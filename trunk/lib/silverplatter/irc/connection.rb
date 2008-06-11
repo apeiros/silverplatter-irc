@@ -1,0 +1,532 @@
+#--
+# Copyright 2007 by Stefan Rusterholz.
+# All rights reserved.
+# See LICENSE.txt for permissions.
+#++
+
+
+
+require 'silverplatter/irc/ascii_casemapping'
+require 'silverplatter/irc/preparation'
+require 'silverplatter/irc/rfc1459_casemapping'
+require 'silverplatter/irc/rfc1459strict_casemapping'
+require 'timeout'
+
+
+
+module SilverPlatter
+	module IRC
+
+		# == Indexing
+		# * Author:   Stefan Rusterholz
+		# * Contact:  apeiros@gmx.net>
+		# * Revision: $Revision: 116 $
+		# * Date:     $Date: 2008-03-08 21:25:27 +0100 (Sat, 08 Mar 2008) $
+		#
+		# == About
+		# A connection to a single irc server, managing users, channels and other
+		# data belonging to it.
+		# 
+		# == Synopsis
+		#   irc = SilverPlatter::IRC::Connection.new "irc.freenode.org"
+		#   irc.connect
+		# 
+		# == Description
+		# Parses messages, automatically converts them to
+		# SilverPlatter::IRC::Messages (or descendants), knows about the user representing
+		# itself, provides highlevel methods that collect commands in reply of queries
+		# (e.g. who, whois, chanlist, banlist etc.) and several other services.
+		# allows creation of dialogs from privmsg and notice messages
+		# Connection is the hub between parser, users, channels, usermanager and
+		# itself.
+		#
+		# == Notes
+		# If you set the connection of the UserList, all users stored in it should
+		# use the same connection object.
+		#
+		# The code assumes Object#dup, Hash#[] and Hash#[] to be atomic, in other
+		# words it doesn't synchronize those methods.
+		# 
+		# == Known Bugs
+		# Currently none
+		# Please inform me about bugs using the bugtracker on
+		# http://rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse
+		#
+		# == See Also
+		# * SilverPlatter::IRC
+		# * SilverPlatter::IRC::Client
+		# * SilverPlatter::IRC::User
+		# * SilverPlatter::IRC::Connection
+		# * SilverPlatter::IRC::Channel
+		# * SilverPlatter::IRC::ChannelList
+		#
+		class Connection < Socket
+
+			# A hash with all options available in addition to SilverPlatter::IRC::Socket::DefaultOptions
+			DefaultOptions = {
+				:port              => 6667,
+				:eol               => "\r\n".freeze,
+				:logger            => nil,
+				:client_encoding   => "utf-8".freeze,
+				:server_encoding   => "utf-8".freeze,
+				:channel_encoding  => nil,
+				:case_mapping      => 'ascii'.freeze,
+				:max_users_backlog => 8192, # maximum number of users offline/out_of_sight
+				:max_users_age     => 3*3600, # maximum age of users that are offline/out_of_sight
+			}
+			
+			DropOnStatus = [:out_of_sight, :unknown].freeze # :nodoc:
+
+			# The encoding of the client (defaults to utf-8)
+			attr_accessor :client_encoding
+			
+			# The default encoding of the server (defaults to utf-8)
+			attr_accessor :server_encoding
+			
+			# A hash with the encodings of individual channels
+			attr_reader   :channel_charset
+			
+			# The SilverPlatter::IRC::User that represents the client of this connection
+			attr_reader   :myself
+			
+			# The callback invoked when the client is disconnected
+			attr_accessor :disconnect_callback
+			
+			# Defaults used e.g. when loging in
+			# Keys:
+			# * :nick - nickname
+			# * :user - username
+			# * :real - realname
+			# * :join - channels to join after logging in
+			attr_reader   :default
+			
+			# The parser instance. Should only be used by connection and parser-commands.
+			attr_reader   :parser
+			
+
+			# Server is the irc-server to connect
+			# you can pass a block which is executed on disconnect with the arguments
+			# connection and reason. Possible values for reason are:
+			# * :quit:       the connection was programmatically quit, this means you should not try to reconnect
+			# * :disconnect: the server stopped responding or the socket raised an error. A reconnect attempt should be made after waiting a bit
+			# * :noconnect:  the attempt to connect failed. You should wait before retrying.
+			# The options argument is a hash, see DefaultOptions constant for possible values.
+			def initialize(server, options={}, &description)
+				options              = DefaultOptions.merge(options).merge(ConnectionDSL.new(server, &description))
+
+				@logger              = options.delete(:logger)
+				@nicknames           = {} # map nicks to users
+				@channelnames        = {} # map channelnames to channels
+				@channels            = ChannelList.new(self) # list of all channels
+				@users               = UserList.new(self) # list of all users
+				@usermanager         = UserManager.new(self, @users, options.delete(:max_users_backlog), options.delete(:max_users_age))
+				@message_lock        = Mutex.new #
+				@client_encoding     = options.delete(:client_encoding)
+				@server_encoding     = options.delete(:server_encoding)
+				@channel_encoding    = Hash.new { @server_encoding }
+				@disconnect_callback = options.delete(:on_disconnect)
+				@ping_delay          = options.delete(:ping_delay)
+				@ping_loop           = nil
+				@myself              = nil
+				@parser              = Parser.new(self, "rfc2812", "generic")
+				@default             = {
+					:nick => options.delete(:nick),
+					:user => options.delete(:user),
+					:real => options.delete(:real),
+					:join => options.delete(:join),
+				}
+
+				@channel_encoding.merge(options[:channel_encoding]) if options[:channel_encoding]
+				options.delete(:channel_encoding)
+
+				super(options)
+			end
+			
+			# An OpenStruct containing all isupport values of the server (lowercased and symbolified)
+			def isupport
+				@parser.isupport
+			end
+			
+			# Subscribe to one, many or all messages (by symbol)
+			# Creates a new Listener, subscribes (see subscribe_listener) and
+			# returns it.
+			# See IRC::SilverPlatter::Listener::new for more info.
+			def subscribe(symbols=nil, priority=0, *args, &callback)
+				listener = Listener.new(symbols, priority, *args, &callback)
+				@subscriptions.subscribe(listener)
+				listener
+			end
+			
+			# Same as #subscribe, but the listener is automatically deleted after the first
+			# invocation.
+			def subscribe_once(symbols=nil, priority=0, *args, &callback)
+				listener = Listener.new(symbols, priority, *args) { |listener, *args|
+					listener.unsubscribe
+					callback.call(listener, *args)
+				}
+				@subscriptions.subscribe(listener)
+				listener
+			end
+
+			# Subscribe a Listener object (or any object emulating the interface of
+			# SilverPlatter::IRC::Listener).
+			def subscribe_listener(listener)
+				@subscriptions.subscribe(listener)
+				listener
+			end
+
+			# Remove a listener from the subscribtions.
+			def unsubscribe(listener)
+				@subscriptions.unsubscribe(listener)
+			end
+
+			# Tests whether two connections are equal. They are if the server and port is the same.
+			def ==(other)
+				(@server == other.server) && (@port == other.port)
+			end
+			
+			# Should only be used by the Parser
+			# Create a new User if necessary or update an old one, returns the new or existing User.
+			def create_user(nick, user=nil, host=nil, real=nil) # nicklist, userlist
+				new_user, old_user = nil, nil
+				@users.synchronize {
+					new_user	= User.new(nick, user, host, real, self)
+					if old_user = @nicknames[new_user.compare]
+						if old_user == new_user then
+							update_user_unsynchronized(old_user, nick, user, host, real)
+							new_user = old_user
+
+						# if old user was out of sight the new user overrides the old
+						elsif DropOnStatus.include?(old_user.status) then
+							@nicknames.delete(old_user.compare)
+							@nicknames[new_user.compare]	= new_user
+							@users[new_user] = true
+							@users.delete(old_user)
+	
+						else # Should NOT happen
+							old_user.status = :mutated
+							@nicknames.delete(old_user.compare)
+							@nicknames[new_user.compare]	= new_user
+							@users[new_user] = true
+							@users.delete(old_user)
+							raise "A user mutated #{old_user.inspect} -> #{new_user.inspect}"
+						end
+					else
+						@nicknames[new_user.compare]	= new_user
+						@users[new_user] = true
+					end
+				}
+				new_user
+			end
+
+			# Should only be used by the Parser
+			# Updates the information of a User
+			def update_user(user, nick, user, host, real) # nicklist, userlist
+				@users.synchronize {
+					update_user_unsynchronized(user, nick, user, host, real)
+				}
+				self
+			end
+
+			# Should only be used by the Parser
+			# Deletes a user, returns whether a User has been actually deleted
+			def delete_user(user) # nicklist, userlist
+				@users.synchronize {
+					!!(@nicknames.delete(user.compare) || @users.delete(user))
+				}
+			end
+			
+			# Should only be used by the parser
+			# Create a Channel if necessary. Returns the new or existing Channel.
+			def create_channel(name) # namelist, channellist
+				@channels.synchronize {
+					channel = (@channelnames[casemap(name)] ||= Channel.new(name, self))
+					@channels[channel] = true
+				}
+				channel
+			end
+			
+			# Should only be used by the parser
+			# Delete a channel, returns whether a channel has been actually deleted
+			def delete_channel(name) # namelist, channellist
+				@channels.synchronize {
+					!!(@channels.delete(channel) || @channelnames.delete(channel.compare))
+				}
+			end
+
+			# If called without arguments it will return a UserList with all known users in this connection
+			# If called with arguments it will return an Array with users mapped to those nicks (possibly nil)
+			def users(*nicks)
+				if nicks.empty? then
+					@users
+				else
+					@message_lock.synchronize {
+						@nicknames.values_at(*nicks.map { |nick| casemap(nick) })
+					}
+				end
+			end
+
+			# If called without arguments it will return a ChannelList with all known channels in this connection
+			# If called with arguments it will return an Array with channels mapped to those names (possibly nil)
+			def channels(*names)
+				if channels.empty? then
+					@channels
+				else
+					@message_lock.synchronize {
+						@channelnames.values_at(*names.map { |name| casemap(name) })
+					}
+				end
+			end
+
+			# Get a user by his nickname (the method takes care of casemapping)
+			def user_by_nick(nick) # => User
+				@message_lock.synchronize {
+					@nicknames[casemap(nick)]
+				}
+			end
+
+			# Get a channel by its name (the method takes care of casemapping)
+			def channel_by_name(name) # => Channel
+				@message_lock.synchronize {
+					@channelnames[casemap(name)]
+				}
+			end
+			
+			# test whether two nicknames are the same, e.g. according to RFC1459-strict the
+			# following nicknames are the same: same_nickname?("foo{}", "FoO[]") # => true
+			def same_nick?(a, b) # => true/false - casemapped comparison
+				casemap(a) == casemap(b)
+			end
+
+			# test whether two channelnames are the same, e.g. according to RFC1459-strict the
+			# following channelnames are the same: same_channelname?("#foo{}", "#FoO[]") # => true
+			def same_channelname?(a, b) # => true/false - casemapped comparison
+				casemap(a) == casemap(b)
+			end
+			
+			# login under nick, user, real - the fourth argument accepts a serverpassword in
+			# case the server requires one
+			# Login will automatically change the nick if the server reports that the provided
+			# one is in use. You can supply a block to change the way the nick is changed. The
+			# block receives the parameters: self, originalnick, lastnick, number. Nick
+			# represents the nick that was rejected and changes the number of changes so far.
+			# The block must return the new nick to use.
+			def login(nick=nil, user=nil, real=nil, serverpass=nil)
+				nick         ||= @default[:nick]
+				user         ||= @default[:user]
+				real         ||= @default[:real]
+				nick_change    = nil
+				number         = 0
+				@myself        = User.new(nick, user, nil, real, self)
+				@myself.myself = true
+				nick_change    = subscribe(:ERR_NICKNAMEINUSE) {
+					@myself.nick block_given? ?
+						yield(self, nick, @myself.nick, number+=1) :
+						"[#{number+=1}]#{nick}"
+					send_nick(change = @myself.nick)
+				}
+				prepare do
+					super(nick, user, real, serverpass)
+				end.wait_for([:RPL_WELCOME, :ERR_NOMOTD])
+				true
+			ensure
+				queue.unsubscribe if queue
+				nick_change.unsubscribe if nick_change
+			end
+
+			# Similar to send_join, but performs a WHO command on each channel joined to fill
+			# the userlists. Use this instead of send_join.
+			def join(*args)
+				send_join(*args)
+				args.each { |chan,pass| send_who(chan) }
+				self
+			end
+
+			def quit(reason=nil)
+				self
+			end
+
+			# blocks current thread until a Message with symbol
+			# (optionally passing a test given as block) is received,
+			# returns the message received that matches.
+			# returns nil if it times out before a match
+			# options:
+			# * :priority: the priority the listener uses (defaults to 0)
+			# * :prepare: a proc object (or any object responding to #call) run after the listener has been set up and before blocking
+			# also see Connection#prepare
+			# 
+			# === Synopsis
+			#   # wait until we get the message that we retained op status
+			#   wait_for(:MODE) { |message| test_if_message_is_the_wanted_one }
+			#   wait_for(:FOO, :prepare => proc { do_something })
+			def wait_for(symbol, timeout=nil, opt={}, &test)
+				listener = nil
+				timeout(timeout) {
+					queue    = Queue.new
+					listener = subscribe(symbol, opt.delete(:priority)) { |l, m| queue.push(m) }
+					opt[:prepare].call if opt.has_key?(:prepare)
+					begin
+						message = queue.shift
+					end until(!block_given? || yield(message))
+					message
+				}
+			rescue Timeout::Error
+				nil
+			ensure
+				listener.unsubscribe
+			end
+			
+			# prepare do stuff end.wait_for :SYMBOL is the same as
+			# wait_for :SYMBOL, :prepare => proc do stuff end
+			# you can alternatively supply a callable object as first argument.
+			def prepare(callback=nil, &block)
+				Preparation.new(self, callback || block)
+			end
+
+			# listens for all Messages with symbol (optionally
+			# passing a test given as block) and pushes them onto the Queue
+			# returns the Queue, extended with Filter.
+			# You are responsible to unsubscribe it (via Queue#unsubscribe).
+			def filter(symbol, priority=0, queue=Queue.new)
+				raise ArgumentError, "Invalid Queue #{queue}:#{queue.class}" unless queue.respond_to?(:push)
+				listener = if block_given? then
+					subscribe(symbol, priority) { |l, message| queue.push(message) if yield(message) }
+				else
+					subscribe(symbol, priority) { |l, message| queue.push(message) }
+				end
+				queue.extend Filter
+				queue.listener = listener
+				queue
+			end
+
+			# Performs a WHOIS command and returns a SilverPlatter::IRC::Whois Struct.
+			def whois(user)
+				nick	= strip_user_prefixes(user.to_s)
+				raise ArgumentError, "Invalid nick #{nick.inspect}" unless valid_nickname?(nick)
+				whois	= Whois.new
+				whois.exists = true
+
+				subscriptions = [
+					subscribe_once(:RPL_WHOISUSER, 10) { |l,m|
+						whois.nick       = message.nick
+						whois.user       = message.user
+						whois.host       = message.host
+						whois.real       = message.real
+					},
+					subscribe_once(:RPL_WHOISSERVER, 10) { |l,m|
+						# FIXME, why is there no code?
+					},
+					subscribe_once(:RPL_WHOISIDLE, 10) { |l,m|
+						whois.signon	   = message.signon_time
+						whois.idle		   = message.seconds_idle
+					},
+					subscribe_once(:RPL_UNIQOPIS, 10) { |l,m|
+						# FIXME, why is there no code?
+					},
+					subscribe_once(:RPL_WHOISCHANNELS, 10) { |l,m|
+						whois.channels   = message.channels
+					},
+					subscribe_once(:RPL_IDENTIFIED_TO_SERVICES, 10) { |l,m|
+						# FIXME, why is there no code?
+					},
+					subscribe_once(:ERR_NOSUCHNICK, 10) { |l,m|
+						whois.exists = false
+					},
+					subscribe_once(:RPL_REGISTERED_INFO, 10) { |l,m|
+						whois.registered = true
+					}
+				]
+
+				@irc.whois(nick)
+
+				wait_for(:RPL_ENDOFWHOIS)
+				subscriptions.each { |listener| listener.unsubscribe }
+				whois
+			end
+
+			def chanlist
+			end
+
+			def banlist(channel)
+			end
+
+			def terminate(stop_reading=true)
+			end
+			
+			# Read the next message from the server. Returns a
+			# SilverPlatter::IRC::Message or nil on disconnect.
+			# Does NOT dispatch.
+			def read_message
+				string = read
+				string && @parser.server_message(string)
+			end
+			
+			# Reads as long as the connection is up, dispatches the read messages
+			# Rescues any exception but Interrupt and logs it as exception
+			def read_loop
+				while string = read
+					begin
+						@parser.server_message(string)
+					rescue Interrupt, Terminate, Errno::EPIPE
+						raise
+					rescue Exception => e
+						exception(e)
+					end
+				end
+			end
+
+			# This method is intended for developer use only, it will remove a user from
+			# a channel and the channel from the user
+			def leave_channel(message, reason1, reason2)
+				if message.from && message.channel then
+					message.from.delete_channel(message.channel, reason1)
+					message.channel.delete_user(message.from, reason1)
+					if message.from.equal?(@myself) then
+						@channels.delete(message.channel)
+						@users.delete_channel(message.channel, reason2)
+					end
+				end
+			end
+			
+			# Test whether a string is a valid channelname
+			# === Synopsis
+			#   connection.valid_channelname?("#silverplatter") # => true
+			def valid_channelname?(name)
+				name =~ @parser.expressions.channel
+			end
+			
+			# Test whether a string is a valid nickname (without prefixes)
+			# === Synopsis
+			#   connection.valid_nickname?("butler") # => true
+			#   connection.valid_nickname?("@butler") # => false
+			def valid_nickname?(name)
+				name =~ @parser.expressions.nick
+			end
+			
+			private
+			# Define which casemapping this connection uses
+			def use_casemapping(type)
+				case type
+					when "ascii"
+						extend ASCII_CaseMapping
+					when "rfc1459"
+						extend RFC1459_CaseMapping
+					when "rfc1459-strict"
+						extend RFC1459Strict_CaseMapping
+					else
+						extend RFC1459_CaseMapping
+						raise ArgumentError, "Unknown casemapping '#{type}'"
+				end
+			end
+			
+			def update_user_unsynchronized(user, nick, user, host, real) # nicklist, userlist
+				old_compare = user.compare
+				user.update(nick, user, host, real)
+				if old_compare != user.compare then
+					@nicknames[user.compare] = user
+					@nicknames.delete(old_compare)
+				end
+			end
+		end # Connection
+	end # IRC
+end # SilverPlatter

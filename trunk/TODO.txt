@@ -1,0 +1,42 @@
+<<<<<<< .mine
+BUGS
+================
+
+* User#quit & User#kill unimplemented
+* Following seems buggy (no length): add_expression :chanstring, /[^\x00\x07\x10\x0D\x20,:]/
+
+=======
+BUGS
+================
+
+* rfc2812/commands.rb has some parser.expression calls
+
+
+>>>>>>> .r149
+TODO
+================
+
+<<<<<<< .mine
+
+* isupport.channelprefixes - check if that's the correct name for the property
+* Check whether channel expressions should be adapted to isupports chanlen
+* Check whether we should really wait for RPL_WELCOME/ERR_NOMOTD (probably only RPL_WELCOME) in Connection#login
+* Check threading validity of Connection#(create/delete)_(user/channel)
+* Send events to @usermanager
+
+* Improve situation with altering commands (avoid having to copy blocks e.g.)
+* Proper IRC lexer
+* me vs. myself, me? vs. myself?
+* FIXMEs
+* Docs
+* Specs
+
+* formatting or formating?=======
+* Improve situation with altering commands (avoid having to copy blocks e.g.)
+* Proper IRC lexer
+* Improve the penalty system (rbot, limechat, original ircd)
+* me vs. myself, me? vs. myself?
+* FIXMEs
+* Docs
+* Specs
+>>>>>>> .r149

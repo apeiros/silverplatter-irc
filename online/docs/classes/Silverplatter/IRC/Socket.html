@@ -1,0 +1,1576 @@
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"/><title>Class: SilverPlatter::IRC::Socket</title><link type="text/css" href="../../.././rdoc-style.css" media="screen" rel="stylesheet"/><script type="text/javascript">
+// Allison template
+// Copyright 2007, 2008 Cloudburst, LLC. Licensed under the AFL 3. See the included LICENSE file.
+
+var href_base = '../../.././rdoc-style.css'.replace(/(.*\/).*/, '$1'); // inline js is good for something  
+
+function $(id) {
+    if (document.getElementById)
+      elem = document.getElementById(id);
+    else if ( document.all )
+      elem = eval("document.all." + id);
+    else
+      return false;
+    return elem;
+}
+
+  function toggle(id) {
+    elem = $(id);
+    elemStyle = elem.style;   
+    if (elemStyle.display == "block") {
+      elemStyle.display = "none"
+    } else {
+      elemStyle.display = "block"
+    }
+    return true;
+  }
+
+  function toggleText(id) {
+    elem = $(id)
+    if (m = elem.innerHTML.match(/(Hide)(.*)/)) {
+      elem.innerHTML = "Show" + m[2];
+    } else if (m = elem.innerHTML.match(/(Show)(.*)/)) {
+      elem.innerHTML = "Hide" + m[2];
+    }
+    return true;
+  }
+
+function span(s, klass) {
+  return '<span class="' + klass + '">' + s + '</span>';
+}
+  
+function highlightSymbols() {
+  pres = document.getElementsByTagName('pre');
+  for(var i = 0; i < pres.length; i++) {
+    pre = pres[i];
+    spans = pre.getElementsByTagName('span');
+    for(var k = 0; k < spans.length; k++) {
+      span = spans[k];
+      if (span.className.match(/ruby-identifier/)) {
+        if (span.innerHTML.match(/^:/)) {
+          span.className += " ruby-symbol";
+        }
+      }
+    }
+  }
+}
+
+ function hasClass(obj) {
+     var result = false;
+     if (obj.getAttributeNode("class") != null) {
+         result = obj.getAttributeNode("class").value;
+     }
+     return result;
+  }   
+
+ function stripe() {
+    var even = true;
+    var color = "#e4ebed";
+    var tables = document.getElementsByTagName('table');
+    if (tables.length == 0) { return; }
+    for (var h = 0; h < tables.length; h++) {
+        var trs = tables[h].getElementsByTagName("tr");
+        for (var i = 0; i < trs.length; i++) {
+          var tds = trs[i].getElementsByTagName("td");
+            for (var j = 0; j < tds.length; j++) {       
+              if (hasClass(tds[j]) != "first") {                
+              var mytd = tds[j];
+              if (even) {
+                mytd.style.backgroundColor = color;
+              }         
+            }
+          }
+          even =  ! even;
+      }
+    }
+  }
+  
+function ajaxGet(url) {
+  url = (href_base + url).replace('/./', '/')
+  var req = false;
+
+  if (window.ActiveXObject) {
+    try {
+      // stupid hack because IE7 disables local Ajax with the native xmlhttprequest object
+      // for security purposes. Yet ActiveX still works. Thanks, Microsoft. I hate you. Die.
+      req = new ActiveXObject("MSXML2.XMLHTTP.3.0");
+    } catch (e) {
+      try {
+        /* IE 6 and maybe 5, don't know, don't care */
+        req = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch (e) {
+        try {
+          req = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e) {
+          req = false;
+        }
+      }
+    }
+  }
+    
+  /* real browsers */
+  if (!req && window.XMLHttpRequest) {
+    try {
+      req = new XMLHttpRequest();
+    } catch (e) {
+      req = false;
+    }
+  } 
+  
+  if (req) {
+    req.open('GET', url, false);
+    req.send(null);
+    return req.responseText;
+  } else {
+    return "Ajax error";  
+  }
+}
+
+
+function addEvent(elm, evType, fn, useCapture) {
+	if (elm.addEventListener) {
+	  elm.addEventListener(evType, fn, useCapture);  
+  	return true;
+	} else if (elm.attachEvent) {
+  	var r = elm.attachEvent('on' + evType, fn);  
+	  return r;  
+	} else {
+  	elm['on' + evType] = fn;
+	}
+}
+
+function insertIndices() {
+  pages = ["class", "file", "method"]
+  for (x in pages) { 
+    $(pages[x]).innerHTML += ajaxGet('fr_' + pages[x] + '_index.html').replace(/(href=")/g, '$1' + href_base);
+  }
+  /* mouseoverify method links */
+  links = $('method').getElementsByTagName('a');
+  for (var x = 0; x < links.length; x++) {
+    if (m = links[x].innerHTML.match(/(.*)\s\((.*)\)/)) {
+      links[x].innerHTML = m[1] + '<br>';
+      links[x].title = m[2];
+    }
+  }
+  /* this is stupid */
+  $('class').style.display = "block";
+  $('file').style.display = "block";
+  
+  /* has to be here because IE7 does not guarantee the onLoad callback order */
+  abbreviateIndicesInner(["class", "file"], 25, "a");
+  /* same, linkTitle() depends on the class link list */
+  linkTitle();
+}
+
+function abbreviateIndices() {
+  var ids = ["defined_in", "child_of", "includes", "requires", "method", "methods"];
+  abbreviateIndicesInner(ids, 25, 'a');
+  abbreviateIndicesInner(ids, 25, 'span');
+}
+
+function abbreviateIndicesInner(indices, amount, tag) {
+  for (var x = 0; x < indices.length; x++) { 
+    var the_index = $(indices[x]);
+    if (the_index) {
+      links = the_index.getElementsByTagName(tag);
+      for (var y = 0; y < links.length; y++) {
+        var link = links[y];
+        if (link.getElementsByTagName('span').length == 0 && link.getElementsByTagName('a').length == 0) {
+          // avoid nesting
+          link.innerHTML = link.innerHTML.replace(/<br>|\n/gi, '');
+          link.title = link.innerHTML;
+          link.innerHTML = abbreviate(link.innerHTML, amount) + '<br>';
+        }
+      }
+    }
+  }
+}
+
+function linkTitle() {
+  
+  /* grab the correct title element from the index */
+  var index_page = ajaxGet('index.html');
+  title_text = index_page.match(/<title>(.*)<\/title>/m)[1];
+  document.title = title_text + " - " + document.title;
+  var p = $('header').getElementsByTagName('p')[0]
+  if (p.innerHTML.match(/^\s*$/)) {
+    p.innerHTML = title_text;
+  } else {
+    p.innerHTML = title_text + ": " + p.innerHTML;
+  }
+  
+  /* set the link properly */
+  title_link = index_page.match(/<a\s+href="(.*?)"/)[1];
+  var element = $('title');
+  var item_type = "";
+  var item_name = "";
+  if (m = element.innerHTML.match(/(Class:|Module:|File:)\s*(.*)/)) {
+    item_type = m[1];
+    item_name = m[2];
+  } else {
+    item_name = element.innerHTML;
+  }
+  element.innerHTML = '<a href="' + href_base + title_link + '">' + item_type + " " + abbreviate(item_name, 45) + '</a>';
+  element.getElementsByTagName('a')[0].title = item_name
+  
+  /* breadcrumb navigation */
+  items = item_name.split("::");
+  items_new = item_name.split("::");
+  file_links = $('class').getElementsByTagName('a');
+  for (var x = 0; x < items.length - 1; x++ ){
+    var item = items[x];
+    link = ("/classes/" + items.slice(0,x).join("/") + "/" + item + ".html").replace('//', '/');
+    regex = new RegExp(RegExp.escape(link) + '$');
+    for (var y = 0; y < file_links.length; y++) {
+      if (file_links[y].href.match(regex)) {
+         items_new[x] = '<a href="' + href_base + link + '">' + item + '</a>';
+         break;
+      }
+    }  
+  }
+  $('item_name').innerHTML = item_type + ' ' + items_new.join(" :: ");
+}
+
+function abbreviate(s, size) {
+  while (s.length > size) {
+    var old_s = s;
+    s = s.replace(/\s|\n/mg, '');
+    s = s.replace(/([A-Z])[a-z]+/m, '$1');
+    if (!s || old_s == s) {
+      return "..." + s.substring(s.length - size, s.length);
+    }
+  }
+  return s;
+}
+
+function disableSubmit(event) {
+  var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+  if (keyCode == 13) {
+    return false;
+  } else {
+    return true;
+  }
+}
+  
+function filterList(id, s, event) {
+  
+  /* some weak escaping */
+  s = s.replace(/[^\w\d\.\_\-\/\:\=\[\]\?\!]/g, '');
+  s = RegExp.escape(s);
+  
+  var show_all = false;
+  if (s.match(/^\s*$/)) {
+    show_all = true;
+  }
+  
+  links = $(id).getElementsByTagName('a')
+  regex = new RegExp(s, 'i');
+  
+  for (var x = 0; x < links.length; x++) {
+    var link = links[x];
+    if (show_all) {
+      link.style.display = 'inline';
+    } else {
+       if (link.innerHTML.match(regex)) {        
+         link.style.display = 'inline';
+       } else {
+         link.style.display = 'none';
+       }
+    }
+  }
+  return true;
+}
+
+RegExp.escape = function(text) {
+  if (!arguments.callee.sRE) {
+    var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
+    arguments.callee.sRE = new RegExp(
+      '(\\' + specials.join('|\\') + ')', 'g'
+    );
+  }
+  return text.replace(arguments.callee.sRE, '\\$1');
+}
+
+function hacks() {
+  // show the spacer if necessary, 
+  divs = document.getElementsByTagName('div');
+  for(var x = 0; x < divs.length; x++) {
+    if (divs[x].className && divs[x].className.match(/top/)) {
+      document.getElementById('spacer').style.display = 'block';
+    }
+  }
+  // remove extra colons from tables
+  tds = document.getElementsByTagName('td');
+  for(var x = 0; x < tds.length; x++) {
+    str = tds[x].innerHTML
+    if (str.charAt(str.length - 1) == ":") {
+      tds[x].innerHTML = str.slice(0, str.length - 1)
+    }
+  }
+}
+
+addEvent(window, 'load', insertIndices, false);
+addEvent(window, 'load', abbreviateIndices, false);
+addEvent(window, 'load', stripe, false);
+addEvent(window, 'load', highlightSymbols, false);
+addEvent(window, 'load', hacks, false);
+</script></head><body><div id="container"><div class="curve" id="preheader_curve_0"></div><div class="curve" id="preheader_curve_1"></div><div class="curve" id="preheader_curve_2"></div><div class="curve" id="preheader_curve_3"></div><div class="curve" id="preheader_curve_4"></div><div class="curve" id="preheader_curve_5"></div><div id="header"><p>
+</p><span><h1 id="title">
+Class: SilverPlatter::IRC::Socket
+</h1></span></div><div class="clear"></div><div id="left">
+<div class="navigation darker top" id="child_of"><h3>Child of</h3><span>
+
+Object
+</span></div>
+
+<div class="navigation darker top" id="defined_in"><h3>Defined in</h3>
+
+<a href="../../../files/lib/silverplatter/irc/socket_rb.html">lib/silverplatter/irc/socket.rb</a>
+
+</div>
+
+<div class="navigation top" id="includes"><h3>Includes</h3>
+
+
+Log::Comfort<br/>
+
+
+</div>
+
+
+<div class="navigation top" id="methods"><h3>Methods</h3>
+
+
+<a href='#M000032'>
+close<br/>
+</a>
+
+
+
+
+<a href='#M000003'>
+connect<br/>
+</a>
+
+
+
+
+<a href='#M000002'>
+connected?<br/>
+</a>
+
+
+
+
+<a href='#M000006'>
+login<br/>
+</a>
+
+
+
+
+<a href='#M000001'>
+new<br/>
+</a>
+
+
+
+
+<a href='#M000009'>
+normalize_message<br/>
+</a>
+
+
+
+
+<a href='#M000031'>
+quit<br/>
+</a>
+
+
+
+
+<a href='#M000004'>
+read<br/>
+</a>
+
+
+
+
+<a href='#M000011'>
+send_action<br/>
+</a>
+
+
+
+
+<a href='#M000017'>
+send_away<br/>
+</a>
+
+
+
+
+<a href='#M000018'>
+send_back<br/>
+</a>
+
+
+
+
+<a href='#M000026'>
+send_ban<br/>
+</a>
+
+
+
+
+<a href='#M000023'>
+send_deop<br/>
+</a>
+
+
+
+
+<a href='#M000025'>
+send_devoice<br/>
+</a>
+
+
+
+
+<a href='#M000008'>
+send_ghost<br/>
+</a>
+
+
+
+
+<a href='#M000007'>
+send_identify<br/>
+</a>
+
+
+
+
+<a href='#M000014'>
+send_join<br/>
+</a>
+
+
+
+
+<a href='#M000019'>
+send_kick<br/>
+</a>
+
+
+
+
+<a href='#M000020'>
+send_mode<br/>
+</a>
+
+
+
+
+<a href='#M000021'>
+send_multiple_mode<br/>
+</a>
+
+
+
+
+<a href='#M000016'>
+send_nick<br/>
+</a>
+
+
+
+
+<a href='#M000012'>
+send_notice<br/>
+</a>
+
+
+
+
+<a href='#M000022'>
+send_op<br/>
+</a>
+
+
+
+
+<a href='#M000015'>
+send_part<br/>
+</a>
+
+
+
+
+<a href='#M000013'>
+send_pong<br/>
+</a>
+
+
+
+
+<a href='#M000010'>
+send_privmsg<br/>
+</a>
+
+
+
+
+<a href='#M000030'>
+send_quit<br/>
+</a>
+
+
+
+
+<a href='#M000027'>
+send_unban<br/>
+</a>
+
+
+
+
+<a href='#M000024'>
+send_voice<br/>
+</a>
+
+
+
+
+<a href='#M000028'>
+send_who<br/>
+</a>
+
+
+
+
+<a href='#M000029'>
+send_whois<br/>
+</a>
+
+
+
+
+<a href='#M000005'>
+write_with_eol<br/>
+</a>
+
+
+</div>
+<div id="spacer"></div><div class="navigation darker index" id="class_wrapper"><div class="list_header"><h3>All classes</h3></div><div class="list_header_link"><a onclick="toggle('class'); toggleText('class_link'); return false;" href="#" id="class_link">Hide...</a></div><div class="clear"></div><div id="class"><form><label for="filter_class">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('class', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_class"></input></form></div></div><div class="navigation darker index" id="file_wrapper"><div class="list_header"><h3>All files</h3></div><div class="list_header_link"><a onclick="toggle('file'); toggleText('file_link'); return false;" href="#" id="file_link">Hide...</a></div><div class="clear"></div><div id="file"><form><label for="filter_file">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('file', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_file"></input></form></div></div><div class="navigation darker index" id="method_wrapper"><div class="list_header"><h3>All methods</h3></div><div class="list_header_link"><a onclick="toggle('method'); toggleText('method_link'); return false;" href="#" id="method_link">Show...</a></div><div class="clear"></div><div id="method"><form><label for="filter_method">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('method', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_method"></input></form></div></div></div><div id="content">
+<h1 id="item_name">Class: SilverPlatter::IRC::Socket</h1>
+
+<div id="description"><h2>Indexing</h2>
+<ul>
+<li>Author: Stefan Rusterholz
+
+</li>
+<li>Contact: apeiros@gmx.net&gt;
+
+</li>
+<li>Revision: $Revision: 118 $
+
+</li>
+<li>Date: $Date: 2008-03-08 21:29:44 +0100 (Sat, 08 Mar 2008) $
+
+</li>
+</ul>
+<h2>Description</h2>
+<p>
+<a href="Socket.html">SilverPlatter::IRC::Socket</a> is a TCPSocket,
+retrofitted for communication with <a href="../IRC.html">IRC</a>-Servers.
+It provides specialized methods for sending messages to <a
+href="../IRC.html">IRC</a>-Server. All methods are safe to be used with <a
+href="../IRC.html">SilverPlatter::IRC</a>::* Objects (e.g. all parameters
+expecting a nickname will accept an <a
+href="User.html">SilverPlatter::IRC::User</a> as well). It will adhere to
+its limit-settings, which will prevent from sending too many messages in a
+too short time to avoid excess flooding. <a
+href="Socket.html#M000005">SilverPlatter::IRC::Socket#write_with_eol</a> is
+the only synchronized method, since all other methods build up on it, <a
+href="Socket.html">IRC::Socket</a> should be safe in threaded environments.
+<a href="Socket.html#M000004">SilverPlatter::IRC::Socket#read</a> is NOT
+synchronized, so unless you <a href="Socket.html#M000004">read</a> from
+only a single thread, statistics might get messed up. Length limits can
+only be safely guaranteed by specialized write methods, <a
+href="Socket.html#M000004">SilverPlatter::IRC::Socket#read</a> from only
+will just warn and send the overlength message. If you are looking for
+queries (commands that get an answer from the server) take a look at <a
+href="Connection.html">SilverPlatter::IRC::Connection</a>.
+</p>
+<h2>Synopsis</h2>
+<pre>
+  irc = SilverPlatter::IRC::Socket.new('irc.freenode.org', :port =&gt; 6667)
+  irc.connect
+  irc.login('your_nickname', 'YourUser', 'Your realname')
+  irc.send_join(&quot;#channel3&quot;)
+  irc.send_part(&quot;#channel3&quot;)
+  irc.send_privmsg(&quot;Hi all of you in #channel1!&quot;, &quot;#channel1&quot;)
+  irc.close
+</pre>
+<h2>Notes</h2>
+<ul>
+<li>Errno::EHOSTUNREACH: server not reached
+
+</li>
+<li>Errno::ECONNREFUSED: server is up, but refuses connection
+
+</li>
+<li>Errno::ECONNRESET: connection works, server did not yet accept connection,
+resets after
+
+</li>
+<li>Errno::EPIPE: writing to a server-side closed connection, nil on gets,
+connection was terminated
+
+</li>
+</ul>
+</div>
+
+
+
+
+<p></p>
+
+
+<h1>Constants</h1><p><table><tr><th>Name</th><th>Value</th></tr>
+<tr>
+<td class="highlight">VERSION</td>
+
+<td class="normal">&quot;1.0.0&quot;</td>
+
+
+
+</tr>
+<tr>
+<td class="highlight">DefaultOptions</td>
+
+<td class="normal">{         :port =&gt; 6667,         :eol  =&gt; &quot;\r\n&quot;.freeze,         :host =&gt; nil,       }</td>
+
+
+
+</tr>
+</table></p>
+
+
+<h1>Attributes</h1><p><table><tr><th>Name</th><th>Read/write?</th></tr>
+<tr>
+<td class="highlight">count</td>
+
+
+
+
+<td class="normal">R</td>
+</tr>
+<tr>
+<td class="highlight">eol</td>
+
+
+
+
+<td class="normal">R</td>
+</tr>
+<tr>
+<td class="highlight">host</td>
+
+
+
+
+<td class="normal">R</td>
+</tr>
+<tr>
+<td class="highlight">limit</td>
+
+
+
+
+<td class="normal">R</td>
+</tr>
+<tr>
+<td class="highlight">log_out</td>
+
+
+
+
+<td class="normal">RW</td>
+</tr>
+<tr>
+<td class="highlight">port</td>
+
+
+
+
+<td class="normal">R</td>
+</tr>
+<tr>
+<td class="highlight">server</td>
+
+
+
+
+<td class="normal">R</td>
+</tr>
+</table></p>
+
+
+<h1>Public Class Methods</h1>
+
+
+<a class="small" name="M000001"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000001'>
+
+
+new
+
+(server, options={})
+
+</a>
+</h3>
+<p>
+Initialize properties, doesn&#8216;t <a
+href="Socket.html#M000003">connect</a> automatically options:
+</p>
+<ul>
+<li>:server: ip/domain of server (overrides a given server parameter)
+
+</li>
+<li>:port: port to <a href="Socket.html#M000003">connect</a> on, defaults to
+6667
+
+</li>
+<li>:eol: what character sequence terminates messages, defaults to \r\n
+
+</li>
+<li>:host: what host address to bind to, defaults to nil
+
+</li>
+</ul>
+
+<p class="source_link" id="M000001-show-link"><a onclick="toggle('M000001-source'); toggleText('M000001-link'); return false;" href="#" id="M000001-link">Show source...</a></p><div class="source" id="M000001-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 100</span>
+100:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">server</span>, <span class="ruby-identifier">options</span>={})
+101:         <span class="ruby-identifier">options</span>       = <span class="ruby-constant">DefaultOptions</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)
+102:         <span class="ruby-ivar">@logger</span>       = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:log</span>)
+103:         <span class="ruby-ivar">@server</span>       = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:server</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">server</span>
+104:         <span class="ruby-ivar">@port</span>         = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:port</span>)
+105:         <span class="ruby-ivar">@eol</span>          = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:eol</span>).<span class="ruby-identifier">dup</span>.<span class="ruby-identifier">freeze</span>
+106:         <span class="ruby-ivar">@host</span>         = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:host</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:host</span>).<span class="ruby-identifier">dup</span>.<span class="ruby-identifier">freeze</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:host</span>)
+107:         <span class="ruby-ivar">@log_out</span>      = <span class="ruby-keyword kw">nil</span>
+108:         <span class="ruby-ivar">@last_sent</span>    = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">new</span>()
+109:         <span class="ruby-ivar">@count</span>        = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>)
+110:         <span class="ruby-ivar">@limit</span>        = {
+111:           <span class="ruby-identifier">:message_length</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">300</span>, <span class="ruby-comment cmt"># max. length of a text message (e.g. in notice, privmsg) sent to server</span>
+112:           <span class="ruby-identifier">:raw_length</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-value">400</span>, <span class="ruby-comment cmt"># max. length of a raw message sent to server</span>
+113:           <span class="ruby-identifier">:burst</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-value">4</span>,   <span class="ruby-comment cmt"># max. messages that can be sent with send_delay (0 = infinite)</span>
+114:           <span class="ruby-identifier">:burst2</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-value">20</span>,  <span class="ruby-comment cmt"># max. messages that can be sent with send_delay (0 = infinite)</span>
+115:           <span class="ruby-identifier">:send_delay</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span><span class="ruby-value">.1</span>, <span class="ruby-comment cmt"># minimum delay between each message</span>
+116:           <span class="ruby-identifier">:burst_delay</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1.5</span>, <span class="ruby-comment cmt"># delay after a burst</span>
+117:           <span class="ruby-identifier">:burst2_delay</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-value">15</span>,  <span class="ruby-comment cmt"># delay after a burst2</span>
+118:         }
+119:         <span class="ruby-ivar">@limit</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">default</span><span class="ruby-operator">|</span>
+120:           <span class="ruby-ivar">@limit</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">key</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">key</span>)
+121:         }
+122:         <span class="ruby-ivar">@mutex</span>        = <span class="ruby-constant">Mutex</span>.<span class="ruby-identifier">new</span>
+123:         <span class="ruby-ivar">@socket</span>       = <span class="ruby-constant">Diagnostics</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">:write</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-constant">NoMethodError</span>, <span class="ruby-value str">&quot;Must connect first to write to the socket&quot;</span>])
+124:         <span class="ruby-ivar">@connected</span>    = <span class="ruby-keyword kw">false</span>
+125:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Unknown arguments: #{options.keys.inspect}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">empty?</span>
+126:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+
+<h1>Public Instance Methods</h1>
+
+
+<a class="small" name="M000032"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000032'>
+
+
+close
+
+()
+
+</a>
+</h3>
+<p>
+closes the connection to the irc-server
+</p>
+
+<p class="source_link" id="M000032-show-link"><a onclick="toggle('M000032-source'); toggleText('M000032-link'); return false;" href="#" id="M000032-link">Show source...</a></p><div class="source" id="M000032-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 410</span>
+410:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>
+411:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Socket not open&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@socket</span>
+412:         <span class="ruby-ivar">@socket</span>.<span class="ruby-identifier">close</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@socket</span>.<span class="ruby-identifier">closed?</span>
+413:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000003"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000003'>
+
+
+connect
+
+()
+
+</a>
+</h3>
+<p>
+connects to the server
+</p>
+
+<p class="source_link" id="M000003-show-link"><a onclick="toggle('M000003-source'); toggleText('M000003-link'); return false;" href="#" id="M000003-link">Show source...</a></p><div class="source" id="M000003-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 133</span>
+133:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">connect</span>
+134:         <span class="ruby-identifier">info</span>(<span class="ruby-node">&quot;Connecting to #{@server} on port #{@port} from #{@host || '&lt;default&gt;'}&quot;</span>)
+135:         <span class="ruby-ivar">@socket</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">open</span>(<span class="ruby-ivar">@server</span>, <span class="ruby-ivar">@port</span>) <span class="ruby-comment cmt">#, @host)</span>
+136:         <span class="ruby-identifier">info</span>(<span class="ruby-value str">&quot;Successfully connected&quot;</span>)
+137:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">ArgumentError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">error</span>
+138:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@host</span> <span class="ruby-keyword kw">then</span>
+139:           <span class="ruby-identifier">warn</span>(<span class="ruby-value str">&quot;host-parameter is not supported by your ruby version. Parameter discarted.&quot;</span>)
+140:           <span class="ruby-ivar">@host</span> = <span class="ruby-keyword kw">nil</span>
+141:           <span class="ruby-keyword kw">retry</span>
+142:         <span class="ruby-keyword kw">else</span>
+143:           <span class="ruby-identifier">raise</span>
+144:         <span class="ruby-keyword kw">end</span>
+145:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Interrupt</span>
+146:         <span class="ruby-identifier">raise</span>
+147:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span>
+148:         <span class="ruby-identifier">error</span>(<span class="ruby-value str">&quot;Connection failed.&quot;</span>)
+149:         <span class="ruby-identifier">raise</span>
+150:       <span class="ruby-keyword kw">else</span>
+151:         <span class="ruby-ivar">@connected</span>    = <span class="ruby-keyword kw">true</span>
+152:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000002"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000002'>
+
+
+connected?
+
+()
+
+</a>
+</h3>
+
+<p class="source_link" id="M000002-show-link"><a onclick="toggle('M000002-source'); toggleText('M000002-link'); return false;" href="#" id="M000002-link">Show source...</a></p><div class="source" id="M000002-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 128</span>
+128:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">connected?</span>
+129:         <span class="ruby-ivar">@connected</span>
+130:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000006"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000006'>
+
+
+login
+
+(nickname, username, realname, serverpass=nil)
+
+</a>
+</h3>
+<p>
+log into the irc-server (and <a href="Socket.html#M000003">connect</a> if
+necessary)
+</p>
+
+<p class="source_link" id="M000006-show-link"><a onclick="toggle('M000006-source'); toggleText('M000006-link'); return false;" href="#" id="M000006-link">Show source...</a></p><div class="source" id="M000006-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 218</span>
+218:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">login</span>(<span class="ruby-identifier">nickname</span>, <span class="ruby-identifier">username</span>, <span class="ruby-identifier">realname</span>, <span class="ruby-identifier">serverpass</span>=<span class="ruby-keyword kw">nil</span>)
+219:         <span class="ruby-identifier">connect</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@connected</span>
+220:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;PASS #{serverpass}&quot;</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">serverpass</span>
+221:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;NICK #{nickname}&quot;</span>)
+222:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;USER #{username} 0 * :#{realname}&quot;</span>)
+223:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000009"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000009'>
+
+
+normalize_message
+
+(message, limit=:message_length)
+
+</a>
+</h3>
+
+<p class="source_link" id="M000009-show-link"><a onclick="toggle('M000009-source'); toggleText('M000009-link'); return false;" href="#" id="M000009-link">Show source...</a></p><div class="source" id="M000009-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 238</span>
+238:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">normalize_message</span>(<span class="ruby-identifier">message</span>, <span class="ruby-identifier">limit</span>=<span class="ruby-identifier">:message_length</span>)
+239:         <span class="ruby-identifier">message</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-node">/[^\n\r]{1,#{@limit[limit]}}/</span>)
+240:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000031"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000031'>
+
+
+quit
+
+(reason=&quot;leaving&quot;, close=true)
+
+</a>
+</h3>
+<p>
+send the <a href="Socket.html#M000031">quit</a> message to the server
+unless you set <a href="Socket.html#M000032">close</a> to false it will
+also <a href="Socket.html#M000032">close</a> the socket
+</p>
+
+<p class="source_link" id="M000031-show-link"><a onclick="toggle('M000031-source'); toggleText('M000031-link'); return false;" href="#" id="M000031-link">Show source...</a></p><div class="source" id="M000031-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 404</span>
+404:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">quit</span>(<span class="ruby-identifier">reason</span>=<span class="ruby-value str">&quot;leaving&quot;</span>, <span class="ruby-identifier">close</span>=<span class="ruby-keyword kw">true</span>)
+405:         <span class="ruby-identifier">send_quit</span>(<span class="ruby-identifier">reason</span>)
+406:         <span class="ruby-identifier">close</span>() <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">close</span>
+407:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000004"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000004'>
+
+
+read
+
+()
+
+</a>
+</h3>
+<p>
+get next message (eol already chomped) from server, blocking, returns nil
+if closed
+</p>
+
+<p class="source_link" id="M000004-show-link"><a onclick="toggle('M000004-source'); toggleText('M000004-link'); return false;" href="#" id="M000004-link">Show source...</a></p><div class="source" id="M000004-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 155</span>
+155:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read</span>
+156:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">m</span> = <span class="ruby-ivar">@socket</span>.<span class="ruby-identifier">gets</span>(<span class="ruby-ivar">@eol</span>) <span class="ruby-keyword kw">then</span>
+157:           <span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:read_lines</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+158:           <span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:read_bytes</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">length</span>
+159:           <span class="ruby-identifier">m</span>.<span class="ruby-identifier">chomp</span>(<span class="ruby-ivar">@eol</span>)
+160:         <span class="ruby-keyword kw">else</span>
+161:           <span class="ruby-ivar">@connected</span> = <span class="ruby-keyword kw">false</span>
+162:           <span class="ruby-keyword kw">nil</span>
+163:         <span class="ruby-keyword kw">end</span>
+164:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000011"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000011'>
+
+
+send_action
+
+(message, *recipients)
+
+</a>
+</h3>
+<p>
+same as privmsg except it&#8216;s formatted for ACTION
+</p>
+
+<p class="source_link" id="M000011-show-link"><a onclick="toggle('M000011-source'); toggleText('M000011-link'); return false;" href="#" id="M000011-link">Show source...</a></p><div class="source" id="M000011-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 254</span>
+254:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_action</span>(<span class="ruby-identifier">message</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">recipients</span>)
+255:         <span class="ruby-identifier">normalize_message</span>(<span class="ruby-identifier">message</span>).<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">message</span><span class="ruby-operator">|</span>
+256:           <span class="ruby-identifier">recipients</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">recipient</span><span class="ruby-operator">|</span>
+257:             <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;PRIVMSG #{recipient} :&quot;</span><span class="ruby-operator">+</span>(<span class="ruby-value">1</span>.<span class="ruby-identifier">chr</span>)<span class="ruby-operator">+</span><span class="ruby-value str">&quot;ACTION &quot;</span><span class="ruby-operator">+</span><span class="ruby-identifier">message</span><span class="ruby-operator">+</span>(<span class="ruby-value">1</span>.<span class="ruby-identifier">chr</span>))
+258:           }
+259:         }
+260:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000017"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000017'>
+
+
+send_away
+
+(reason=&quot;&quot;)
+
+</a>
+</h3>
+<p>
+set your status to away with reason &#8216;reason&#8216;
+</p>
+
+<p class="source_link" id="M000017-show-link"><a onclick="toggle('M000017-source'); toggleText('M000017-link'); return false;" href="#" id="M000017-link">Show source...</a></p><div class="source" id="M000017-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 324</span>
+324:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_away</span>(<span class="ruby-identifier">reason</span>=<span class="ruby-value str">&quot;&quot;</span>)
+325:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">back</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">reason</span>.<span class="ruby-identifier">empty?</span>
+326:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;AWAY :#{reason}&quot;</span>)
+327:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000018"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000018'>
+
+
+send_back
+
+()
+
+</a>
+</h3>
+<p>
+reset your away status to back
+</p>
+
+<p class="source_link" id="M000018-show-link"><a onclick="toggle('M000018-source'); toggleText('M000018-link'); return false;" href="#" id="M000018-link">Show source...</a></p><div class="source" id="M000018-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 330</span>
+330:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_back</span>
+331:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-value str">&quot;AWAY&quot;</span>)
+332:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000026"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000026'>
+
+
+send_ban
+
+(channel, *masks)
+
+</a>
+</h3>
+<p>
+Set ban in channel to mask
+</p>
+
+<p class="source_link" id="M000026-show-link"><a onclick="toggle('M000026-source'); toggleText('M000026-link'); return false;" href="#" id="M000026-link">Show source...</a></p><div class="source" id="M000026-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 378</span>
+378:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_ban</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">masks</span>)
+379:         <span class="ruby-identifier">send_multiple_mode</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-value str">'+'</span>, <span class="ruby-value str">'b'</span>, <span class="ruby-identifier">masks</span>)
+380:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000023"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000023'>
+
+
+send_deop
+
+(channel, *users)
+
+</a>
+</h3>
+<p>
+Take Op from user in channel <a href="User.html">User</a> can be a nick or
+<a href="User.html">IRC::User</a>, either one or an array.
+</p>
+
+<p class="source_link" id="M000023-show-link"><a onclick="toggle('M000023-source'); toggleText('M000023-link'); return false;" href="#" id="M000023-link">Show source...</a></p><div class="source" id="M000023-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 361</span>
+361:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_deop</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">users</span>)
+362:         <span class="ruby-identifier">send_multiple_mode</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-value str">'-'</span>, <span class="ruby-value str">'o'</span>, <span class="ruby-identifier">users</span>)
+363:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000025"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000025'>
+
+
+send_devoice
+
+(channel, *users)
+
+</a>
+</h3>
+<p>
+Take voice from user in channel. <a href="User.html">User</a> can be a nick
+or <a href="User.html">IRC::User</a>, either one or an array.
+</p>
+
+<p class="source_link" id="M000025-show-link"><a onclick="toggle('M000025-source'); toggleText('M000025-link'); return false;" href="#" id="M000025-link">Show source...</a></p><div class="source" id="M000025-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 373</span>
+373:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_devoice</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">users</span>)
+374:         <span class="ruby-identifier">send_multiple_mode</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-value str">'-'</span>, <span class="ruby-value str">'v'</span>, <span class="ruby-identifier">users</span>)
+375:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000008"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000008'>
+
+
+send_ghost
+
+(nickname, password)
+
+</a>
+</h3>
+<p>
+FIXME, figure out what the server supports, possibly requires it to be
+moved to Butler::IRC::Client (to allow ghosting, nickchange, identify)
+</p>
+
+<p class="source_link" id="M000008-show-link"><a onclick="toggle('M000008-source'); toggleText('M000008-link'); return false;" href="#" id="M000008-link">Show source...</a></p><div class="source" id="M000008-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 234</span>
+234:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_ghost</span>(<span class="ruby-identifier">nickname</span>, <span class="ruby-identifier">password</span>)
+235:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;NS :GHOST #{nickname} #{password}&quot;</span>)
+236:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000007"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000007'>
+
+
+send_identify
+
+(password)
+
+</a>
+</h3>
+<p>
+identify nickname to nickserv FIXME, figure out what the server supports,
+possibly requires it to be moved to Butler::IRC::Client (to allow ghosting,
+nickchange, identify)
+</p>
+
+<p class="source_link" id="M000007-show-link"><a onclick="toggle('M000007-source'); toggleText('M000007-link'); return false;" href="#" id="M000007-link">Show source...</a></p><div class="source" id="M000007-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 228</span>
+228:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_identify</span>(<span class="ruby-identifier">password</span>)
+229:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;NS :IDENTIFY #{password}&quot;</span>)
+230:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000014"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000014'>
+
+
+send_join
+
+(*channels)
+
+</a>
+</h3>
+<p>
+join specified channels use an array [channel, password] to join
+password-protected channels returns the channels joined.
+</p>
+<h2>Synopsis</h2>
+<pre>
+  irc.send_join(&quot;#foo&quot;, &quot;#bar&quot;)
+  irc.send_join([&quot;#foo&quot;, &quot;pass_for_foo&quot;])
+  require 'silverplatter/irc/string'
+  irc.send_join(&quot;#foo&quot;.with_password(&quot;foopass&quot;))
+</pre>
+
+<p class="source_link" id="M000014-show-link"><a onclick="toggle('M000014-source'); toggleText('M000014-link'); return false;" href="#" id="M000014-link">Show source...</a></p><div class="source" id="M000014-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 291</span>
+291:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_join</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">channels</span>)
+292:         <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">channel</span>, <span class="ruby-identifier">password</span><span class="ruby-operator">|</span>
+293:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">password</span> <span class="ruby-keyword kw">then</span>
+294:             <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;JOIN #{channel} #{password}&quot;</span>)
+295:           <span class="ruby-keyword kw">else</span>
+296:             <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;JOIN #{channel}&quot;</span>)
+297:           <span class="ruby-keyword kw">end</span>
+298:           <span class="ruby-identifier">channel</span>
+299:         }
+300:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000019"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000019'>
+
+
+send_kick
+
+(user, channel, reason)
+
+</a>
+</h3>
+<p>
+kick user in channel with reason
+</p>
+
+<p class="source_link" id="M000019-show-link"><a onclick="toggle('M000019-source'); toggleText('M000019-link'); return false;" href="#" id="M000019-link">Show source...</a></p><div class="source" id="M000019-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 335</span>
+335:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_kick</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">channel</span>, <span class="ruby-identifier">reason</span>)
+336:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;KICK #{channel} #{user} :#{reason}&quot;</span>)
+337:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000020"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000020'>
+
+
+send_mode
+
+(channel, mode)
+
+</a>
+</h3>
+<p>
+send a mode command to a channel
+</p>
+
+<p class="source_link" id="M000020-show-link"><a onclick="toggle('M000020-source'); toggleText('M000020-link'); return false;" href="#" id="M000020-link">Show source...</a></p><div class="source" id="M000020-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 340</span>
+340:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_mode</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-identifier">mode</span>)
+341:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;MODE #{channel} #{mode}&quot;</span>)
+342:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000021"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000021'>
+
+
+send_multiple_mode
+
+(channel, pre, flag, targets)
+
+</a>
+</h3>
+<p>
+Give Op to user in channel <a href="User.html">User</a> can be a nick or <a
+href="User.html">IRC::User</a>, either one or an array.
+</p>
+
+<p class="source_link" id="M000021-show-link"><a onclick="toggle('M000021-source'); toggleText('M000021-link'); return false;" href="#" id="M000021-link">Show source...</a></p><div class="source" id="M000021-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 346</span>
+346:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_multiple_mode</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-identifier">pre</span>, <span class="ruby-identifier">flag</span>, <span class="ruby-identifier">targets</span>)
+347:         (<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-identifier">targets</span>.<span class="ruby-identifier">length</span>).<span class="ruby-identifier">step</span>(<span class="ruby-value">10</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+348:           <span class="ruby-identifier">slice</span> = <span class="ruby-identifier">targets</span>[<span class="ruby-identifier">i</span>,<span class="ruby-value">10</span>]
+349:           <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;MODE #{channel} +#{flag*slice.length} #{slice*' '}&quot;</span>)
+350:         }
+351:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000016"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000016'>
+
+
+send_nick
+
+(nick)
+
+</a>
+</h3>
+<p>
+set your own nick does NO verification/validation of any kind
+</p>
+
+<p class="source_link" id="M000016-show-link"><a onclick="toggle('M000016-source'); toggleText('M000016-link'); return false;" href="#" id="M000016-link">Show source...</a></p><div class="source" id="M000016-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 319</span>
+319:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_nick</span>(<span class="ruby-identifier">nick</span>)
+320:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;NICK #{nick}&quot;</span>)
+321:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000012"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000012'>
+
+
+send_notice
+
+(message, *recipients)
+
+</a>
+</h3>
+<p>
+sends a notice to receiver (or multiple if receiver is array of receivers)
+formatted=true allows usage of ![]-format commands (see
+IRCmessage.getFormatted) messages containing newline automatically get
+splitted up into multiple messages. Too long messages will be tokenized
+into fitting sized messages (see @limit[:message_length])
+</p>
+
+<p class="source_link" id="M000012-show-link"><a onclick="toggle('M000012-source'); toggleText('M000012-link'); return false;" href="#" id="M000012-link">Show source...</a></p><div class="source" id="M000012-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 266</span>
+266:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_notice</span>(<span class="ruby-identifier">message</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">recipients</span>)
+267:         <span class="ruby-identifier">normalize_message</span>(<span class="ruby-identifier">message</span>).<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">message</span><span class="ruby-operator">|</span>
+268:           <span class="ruby-identifier">recipients</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">recipient</span><span class="ruby-operator">|</span>
+269:             <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;NOTICE #{recipient} :#{message}&quot;</span>)
+270:           }
+271:         }
+272:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000022"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000022'>
+
+
+send_op
+
+(channel, *users)
+
+</a>
+</h3>
+<p>
+Give Op to user in channel <a href="User.html">User</a> can be a nick or <a
+href="User.html">IRC::User</a>, either one or an array.
+</p>
+
+<p class="source_link" id="M000022-show-link"><a onclick="toggle('M000022-source'); toggleText('M000022-link'); return false;" href="#" id="M000022-link">Show source...</a></p><div class="source" id="M000022-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 355</span>
+355:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_op</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">users</span>)
+356:         <span class="ruby-identifier">send_multiple_mode</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-value str">'+'</span>, <span class="ruby-value str">'o'</span>, <span class="ruby-identifier">users</span>)
+357:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000015"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000015'>
+
+
+send_part
+
+(reason=nil, *channels)
+
+</a>
+</h3>
+<p>
+part specified channels returns the channels parted from.
+</p>
+
+<p class="source_link" id="M000015-show-link"><a onclick="toggle('M000015-source'); toggleText('M000015-link'); return false;" href="#" id="M000015-link">Show source...</a></p><div class="source" id="M000015-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 304</span>
+304:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_part</span>(<span class="ruby-identifier">reason</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">channels</span>)
+305:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">empty?</span>
+306:           <span class="ruby-identifier">channels</span> = [<span class="ruby-identifier">reason</span>]
+307:           <span class="ruby-identifier">reason</span>   = <span class="ruby-keyword kw">nil</span>
+308:         <span class="ruby-keyword kw">end</span>
+309:         <span class="ruby-identifier">reason</span> <span class="ruby-operator">||=</span> <span class="ruby-value str">&quot;leaving&quot;</span>
+310: 
+311:         <span class="ruby-comment cmt"># some servers still can't process lists of channels in part</span>
+312:         <span class="ruby-identifier">channels</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">channel</span><span class="ruby-operator">|</span>
+313:           <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;PART #{channel} #{reason}&quot;</span>)
+314:         }
+315:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000013"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000013'>
+
+
+send_pong
+
+(*args)
+
+</a>
+</h3>
+<p>
+send a pong
+</p>
+
+<p class="source_link" id="M000013-show-link"><a onclick="toggle('M000013-source'); toggleText('M000013-link'); return false;" href="#" id="M000013-link">Show source...</a></p><div class="source" id="M000013-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 275</span>
+275:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_pong</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+276:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword kw">then</span>
+277:           <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-value str">&quot;PONG&quot;</span>)
+278:         <span class="ruby-keyword kw">else</span>
+279:           <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;PONG #{args.join(' ')}&quot;</span>)
+280:         <span class="ruby-keyword kw">end</span>
+281:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000010"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000010'>
+
+
+send_privmsg
+
+(message, *recipients)
+
+</a>
+</h3>
+<p>
+sends a privmsg to given user or channel (or multiple) messages containing
+newline or exceeding @limit[:message_length] are automatically splitted
+into multiple messages.
+</p>
+
+<p class="source_link" id="M000010-show-link"><a onclick="toggle('M000010-source'); toggleText('M000010-link'); return false;" href="#" id="M000010-link">Show source...</a></p><div class="source" id="M000010-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 245</span>
+245:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_privmsg</span>(<span class="ruby-identifier">message</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">recipients</span>)
+246:         <span class="ruby-identifier">normalize_message</span>(<span class="ruby-identifier">message</span>).<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">message</span><span class="ruby-operator">|</span>
+247:           <span class="ruby-identifier">recipients</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">recipient</span><span class="ruby-operator">|</span>
+248:             <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;PRIVMSG #{recipient} :#{message}&quot;</span>)
+249:           }
+250:         }
+251:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000030"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000030'>
+
+
+send_quit
+
+(reason=&quot;leaving&quot;)
+
+</a>
+</h3>
+<p>
+send the <a href="Socket.html#M000031">quit</a> message to the server
+</p>
+
+<p class="source_link" id="M000030-show-link"><a onclick="toggle('M000030-source'); toggleText('M000030-link'); return false;" href="#" id="M000030-link">Show source...</a></p><div class="source" id="M000030-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 398</span>
+398:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_quit</span>(<span class="ruby-identifier">reason</span>=<span class="ruby-value str">&quot;leaving&quot;</span>)
+399:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;QUIT :#{reason}&quot;</span>)
+400:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000027"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000027'>
+
+
+send_unban
+
+(channel, *masks)
+
+</a>
+</h3>
+<p>
+Remove ban in channel to mask
+</p>
+
+<p class="source_link" id="M000027-show-link"><a onclick="toggle('M000027-source'); toggleText('M000027-link'); return false;" href="#" id="M000027-link">Show source...</a></p><div class="source" id="M000027-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 383</span>
+383:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_unban</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">masks</span>)
+384:         <span class="ruby-identifier">send_multiple_mode</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-value str">'-'</span>, <span class="ruby-value str">'b'</span>, <span class="ruby-identifier">masks</span>)
+385:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000024"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000024'>
+
+
+send_voice
+
+(channel, *users)
+
+</a>
+</h3>
+<p>
+Give voice to user in channel <a href="User.html">User</a> can be a nick or
+<a href="User.html">IRC::User</a>, either one or an array.
+</p>
+
+<p class="source_link" id="M000024-show-link"><a onclick="toggle('M000024-source'); toggleText('M000024-link'); return false;" href="#" id="M000024-link">Show source...</a></p><div class="source" id="M000024-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 367</span>
+367:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_voice</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">users</span>)
+368:         <span class="ruby-identifier">send_multiple_mode</span>(<span class="ruby-identifier">channel</span>, <span class="ruby-value str">'+'</span>, <span class="ruby-value str">'v'</span>, <span class="ruby-identifier">users</span>)
+369:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000028"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000028'>
+
+
+send_who
+
+(channel)
+
+</a>
+</h3>
+<p>
+Send a &quot;who&quot; to channel
+</p>
+
+<p class="source_link" id="M000028-show-link"><a onclick="toggle('M000028-source'); toggleText('M000028-link'); return false;" href="#" id="M000028-link">Show source...</a></p><div class="source" id="M000028-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 388</span>
+388:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_who</span>(<span class="ruby-identifier">channel</span>)
+389:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;WHO #{channel}&quot;</span>)
+390:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000029"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000029'>
+
+
+send_whois
+
+(nick)
+
+</a>
+</h3>
+<p>
+Send a &quot;whois&quot; to server
+</p>
+
+<p class="source_link" id="M000029-show-link"><a onclick="toggle('M000029-source'); toggleText('M000029-link'); return false;" href="#" id="M000029-link">Show source...</a></p><div class="source" id="M000029-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 393</span>
+393:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_whois</span>(<span class="ruby-identifier">nick</span>)
+394:         <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-node">&quot;WHOIS #{nick}&quot;</span>)
+395:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000005"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000005'>
+
+
+write_with_eol
+
+(data)
+
+</a>
+</h3>
+<p>
+Send a raw message to irc, eol will be appended Use specialized methods
+instead if possible since they will releave you from several tasks like
+translating newlines, take care of overlength messages etc.
+</p>
+
+<p class="source_link" id="M000005-show-link"><a onclick="toggle('M000005-source'); toggleText('M000005-link'); return false;" href="#" id="M000005-link">Show source...</a></p><div class="source" id="M000005-source"><pre>     <span class="ruby-comment cmt"># File lib/silverplatter/irc/socket.rb, line 170</span>
+170:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_with_eol</span>(<span class="ruby-identifier">data</span>)
+171:         <span class="ruby-ivar">@mutex</span>.<span class="ruby-identifier">synchronize</span> {
+172:           <span class="ruby-identifier">warn</span>(<span class="ruby-node">&quot;Raw too long (#{data.length} instead of #{@limit[:raw_length]})&quot;</span>) <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">data</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@limit</span>[<span class="ruby-identifier">:raw_length</span>])
+173:           <span class="ruby-identifier">now</span>  = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+174:     
+175:           <span class="ruby-comment cmt"># keep delay between single (bursted) messages</span>
+176:           <span class="ruby-identifier">sleeptime</span> = <span class="ruby-ivar">@limit</span>[<span class="ruby-identifier">:send_delay</span>]<span class="ruby-operator">-</span>(<span class="ruby-identifier">now</span><span class="ruby-operator">-</span><span class="ruby-ivar">@last_sent</span>)
+177:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sleeptime</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">then</span>
+178:             <span class="ruby-identifier">sleep</span>(<span class="ruby-identifier">sleeptime</span>)
+179:             <span class="ruby-identifier">now</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">sleeptime</span>
+180:           <span class="ruby-keyword kw">end</span>
+181:           
+182:           <span class="ruby-comment cmt"># keep delay after a burst (1)</span>
+183:           <span class="ruby-keyword kw">if</span> (<span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:burst</span>] <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@limit</span>[<span class="ruby-identifier">:burst</span>]) <span class="ruby-keyword kw">then</span>
+184:             <span class="ruby-identifier">sleeptime</span> = <span class="ruby-ivar">@limit</span>[<span class="ruby-identifier">:burst_delay</span>]<span class="ruby-operator">-</span>(<span class="ruby-identifier">now</span><span class="ruby-operator">-</span><span class="ruby-ivar">@last_sent</span>)
+185:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sleeptime</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">then</span>
+186:               <span class="ruby-identifier">sleep</span>(<span class="ruby-identifier">sleeptime</span>)
+187:               <span class="ruby-identifier">now</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">sleeptime</span>
+188:             <span class="ruby-keyword kw">end</span>
+189:             <span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:burst</span>]  = <span class="ruby-value">0</span>
+190:           <span class="ruby-keyword kw">end</span>
+191:     
+192:           <span class="ruby-comment cmt"># keep delay after a burst (2)</span>
+193:           <span class="ruby-keyword kw">if</span> (<span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:burst2</span>] <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@limit</span>[<span class="ruby-identifier">:burst2</span>]) <span class="ruby-keyword kw">then</span>
+194:             <span class="ruby-identifier">sleeptime</span> = <span class="ruby-ivar">@limit</span>[<span class="ruby-identifier">:burst2_delay</span>]<span class="ruby-operator">-</span>(<span class="ruby-identifier">now</span><span class="ruby-operator">-</span><span class="ruby-ivar">@last_sent</span>)
+195:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sleeptime</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">then</span>
+196:               <span class="ruby-identifier">sleep</span>(<span class="ruby-identifier">sleeptime</span>)
+197:               <span class="ruby-identifier">now</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">sleeptime</span>
+198:             <span class="ruby-keyword kw">end</span>
+199:             <span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:burst2</span>] = <span class="ruby-value">0</span>
+200:           <span class="ruby-keyword kw">end</span>
+201:     
+202:           <span class="ruby-comment cmt"># send data and update data</span>
+203:           <span class="ruby-ivar">@last_sent</span>  = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">new</span>
+204:           <span class="ruby-identifier">data</span>       <span class="ruby-operator">+=</span> <span class="ruby-ivar">@eol</span>
+205:           <span class="ruby-ivar">@socket</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">data</span>)
+206:           <span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:burst</span>]      <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+207:           <span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:burst2</span>]     <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+208:           <span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:sent_lines</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+209:           <span class="ruby-ivar">@count</span>[<span class="ruby-identifier">:sent_bytes</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">length</span>
+210:           <span class="ruby-ivar">@log_out</span>.<span class="ruby-identifier">puts</span>(<span class="ruby-identifier">data</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@log_out</span>
+211:         }
+212:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">IOError</span>
+213:         <span class="ruby-identifier">error</span>(<span class="ruby-node">&quot;Writing #{data.inspect} failed&quot;</span>)
+214:         <span class="ruby-identifier">raise</span>
+215:       <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+
+
+
+
+</div><div class="clear" id="footer">Generated on Mar 9, 2008 / Allison 2 &copy; 2007 <a href="http://cloudbur.st">Cloudburst, LLC</a></div></div></body></html>

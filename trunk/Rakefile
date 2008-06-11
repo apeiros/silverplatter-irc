@@ -1,0 +1,18 @@
+# Look in the tasks/setup.rb file for the various options that can be
+# configured in this Rakefile. The .rake files in the tasks directory
+# are where the options are used.
+
+load 'rake/setup.rb'
+
+ensure_in_path 'lib'
+require 'silverplatter/irc'
+
+task :default => 'spec:run'
+
+PROJ.name       = 'silverplatter-irc'
+PROJ.url        = 'http://silverplatter.rubyforge.org/irc'
+PROJ.rf.project = 'silverplatter'
+PROJ.rf.path    = 'silverplatter/irc'
+
+
+PROJ.spec.opts << '--color'

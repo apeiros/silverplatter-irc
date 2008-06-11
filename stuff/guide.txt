@@ -1,0 +1,17 @@
+GUIDE
+- DONT:
+	send_command
+	subscribe_for_reply
+	-> the reply might come before your subscription is done and you miss it
+- DO:
+	a)
+		subscribe_for_reply
+		send_command
+	b)
+		prepare do
+			send_command
+		end.wait_for replay
+
+CAVEATS
+-If you use send_quit directly instead of quit, the on_disconnect will receive a :disconnect
+ instead of a :quit.
