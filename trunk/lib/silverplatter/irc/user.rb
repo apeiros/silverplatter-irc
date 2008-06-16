@@ -92,7 +92,7 @@ module SilverPlatter
 
 				set_compare
 
-				@channels   = Hash.new(NoFlags) # IRC::Channel => flags
+				@channels   = Hash.new(NoModes) # IRC::Channel => flags
 				@myself     = false
 				@away       = nil
 			end

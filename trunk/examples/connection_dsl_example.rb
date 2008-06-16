@@ -30,11 +30,12 @@ client = IRC::Connection.new do
 	reconnect_delay 60
 
 	# callbacks
-	on_nick_err { |client, connection, previous|
+	on_nick_error { |client, connection, previous|
 		newnick = previous.dup
 		newnick.sub!(/^\[(\d+)\]/) { "[#{$1.to_i+1}]" } || newnick.sub!(/^/, '[1]')
 		connection.nick(newnick)
 	}
+
 	on_disconnect { |client, connection, reason|
 		puts "Disconnected due to #{reason}"
 		IRC::Client::DefaultProc::OnDisconnect.call(client, connection, reason)
@@ -42,13 +43,22 @@ client = IRC::Connection.new do
 end
 
 client.connect # redundant if you call client.login and nothing between
+Thread.new {
+	client.read_loop
+	puts "Read loop ended"
+}
 client.login
+client.join("#butler-test")
+#client.privmsg "Hello world!", "
 client.run do |message|
 	case message.symbol
 		when :PRIVMSG
 			# do something with it
+			puts message
 		when :PING
 			# you don't have to handle ping as ping is the only command IRC::Client will automatically
 			# react on by sending a PONG back
+		else
+			p [:unhandled, message]
 	end
 end

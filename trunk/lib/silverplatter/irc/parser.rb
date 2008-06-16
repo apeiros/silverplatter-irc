@@ -6,6 +6,7 @@
 
 
 
+require 'ruby/ostruct'
 require 'silverplatter/irc/channellist'
 require 'silverplatter/irc/hostmask'
 require 'silverplatter/irc/message'
@@ -83,7 +84,7 @@ module SilverPlatter
 			# The commands this parser knows about
 			attr_reader :commands
 			
-			# The expressions this parser knows about
+			# The (regular) expressions this parser knows about
 			attr_reader :expression
 			
 			# The isupport as given by the server (or defaults otherwise)
@@ -99,16 +100,16 @@ module SilverPlatter
 				@isupport     = OpenStruct.new(
 					:nicklen         => 8,
 					:channellen      => 50,
-					:prefixes        => "@+"
-					:channelprefixes => "&\#!+" # FIXME lookup the correct name, adapt expressions accordingly
+					:prefixes        => "@+",
+					:channelprefixes => "\#+&!" # FIXME lookup the correct name, adapt expressions accordingly
 				)
 				reset
 			end
 
 			# Reset the parser using the provided isupport data (if set to nil, it will keep the current
 			# isupport data).
-			def reset(isupport=nil)
-				@isupport   = OpenStruct.new(isupport) if isupport
+			def reset(with_isupport=nil)
+				@isupport   = OpenStruct.new(with_isupport) if with_isupport
 				@expression = OpenStruct.new
 				@commands   = Hash.new { |h,k| raise IndexError, "Unknown command #{k}" }
 				
@@ -123,7 +124,7 @@ module SilverPlatter
 					expressions << exp if File.exist?(exp)
 					commands    << com if File.exist?(com)
 				}
-
+				
 				# load the expressions
 				# expression loading happens twice, once in order as given to enable definition based on other expressions,
 				# once in reverse to redefine those that are defined by others that were updated in a following file
@@ -131,16 +132,16 @@ module SilverPlatter
 				# that you have to redefine all altered expressions too, the files are loaded in reverse after so the patterns
 				# depending on nick are redefined accordingly. patterns that have a newer definition are ignored.
 				# takes precedence and less specific ones can be ignored
-				exp.each { |expfile|
+				expressions.each { |expfile|
 					instance_eval(File.read(expfile), expfile)
 				}
 				@loading[:firstrun] = false
-				exp.reverse_each { |expfile|
+				expressions.reverse_each { |expfile|
 					instance_eval(File.read(expfile), expfile)
 				}
 				
 				# load the commands
-				com.each { |comfile|
+				commands.each { |comfile|
 					instance_eval(File.read(comfile), comfile)
 				}
 				@loading = nil

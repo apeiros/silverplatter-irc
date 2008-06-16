@@ -45,7 +45,6 @@ module SilverPlatter
 			def casemap(string)
 				string.tr(RFC1459_Upper, RFC1459_Lower)
 			end
-			module_function :casemap
 		end
 	end
 end

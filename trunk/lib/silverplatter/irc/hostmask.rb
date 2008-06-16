@@ -12,8 +12,6 @@ require 'silverplatter/irc/rfc1459_casemapping.rb'
 
 module SilverPlatter
 	module IRC
-		class User; end # :nodoc:
-
 
 		# == Indexing
 		# * Author:   Stefan Rusterholz

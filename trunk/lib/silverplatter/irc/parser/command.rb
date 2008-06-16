@@ -10,7 +10,7 @@ require 'log/comfort'
 
 
 
-class Butler
+module SilverPlatter
 	module IRC
 		class Parser
 

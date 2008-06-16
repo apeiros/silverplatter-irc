@@ -46,6 +46,11 @@ module SilverPlatter
 				@__config__[:server] = val
 			end
 
+			# Password to send the server upon connect
+			def serverpass(val)
+				@__config__[:serverpass] = val
+			end
+
 			# Use this port
 			def port(val)
 				@__config__[:port] = val

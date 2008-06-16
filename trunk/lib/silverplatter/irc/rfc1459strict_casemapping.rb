@@ -20,7 +20,6 @@ module SilverPlatter
 		# which lowercases a string according to strict-rfc1459
 		# 
 		# == Synopsis
-		#   RFC1459Strict_CaseMapping.casemap(string)
 		#   include RFC1459Strict_CaseMapping
 		#   casemap(string)
 		# 
@@ -45,7 +44,6 @@ module SilverPlatter
 			def casemap(string)
 				string.tr(RFC1459_Upper, RFC1459_Lower)
 			end
-			module_function :casemap
 		end
 	end
 end

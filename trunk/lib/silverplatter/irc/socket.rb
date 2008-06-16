@@ -16,11 +16,8 @@ require 'thread'
 module SilverPlatter
 	module IRC
 	
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net>
-		# * Revision: $Revision: 118 $
-		# * Date:     $Date: 2008-03-08 21:29:44 +0100 (Sat, 08 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# ==Description
 		# SilverPlatter::IRC::Socket is a TCPSocket, retrofitted for communication
@@ -58,7 +55,8 @@ module SilverPlatter
 			VERSION	= "1.0.0"
 
 			include Log::Comfort
-			
+			include RFC1459_CaseMapping
+
 			# server the instance is linked with
 			attr_reader :server
 
@@ -89,6 +87,13 @@ module SilverPlatter
 				:eol  => "\r\n".freeze,
 				:host => nil,
 			}
+			
+			# Fix evil behaviour of IO::new (complains if a block is given)
+			def self.new(*a, &b) # :nodoc:
+				obj = allocate
+				obj.send(:initialize, *a, &b)
+				obj
+			end
 			
 			# Initialize properties, doesn't connect automatically
 			# options:
@@ -132,7 +137,7 @@ module SilverPlatter
 			# connects to the server
 			def connect
 				info("Connecting to #{@server} on port #{@port} from #{@host || '<default>'}")
-				@socket	= TCPSocket.open(@server, @port) #, @host)
+				@socket	= TCPSocket.open(@server, @port, @host)
 				info("Successfully connected")
 			rescue ArgumentError => error
 				if @host then
