@@ -2,9 +2,11 @@
 libdir = File.expand_path(File.dirname(__FILE__)+'/../lib')
 $LOAD_PATH.unshift libdir if File.exist?(libdir)
 
+# Require the necessary libraries
 require 'rubygems'
 require 'silverplatter/irc/socket'
 
+# Who wants to type that everytime? :)
 include SilverPlatter
 
 client = IRC::Connection.new do

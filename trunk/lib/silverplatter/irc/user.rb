@@ -223,24 +223,12 @@ module SilverPlatter
 				self
 			end
 
-<<<<<<< .mine
 			# Change the visibility of this user, returns whether the status has changed or not
 			def change_visibility(new_visibility)
 				changed     = (@visibility != new_visibility)
 				@last_seen  = Time.now
 				@visibility = new_visibility
 				changed
-=======
-			# Change the status of this user, returns whether the status has changed or not
-			def change_status(new_status)
-				raise ArgumentError, "Invalid new status #{new_status.inspect}, see User::Status" unless Status.include?(new_status)
-				@offline_since = @out_of_sight_since = nil
-				case new_status
-					when :offline then @offline_since = Time.now
-					when :out_of_sight then @out_of_sight_since = Time.now
-				end
-				@status != (@status = new_status) # yes, this actually works (at least in 1.8.6)
->>>>>>> .r149
 			end
 			
 			# Set the last_seen time to now

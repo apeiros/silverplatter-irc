@@ -62,6 +62,18 @@ module SilverPlatter
 		#
 		class Connection < Socket
 
+			# This is the proc that is used per default for &on_nick_err in Connection#login
+			RaiseOnNickErr = proc { |connection, original_nick, current_nick, tries|
+				raise "Nick #{current_nick} is already in use"
+			}
+			
+			# This proc can be used as &on_nick_err with Connection#login
+			# It will prefix the nick with [<digit] with <digit> growing by 1 per try.
+			# E.g. first try is 'butler', then '[1]butler', '[2]butler' and so on.
+			IncrementOnNickErr = proc { |connection, original_nick, current_nick, tries|
+				"[#{tries}]#{original_nick}"
+			}
+
 			# A hash with all options available in addition to SilverPlatter::IRC::Socket::DefaultOptions
 			DefaultOptions = {
 				:port              => 6667,
@@ -311,19 +323,18 @@ module SilverPlatter
 			# block receives the parameters: self, originalnick, lastnick, number. Nick
 			# represents the nick that was rejected and changes the number of changes so far.
 			# The block must return the new nick to use.
-			def login(nick=nil, user=nil, real=nil, serverpass=nil)
+			def login(nick=nil, user=nil, real=nil, serverpass=nil, &on_nick_err)
 				nick         ||= @default[:nick]
 				user         ||= @default[:user]
 				real         ||= @default[:real]
+				on_nick_err  ||= RaiseOnNickErr
 				nick_change    = nil
 				number         = 0
 				@myself        = User.new(nick, user, nil, real, self)
 				@myself.myself = true
 				nick_change    = subscribe(:ERR_NICKNAMEINUSE) {
-					@myself.nick block_given? ?
-						yield(self, nick, @myself.nick, number+=1) :
-						"[#{number+=1}]#{nick}"
-					send_nick(change = @myself.nick)
+					@myself.nick = on_nick_err.call(self, nick, @myself.nick, number+=1) # get new nick
+					send_nick(@myself.nick)
 				}
 				prepare do
 					super(nick, user, real, serverpass)
