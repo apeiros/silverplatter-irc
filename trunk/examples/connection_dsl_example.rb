@@ -4,7 +4,7 @@ $LOAD_PATH.unshift libdir if File.exist?(libdir)
 
 # Require the necessary libraries
 require 'rubygems'
-require 'silverplatter/irc/socket'
+require 'silverplatter/irc/connection'
 
 # Who wants to type that everytime? :)
 include SilverPlatter

@@ -11,13 +11,13 @@ irc = IRC::Socket.new("irc.freenode.org", :port => 6667)
 irc.connect
 irc.login('sp_irc_socket', 'SilverPlatter', 'SilverPlatter-IRC')
 until irc.read =~ /\A\S*\s+376\s+/; end
-irc.send_join("#butler")
+irc.send_join("#butler-test")
 sleep 1
-irc.send_privmsg("Hi all of you in #butler!", "#butler")
+irc.send_privmsg("Hi all of you in #butler-test!", "#butler-test")
 sleep 1
-irc.send_part("Part of the example code", "#butler")
+irc.send_part("Part of the example code", "#butler-test")
 sleep 1
-irc.send_join("#butler")
+irc.send_join("#butler-test")
 sleep 1
 irc.quit("Example done")
 puts "Finished"

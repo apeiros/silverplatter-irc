@@ -148,6 +148,8 @@ module SilverPlatter
 					:join => options.delete(:join),
 				}
 
+				@mutex_whois         = Mutex.new
+
 				@channel_encoding.merge(options[:channel_encoding]) if options[:channel_encoding]
 				options.delete(:channel_encoding)
 
@@ -233,9 +235,9 @@ module SilverPlatter
 
 			# Should only be used by the Parser
 			# Updates the information of a User
-			def update_user(user, nick, user, host, real) # nicklist, userlist
+			def update_user(user_obj, nick, user, host, real) # nicklist, userlist
 				@users.synchronize {
-					update_user_unsynchronized(user, nick, user, host, real)
+					update_user_unsynchronized(user_obj, nick, user, host, real)
 				}
 				self
 			end
@@ -387,7 +389,7 @@ module SilverPlatter
 				listener.unsubscribe
 			end
 			
-			# prepare do stuff end.wait_for :SYMBOL is the same as
+			# prepare do preparation_stuff end.wait_for :SYMBOL is the same as
 			# wait_for :SYMBOL, :prepare => proc do stuff end
 			# you can alternatively supply a callable object as first argument.
 			def prepare(callback=nil, &block)
@@ -417,41 +419,44 @@ module SilverPlatter
 				whois	= Whois.new
 				whois.exists = true
 
-				subscriptions = [
-					subscribe_once(:RPL_WHOISUSER, 10) { |l,m|
-						whois.nick       = message.nick
-						whois.user       = message.user
-						whois.host       = message.host
-						whois.real       = message.real
-					},
-					subscribe_once(:RPL_WHOISSERVER, 10) { |l,m|
-						# FIXME, why is there no code?
-					},
-					subscribe_once(:RPL_WHOISIDLE, 10) { |l,m|
-						whois.signon	   = message.signon_time
-						whois.idle		   = message.seconds_idle
-					},
-					subscribe_once(:RPL_UNIQOPIS, 10) { |l,m|
-						# FIXME, why is there no code?
-					},
-					subscribe_once(:RPL_WHOISCHANNELS, 10) { |l,m|
-						whois.channels   = message.channels
-					},
-					subscribe_once(:RPL_IDENTIFIED_TO_SERVICES, 10) { |l,m|
-						# FIXME, why is there no code?
-					},
-					subscribe_once(:ERR_NOSUCHNICK, 10) { |l,m|
-						whois.exists = false
-					},
-					subscribe_once(:RPL_REGISTERED_INFO, 10) { |l,m|
-						whois.registered = true
-					}
-				]
+				@mutex_whois.synchronize do
+					subscriptions = [
+						subscribe_once(:RPL_WHOISUSER, 10) { |l,m|
+							whois.nick       = message.nick
+							whois.user       = message.user
+							whois.host       = message.host
+							whois.real       = message.real
+						},
+						subscribe_once(:RPL_WHOISSERVER, 10) { |l,m|
+							# FIXME, why is there no code?
+						},
+						subscribe_once(:RPL_WHOISIDLE, 10) { |l,m|
+							whois.signon	   = message.signon_time
+							whois.idle		   = message.seconds_idle
+						},
+						subscribe_once(:RPL_UNIQOPIS, 10) { |l,m|
+							# FIXME, why is there no code?
+						},
+						subscribe_once(:RPL_WHOISCHANNELS, 10) { |l,m|
+							whois.channels   = message.channels
+						},
+						subscribe_once(:RPL_IDENTIFIED_TO_SERVICES, 10) { |l,m|
+							# FIXME, why is there no code?
+						},
+						subscribe_once(:ERR_NOSUCHNICK, 10) { |l,m|
+							whois.exists = false
+						},
+						subscribe_once(:RPL_REGISTERED_INFO, 10) { |l,m|
+							whois.registered = true
+						}
+					]
+	
+					prepare do
+						@irc.whois(nick)
+					end.wait_for(:RPL_ENDOFWHOIS)
+					subscriptions.each { |listener| listener.unsubscribe }
+				end
 
-				@irc.whois(nick)
-
-				wait_for(:RPL_ENDOFWHOIS)
-				subscriptions.each { |listener| listener.unsubscribe }
 				whois
 			end
 
@@ -530,11 +535,11 @@ module SilverPlatter
 				end
 			end
 			
-			def update_user_unsynchronized(user, nick, user, host, real) # nicklist, userlist
-				old_compare = user.compare
-				user.update(nick, user, host, real)
-				if old_compare != user.compare then
-					@nicknames[user.compare] = user
+			def update_user_unsynchronized(user_obj, nick, user, host, real) # nicklist, userlist
+				old_compare = user_obj.compare
+				user_obj.update(nick, user, host, real)
+				if old_compare != user_obj.compare then
+					@nicknames[user_obj.compare] = user_obj
 					@nicknames.delete(old_compare)
 				end
 			end
