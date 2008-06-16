@@ -175,7 +175,7 @@ module SilverPlatter
 			# information set will be == to any other User.
 			def ==(other)
 				other.kind_of?(User) && (
-					(!(@server && other.server) || @compare == other.compare) &&
+					(!(@connection && other.connection) || @connection == other.connection) &&
 					(!(@nick && other.nick)     || @compare == other.compare) &&
 					(!(@user && other.user)     || @user == other.user) &&
 					(!(@host && other.host)     || @host == other.host) &&
@@ -216,7 +216,11 @@ module SilverPlatter
 			# in case the server alters parts about 'myself'
 			# examples: some ircd's change the 'user' part (prefix it), some
 			# ircd's allow hiding the host, ...
-			def update(user=nil, host=nil, real=nil) #:nodoc:
+			def update(nick=nil, user=nil, host=nil, real=nil) #:nodoc:
+				if nick then
+					@nick = nick.freeze
+					set_compare
+				end
 				@user = user.freeze if user
 				@host = host.freeze if host
 				@real = real.freeze if real
@@ -248,13 +252,13 @@ module SilverPlatter
 
 			# This method is intended to be used by IRC::Parser or IRC::Client
 			# add a channel to the user (should only be used by SilverPlatter::IRC::Parser)
-			def add_channel(channel) #:nodoc:
+			def add_channel(channel, reason=nil) #:nodoc:
 				raise TypeError, "Channel required, #{channel.class} given" unless Channel === channel
 				@channels[channel] = "" unless @channels.has_key?(channel)
 			end
 	
 			# remove a channel from the user (should only be used by SilverPlatter::IRC::Parser)
-			def delete_channel(channel) #:nodoc:
+			def delete_channel(channel, reason=nil) #:nodoc:
 				raise TypeError, "Channel required, #{channel.class} given" unless Channel === channel
 				@channels.delete(channel)
 			end

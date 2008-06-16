@@ -28,7 +28,7 @@ alter("005", :ISUPPORT) { |connection, message|
 	connection.isupport.__hash__.each { |key, value|
 		isupport[key] = value
 	}
-	isupport[:prefixes] = isupport.prefix.values.join('') if isupport.has_key?(:prefix)
+	isupport[:prefixes] = isupport[:prefix].values.join('') if isupport.has_key?(:prefix)
 
 	connection.use_casemapping(hash[:casemapping]) if hash[:casemapping]
 	connection.parser.reset(isupport)

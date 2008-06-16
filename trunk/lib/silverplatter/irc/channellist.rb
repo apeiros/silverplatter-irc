@@ -76,6 +76,11 @@ module SilverPlatter
 				@lock       = Mutex.new
 				@connection = connection
 			end
+			
+			# Delegates to this lists lock.
+			def synchronize(*args, &block)
+				@lock.synchronize(*args, &block)
+			end
 
 			# Get the value associated with a channel
 			def [](channel)
@@ -212,7 +217,7 @@ module SilverPlatter
 			end
 
 			def inspect # :nodoc:
-				"#<%s:0x%x %s %s (%d users)" %  [self.class, object_id, @name, @connection, size]
+				"#<%s:0x%x %s (%d users)" %  [self.class, object_id, @connection, size]
 			end
 
 			private

@@ -94,7 +94,7 @@ module SilverPlatter
 			attr_reader :data
 			
 			
-			def initialize(symbol, raw, prefix, command, params, connection=nil) # :nodoc:
+			def initialize(symbol, raw, prefix, command, params, fields, connection=nil) # :nodoc:
 				@connection = connection
 	
 				#raw message
@@ -113,7 +113,7 @@ module SilverPlatter
 				@identified = nil
 	
 				#specific data
-				@data       = {}
+				@data       = fields
 			end
 	
 			def initialize_copy(original) #:nodoc:

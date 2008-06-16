@@ -200,21 +200,21 @@ add("352", :RPL_WHOREPLY,
 			[:recipient, :channel, :user, :host, :server, :nick, :status, :flags, :hopcount, :real]) { |connection, message, fields|
 #"for", "channel", "user", "host", "server", "nick", "status", "flags", "hopcount", "real"
 	user	= connection.create_user(message[:nick])
-	connection.update_user(user, message[:user], message[:host], message[:real])
+	connection.update_user(message[:nick], user, message[:user], message[:host], message[:real])
 	user.away	= message[:status] == "G"
 	user.add_channel(message.channel, :joined)
 	message.channel.add_user(user, :joined)
 	user.add_flags(message.channel, message[:flags].to_flags)
 }
 add("353", :RPL_NAMEREPLY, /(\S+) [=@*] (\S+) :(.*)/, [:recipient, :channel, :users]) { |connection, message, fields|
-	users            = message[:users]
-	message[:users]  = []
+	users            = fields[:users]
 	delete_who_flags = connection.parser.expression.delete_who_flags
-	users.split(/ /).each { |nick|
+
+	message[:users] = users.split(/ /).map { |nick|
 		user	= connection.create_user(nick.sub(delete_who_flags, ''))
-		message[:users]	<< user
 		user.add_channel(message.channel, :joined)
 		message.channel.add_user(user, :joined)
+		user
 	}
 }
 add("361", :RPL_KILLDONE)

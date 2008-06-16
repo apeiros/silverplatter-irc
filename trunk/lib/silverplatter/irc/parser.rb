@@ -238,8 +238,8 @@ module SilverPlatter
 				processor = @commands[command.downcase]
 				symbol    = processor.symbol
 				fields    = {}
-				if matcher = processor.matcher then
-					if match = matcher.match(params) then
+				if regex = processor.regex then
+					if match = regex.match(params) then
 						processor.mapping.zip(match.captures) { |name, value| fields[name] = value }
 					else
 						raise MatchingFailure.new(symbol, params)
@@ -257,9 +257,9 @@ module SilverPlatter
 					channel   = @connection.create_channel(channel) if channel
 				end
 				
-				klass     = Message.const_get(symbol) || Message
-				message	  = klass.new(@connection, symbol, raw, prefix, command, params, fields)
-				processor.processor.call(connection, message)
+				klass     = Message.const_defined?(symbol) ? Message.const_get(symbol) : Message
+				message	  = klass.new(symbol, raw, prefix, command, params, fields, @connection)
+				processor.processor.call(connection, message, fields) if processor.processor
 
 				message
 			rescue IndexError

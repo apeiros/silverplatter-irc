@@ -42,10 +42,16 @@ client = IRC::Connection.new do
 	}
 end
 
+$VERBOSE = true
+Thread.abort_on_exception = true
 client.connect # redundant if you call client.login and nothing between
 Thread.new {
-	client.read_loop
-	puts "Read loop ended"
+	begin
+		client.run
+		puts "Read loop ended"
+	rescue Exception => e
+		puts e, *e.backtrace
+	end
 }
 client.login
 client.join("#butler-test")
@@ -62,3 +68,4 @@ client.run do |message|
 			p [:unhandled, message]
 	end
 end
+sleep 3

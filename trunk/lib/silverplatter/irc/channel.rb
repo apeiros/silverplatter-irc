@@ -6,6 +6,7 @@
 
 
 
+require 'silverplatter/irc/channelmodes'
 require 'silverplatter/irc/rfc1459_casemapping'
 require 'silverplatter/irc/rfc1459_usermodes'
 require 'silverplatter/irc/rfc1459_channelmodes'

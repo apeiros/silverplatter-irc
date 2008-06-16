@@ -7,6 +7,7 @@
 
 
 require 'silverplatter/irc/ascii_casemapping'
+require 'silverplatter/irc/channel'
 require 'silverplatter/irc/channellist'
 require 'silverplatter/irc/connectiondsl'
 require 'silverplatter/irc/listener'
@@ -17,6 +18,7 @@ require 'silverplatter/irc/rfc1459strict_casemapping'
 require 'silverplatter/irc/socket'
 require 'silverplatter/irc/subscriptions'
 require 'silverplatter/irc/userlist'
+require 'silverplatter/irc/user'
 require 'silverplatter/irc/usermanager'
 require 'timeout'
 
@@ -159,6 +161,8 @@ module SilverPlatter
 				@ping_delay          = options.delete(:ping_delay)
 				@ping_loop           = nil
 				@myself              = nil
+				@run                 = []
+				@read_thread         = Thread.new {} # create a dead thread
 				@parser              = Parser.new(self, "rfc2812", "generic")
 				@default             = {
 					:serverpass => options.delete(:serverpass),
@@ -174,6 +178,8 @@ module SilverPlatter
 				options.delete(:channel_encoding)
 
 				super(nil, options)
+				
+				@read_thread.join
 			end
 			
 			# An OpenStruct containing all isupport values of the server (lowercased and symbolified)
@@ -276,8 +282,8 @@ module SilverPlatter
 				@channels.synchronize {
 					channel = (@channelnames[casemap(name)] ||= Channel.new(name, self))
 					@channels[channel] = true
+					channel
 				}
-				channel
 			end
 			
 			# Should only be used by the parser
@@ -506,12 +512,18 @@ module SilverPlatter
 						@subscriptions.each_for(message.symbol) { |listener|
 							listener.call(message)
 						}
-					rescue Interrupt, Terminate, Errno::EPIPE
+						@run.each { |run| run.call(message) }
+					rescue Interrupt, Errno::EPIPE
 						raise
 					rescue Exception => e
 						exception(e)
 					end
 				end
+			end
+			
+			def run(&block)
+				@run << block if block
+				@read_thread = Thread.new { read_loop } unless @read_thread.alive?
 			end
 
 			# This method is intended for developer use only, it will remove a user from
@@ -527,11 +539,17 @@ module SilverPlatter
 				end
 			end
 			
+			# See CAPAB-IDENTIFY in the ISUPPORT draft.
+			# FIXME comment
+			def msg_identify
+				@parser.msg_identify
+			end
+			
 			# Test whether a string is a valid channelname
 			# === Synopsis
 			#   connection.valid_channelname?("#silverplatter") # => true
 			def valid_channelname?(name)
-				name =~ @parser.expressions.channel
+				name =~ @parser.expression.channel
 			end
 			
 			# Test whether a string is a valid nickname (without prefixes)
@@ -542,7 +560,6 @@ module SilverPlatter
 				name =~ @parser.expressions.nick
 			end
 			
-			private
 			# Define which casemapping this connection uses
 			def use_casemapping(type)
 				case type
