@@ -259,6 +259,13 @@ module SilverPlatter
 				
 				klass     = Message.const_defined?(symbol) ? Message.const_get(symbol) : Message
 				message	  = klass.new(symbol, raw, prefix, command, params, fields, @connection)
+				message.instance_eval {
+					@from       = from
+					@recipient  = recipient
+					@channel    = channel
+					@text       = fields.delete(:text)
+					@identified = nil
+				}
 				processor.processor.call(connection, message, fields) if processor.processor
 
 				message

@@ -162,7 +162,7 @@ module SilverPlatter
 				@ping_loop           = nil
 				@myself              = nil
 				@run                 = []
-				@read_thread         = Thread.new {} # create a dead thread
+				@read_thread         = Thread.new {} # create a dead thread which can be tested for .alive?
 				@parser              = Parser.new(self, "rfc2812", "generic")
 				@default             = {
 					:serverpass => options.delete(:serverpass),

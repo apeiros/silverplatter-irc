@@ -207,7 +207,7 @@ module SilverPlatter
 			end
 			
 			def inspect #:nodoc:
-				fields = @data.select { |k,v| v }.sort.map { |k,v| "#{k}=#{v}" }.join(", ")
+				fields = @data.select { |k,v| v }.map { |k,v| "#{k}=#{v}" }.sort.join(", ")
 				comma  = fields.empty? ? "" : ", "
 				"#<%s:0x%x %s %s%s%s>" %  [
 					self.class,

@@ -271,6 +271,14 @@ module SilverPlatter
 				@channels[channel] = (current+flag).split.sort.join unless current.include?(flag)
 			end
 
+			# user.add_flags(@channels["#foo], "@+")
+			def add_flags(channel, flags) #:nodoc:
+				raise ArgumentError, "User #{self} is not listed in #{channel}" unless @channels.has_key?(channel)
+				#raise ArgumentError, "Invalid flag '#{flag}'" unless Flags.include?(flag)
+				current            = @channels[channel]
+				@channels[channel] = (current+flags).split.uniq.sort.join
+			end
+
 			# user.delete_flag(@channels["#foo], "@")
 			def delete_flag(channel, flag) #:nodoc:
 				raise ArgumentError, "User #{self} is not listed in #{channel}" unless @channels.has_key?(channel)
