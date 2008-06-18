@@ -542,8 +542,10 @@ module SilverPlatter
 			def run(&block)
 				if block then
 					read_loop(&block)
+				elsif @read_thread.alive? then
+					raise "Already running"
 				else
-					@read_thread = Thread.new { read_loop } unless @read_thread.alive?
+					@read_thread = Thread.new { read_loop }
 				end
 			end
 
