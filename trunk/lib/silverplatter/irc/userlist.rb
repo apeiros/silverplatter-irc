@@ -232,6 +232,7 @@ module SilverPlatter
 			def delete(user, reason=nil)
 				@lock.synchronize { @users.delete(user) }
 			end
+			alias delete_user delete
 			
 			# Delete a user by nick, the reason is passed on to observers
 			def delete_nick(nick, reason=nil)

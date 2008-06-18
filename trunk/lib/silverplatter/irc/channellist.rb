@@ -191,6 +191,7 @@ module SilverPlatter
 			def delete(channel, reason=nil)
 				@lock.synchronize { @channels.delete(channel) }
 			end
+			alias delete_channel delete
 
 			# Delete a channel by name, the reason is passed on to observers
 			def delete_name(name, reason=nil)
@@ -200,7 +201,7 @@ module SilverPlatter
 
 			# Delete a user from all channels in this list
 			def delete_user(user, reason=nil)
-				@channels.each_key { |user| user.delete_user(user, reason) }
+				@channels.each_key { |channel| channel.delete_user(user, reason) }
 			end
 
 			# Test if channellist is empty

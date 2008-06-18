@@ -79,8 +79,8 @@ add("privmsg", :PRIVMSG, /(\S+) :(.*)/, [:recipient, :text]) { |connection, mess
 }
 add("quit",    :QUIT,    /(.*)/, [:text]) { |connection, message, fields|
 	if message.from then
-		message.from.channels.delete_user(message.from, :quit)
-		connection.delete_user(message.from, :quit)
+		message.from.delete_user(message.from, :quit) # a user that quit is in no channel he was anymore
+		connection.delete_user(message.from, :quit)   # a user that is in no channel is unknown to the connection
 	end
 }
 add("topic",   :TOPIC, /(\S+) :(.*)/, [:channel, :text])

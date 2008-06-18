@@ -277,7 +277,7 @@ module SilverPlatter
 
 			# Should only be used by the Parser
 			# Deletes a user, returns whether a User has been actually deleted
-			def delete_user(user) # nicklist, userlist
+			def delete_user(user, reason=nil) # nicklist, userlist
 				@users.synchronize {
 					!!(@nicknames.delete(user.compare) || @users.delete(user))
 				}
@@ -295,7 +295,7 @@ module SilverPlatter
 			
 			# Should only be used by the parser
 			# Delete a channel, returns whether a channel has been actually deleted
-			def delete_channel(name) # namelist, channellist
+			def delete_channel(name, reason=nil) # namelist, channellist
 				@channels.synchronize {
 					!!(@channels.delete(channel) || @channelnames.delete(channel.compare))
 				}
