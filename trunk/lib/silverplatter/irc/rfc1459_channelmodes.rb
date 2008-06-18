@@ -9,11 +9,8 @@
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net>
-		# * Revision: $Revision: 110 $
-		# * Date:     $Date: 2008-03-06 12:02:56 +0100 (Thu, 06 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# SilverPlatter::IRC::RFC1459_ChannelModes provides constants containing

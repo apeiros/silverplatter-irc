@@ -13,11 +13,8 @@ require 'thread'
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net>
-		# * Revision: $Revision: 141 $
-		# * Date:     $Date: 2008-03-14 17:48:39 +0100 (Fri, 14 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# Subscriptions manages a set of listeners for a connection. It deals with subscribing,

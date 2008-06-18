@@ -19,11 +19,8 @@ require 'thread'
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net
-		# * Revision: $Revision: 109 $
-		# * Date:     $Date: 2008-03-06 11:59:38 +0100 (Thu, 06 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# Channel represents a Channel in the IRC network.

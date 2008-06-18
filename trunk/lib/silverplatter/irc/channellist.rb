@@ -14,11 +14,8 @@ require 'thread'
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net
-		# * Revision: $Revision: 139 $
-		# * Date:     $Date: 2008-03-14 17:47:29 +0100 (Fri, 14 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# ChannelList provides a convenient way to keep a list of channels with attached

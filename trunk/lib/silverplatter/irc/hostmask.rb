@@ -13,11 +13,8 @@ require 'silverplatter/irc/rfc1459_casemapping.rb'
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net>
-		# * Revision: $Revision: 109 $
-		# * Date:     $Date: 2008-03-06 11:59:38 +0100 (Thu, 06 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# SilverPlatter::IRC::Hostmask provides methods to see if hostmasks match.

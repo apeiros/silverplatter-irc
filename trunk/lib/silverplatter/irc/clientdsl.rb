@@ -9,11 +9,8 @@
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net>
-		# * Revision: $Revision: 115 $
-		# * Date:     $Date: 2008-03-08 21:24:59 +0100 (Sat, 08 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# Helper class used for SilverPlatter::IRC::Client#new's DSL.

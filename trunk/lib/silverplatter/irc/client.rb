@@ -13,11 +13,8 @@ require 'silverplatter/irc/connection'
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net>
-		# * Revision: $Revision: 109 $
-		# * Date:     $Date: 2008-03-06 11:59:38 +0100 (Thu, 06 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# IRC::Client represents a whole irc client, capable of multiple connections.
@@ -62,28 +59,35 @@ module SilverPlatter
 
 			def initialize
 				@connections = {}
+				@connections_noport = {}
 			end
 			
-			def subscribe(*args)
+			def subscribe(*args, &callback)
 				rv = {}
-				@connections.each { |key, con| rv[key] = con.subscribe(*args) }
+				@connections.each { |key, con| rv[key] = con.subscribe(*args, &callback) }
 				rv
 			end
 			
-			def subscribe_once(*args)
+			def subscribe_once(*args, &callback)
 				rv = {}
-				@connections.each { |key, con| rv[key] = con.subscribe_once(*args) }
+				@connections.each { |key, con| rv[key] = con.subscribe_once(*args, &callback) }
 				rv
 			end
 			
 			def connect_to(server, options=nil)
 				connection = Connection.new(server, options || EmptyHash)
 				@connections["#{connection.server}:#{connection.port}"] = connection
+				if @connections_noport.has_key?(connection.server) then
+					@connections_noport.delete(connection.server)
+				else
+					@connections_noport[connection.server] = connection
+				end
 			end
 			
-			# Get a connection by "<server>:<port>"
+			# Get a connection by "<server>:<port>", or if there's no other connection
+			# to the same server on a different port, just "<server>".
 			def [](connection)
-				@connections[connection]
+				@connections[connection] || @connections_noport[connection]
 			end
 			
 			# Iterate over all connections
@@ -95,9 +99,10 @@ module SilverPlatter
 			def disconnect_from(connection, quit_reason=nil)
 				raise ArgumentError, "No connection '#{connection}' available" unless con = @connections[connection]
 				con.quit(quit_reason, true) if con.connected?
-				@connections.delete(connection)
+				@connections.delete("#{connection.server}:#{connection.port}")
+				@connections_noport.delete(connection.server)
 				true
 			end
-		end
+		end # Client
 	end # IRC
 end # SilverPlatter

@@ -11,11 +11,8 @@ require 'silverplatter/irc/color/sequence'
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net>
-		# * Revision: $Revision: 144 $
-		# * Date:     $Date: 2008-03-14 18:28:54 +0100 (Fri, 14 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# 

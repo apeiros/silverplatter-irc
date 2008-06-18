@@ -9,11 +9,8 @@
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net
-		# * Revision: $Revision$
-		# * Date:     $Date$
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# UserManager takes care of deleting users gone out of sight for too long
@@ -42,7 +39,7 @@ module SilverPlatter
 				@connection = connection
 				@userlist   = userlist
 				@maxsize    = maxsize
-				@eliminate  = (1..[maxsize.div(32), 4].max)
+				@eliminate  = (1..[maxsize>>5, 4].max) # eliminate a lot at once
 				@maxage     = maxage
 			end
 			

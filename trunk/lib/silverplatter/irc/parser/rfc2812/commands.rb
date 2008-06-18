@@ -68,7 +68,7 @@ add("notice",  :NOTICE,  /(\S+) :(.*)/, [:recipient, :text]) { |connection, mess
 add("part",    :PART,    /^([^\x00\x07\x10\x0D\x20,:]+)(?: :(.*))?/, [:channel, :reason]) { |connection, message, fields|
 	connection.leave_channel(message, :part, :parted)
 }
-add("ping",    :PING,    /:(.*)/, [:pong]) { |connection, message, fields|
+add("ping",    :PING,    /^:?(.*)/, [:pong]) { |connection, message, fields|
 	connection.send_pong(fields[:pong])
 }
 add("pong",    :PONG)
@@ -79,7 +79,7 @@ add("privmsg", :PRIVMSG, /(\S+) :(.*)/, [:recipient, :text]) { |connection, mess
 }
 add("quit",    :QUIT,    /(.*)/, [:text]) { |connection, message, fields|
 	if message.from then
-		message.from.quit
+		message.from.channels.delete_user(message.from, :quit)
 		connection.delete_user(message.from, :quit)
 	end
 }
@@ -274,7 +274,9 @@ add("423", :ERR_NOADMININFO)
 add("424", :ERR_FILEERROR)
 add("431", :ERR_NONICKNAMEGIVEN)
 add("432", :ERR_ERRONEUSNICKNAME)
-add("433", :ERR_NICKNAMEINUSE)
+add("433", :ERR_NICKNAMEINUSE) { |connection, message, fields|
+	connection.event(:nick_error, message)
+}
 add("436", :ERR_NICKCOLLISION)
 add("437", :ERR_UNAVAILRESOURCE)
 add("441", :ERR_USERNOTINCHANNEL)

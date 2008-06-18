@@ -15,11 +15,8 @@ require 'silverplatter/irc/rfc1459_usermodes'
 module SilverPlatter
 	module IRC
 
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net
-		# * Revision: $Revision: 147 $
-		# * Date:     $Date: 2008-03-21 16:55:07 +0100 (Fri, 21 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		#	The User class is used to store users and attached infos, e.g. channels

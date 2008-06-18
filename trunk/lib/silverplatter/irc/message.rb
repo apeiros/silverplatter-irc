@@ -13,11 +13,8 @@ require 'iconv'
 module SilverPlatter
 	module IRC
 	
-		# == Indexing
-		# * Author:   Stefan Rusterholz
-		# * Contact:  apeiros@gmx.net>
-		# * Revision: $Revision: 126 $
-		# * Date:     $Date: 2008-03-09 02:33:43 +0100 (Sun, 09 Mar 2008) $
+		# == Authors
+		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
 		# Represents a message comming from the server. Is created by IRC::Parser.
@@ -174,7 +171,7 @@ module SilverPlatter
 
 			# Change charset encoding
 			def transcode!(from, to)
-				@text = Iconv.iconv(@text, to, from) unless to.downcase == from.downcase
+				@text = Iconv.conv(to, from, @text)
 			end
 			
 			# Case equality of a message

@@ -70,14 +70,14 @@ module SilverPlatter
 		class Connection < Socket
 
 			# This is the proc that is used per default for &on_nick_error in Connection#login
-			RaiseOnNickErr = proc { |connection, original_nick, current_nick, tries|
+			RaiseOnNickError = proc { |connection, original_nick, current_nick, tries|
 				raise "Nick #{current_nick} is already in use"
 			}
 			
 			# This proc can be used as &on_nick_error with Connection#login
 			# It will prefix the nick with [<digit] with <digit> growing by 1 per try.
 			# E.g. first try is 'butler', then '[1]butler', '[2]butler' and so on.
-			IncrementOnNickErr = proc { |connection, original_nick, current_nick, tries|
+			IncrementOnNickError = proc { |connection, original_nick, current_nick, tries|
 				"[#{tries}]#{original_nick}"
 			}
 
@@ -103,7 +103,7 @@ module SilverPlatter
 			attr_accessor :server_encoding
 			
 			# A hash with the encodings of individual channels
-			attr_reader   :channel_charset
+			attr_reader   :channel_encoding
 			
 			# The SilverPlatter::IRC::User that represents the client of this connection
 			attr_reader   :myself
@@ -139,8 +139,11 @@ module SilverPlatter
 			#     port   8001
 			#   end
 			def initialize(server=nil, options={}, &description)
-				options              = DefaultOptions.merge(options).merge(ConnectionDSL.new(server, &description).__config__)
+				options              = DefaultOptions.merge(options)
+				options.update(ConnectionDSL.new(server, &description).__config__) if description
+				options[:server]   ||= server # options overrides server
 
+				@events              = {}
 				@logger              = options.delete(:logger)
 				@nicknames           = {} # map nicks to users
 				@channelnames        = {} # map channelnames to channels
@@ -151,17 +154,16 @@ module SilverPlatter
 				@message_lock        = Mutex.new #
 				@client_encoding     = options.delete(:client_encoding)
 				@server_encoding     = options.delete(:server_encoding)
-				@channel_encoding    = Hash.new { @server_encoding }
-				@disconnect_callback = options.delete(:on_disconnect)
+				@channel_encoding    = Hash.new { @server_encoding } # @server_encoding might change
 				@reconnect_tries     = options.delete(:reconnect_tries)
 				@reconnect_delay     = options.delete(:reconnect_delay)
-				@on_nick_error       = options.delete(:on_nick_error)
+				@events[:disconnect] = options.delete(:on_disconnect)
+				@events[:nick_error] = options.delete(:on_nick_error) || RaiseOnNickError
 				@ping_interval       = options.delete(:ping_interval)
 				@case_mapping        = options.delete(:case_mapping)
 				@ping_delay          = options.delete(:ping_delay)
 				@ping_loop           = nil
 				@myself              = nil
-				@run                 = []
 				@read_thread         = Thread.new {} # create a dead thread which can be tested for .alive?
 				@parser              = Parser.new(self, "rfc2812", "generic")
 				@default             = {
@@ -182,11 +184,16 @@ module SilverPlatter
 				@read_thread.join
 			end
 			
+			def event(name, *args)
+				cb = @events[name]
+				cb.call(*args)
+			end
+
 			# An OpenStruct containing all isupport values of the server (lowercased and symbolified)
 			def isupport
 				@parser.isupport
 			end
-			
+
 			# Subscribe to one, many or all messages (by symbol)
 			# Creates a new Listener, subscribes (see subscribe_listener) and
 			# returns it.
@@ -243,7 +250,7 @@ module SilverPlatter
 							@users[new_user] = true
 							@users.delete(old_user)
 	
-						else # Should NOT happen
+						else # Must NOT happen
 							old_user.status = :mutated
 							@nicknames.delete(old_user.compare)
 							@nicknames[new_user.compare]	= new_user
@@ -356,21 +363,31 @@ module SilverPlatter
 				user          ||= @default[:username]
 				real          ||= @default[:realname]
 				serverpass    ||= @default[:serverpass]
-				on_nick_error ||= RaiseOnNickErr
+				on_nick_error ||= @events[:nick_error] || RaiseOnNickError
 				nick_change     = nil
 				number          = 0
 				@myself         = User.new(nick, user, nil, real, self)
 				@myself.myself  = true
-				nick_change     = subscribe(:ERR_NICKNAMEINUSE) {
-					@myself.nick = on_nick_error.call(self, nick, @myself.nick, number+=1) # get new nick
+				@events[:old_nick_error] = @events[:nick_error]
+				@events[:nick_error] = proc {
+					@myself.nick = @events[:old_nick_error].call(self, nick, @myself.nick, number+=1)
 					send_nick(@myself.nick)
 				}
-				prepare do
+
+				if @read_thread.alive? then
+					prepare do
+						super(nick, user, real, serverpass)
+					end.wait_for([:RPL_WELCOME, :ERR_NOMOTD])
+				else
 					super(nick, user, real, serverpass)
-				end.wait_for([:RPL_WELCOME, :ERR_NOMOTD])
+					begin
+						message = read_message
+					end until [:RPL_WELCOME, :ERR_NOMOTD].include?(message.symbol)
+				end
+
 				true
 			ensure
-				nick_change.unsubscribe if nick_change
+				@events[:nick_error] = @events.delete(:old_nick_error)
 			end
 
 			# Similar to send_join, but performs a WHO command on each channel joined to fill
@@ -382,6 +399,7 @@ module SilverPlatter
 			end
 
 			def quit(reason=nil)
+				send_quit(reason)
 				self
 			end
 
@@ -502,7 +520,7 @@ module SilverPlatter
 				string = read
 				string && @parser.server_message(string)
 			end
-			
+
 			# Reads as long as the connection is up, dispatches the read messages
 			# Rescues any exception but Interrupt and logs it as exception
 			def read_loop
@@ -512,7 +530,7 @@ module SilverPlatter
 						@subscriptions.each_for(message.symbol) { |listener|
 							listener.call(message)
 						}
-						@run.each { |run| run.call(message) }
+						yield(message) if block_given?
 					rescue Interrupt, Errno::EPIPE
 						raise
 					rescue Exception => e
@@ -522,8 +540,11 @@ module SilverPlatter
 			end
 			
 			def run(&block)
-				@run << block if block
-				@read_thread = Thread.new { read_loop } unless @read_thread.alive?
+				if block then
+					read_loop(&block)
+				else
+					@read_thread = Thread.new { read_loop } unless @read_thread.alive?
+				end
 			end
 
 			# This method is intended for developer use only, it will remove a user from
