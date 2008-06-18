@@ -8,4 +8,3 @@
 # available methods
 
 alter_expression :nick,       /[A-Za-z\[\]\\`_^{|}][A-Za-z\d\[\]\\`_^{|}-]{0,#{isupport.nicklen-1}}/
-alter_expression :who_flags,  /[@+!<diwghx]{0,10}/

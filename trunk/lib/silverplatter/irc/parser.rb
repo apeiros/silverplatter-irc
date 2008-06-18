@@ -55,8 +55,8 @@ module SilverPlatter
 			
 			# Raised if the parameter part of a message could not be matched.
 			class MatchingFailure < RuntimeError
-				def initialize(symbol, params)
-					super("Matching failed in #{symbol} for #{params.inspect}")
+				def initialize(symbol, params, regex)
+					super("Matching failed in #{symbol} for #{params.inspect} against #{regex.inspect}")
 				end
 			end
 			
@@ -239,7 +239,7 @@ module SilverPlatter
 					if match = regex.match(params) then
 						processor.mapping.zip(match.captures) { |name, value| fields[name] = value }
 					else
-						raise MatchingFailure.new(symbol, params)
+						raise MatchingFailure.new(symbol, params, regex)
 					end
 				end
 

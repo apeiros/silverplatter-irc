@@ -91,7 +91,11 @@ module SilverPlatter
 
 			# Get the value associated with a user
 			def [](user)
-				@users[user]
+				if user.kind_of(User) then
+					@users[user]
+				else
+					by_nick(user)
+				end
 			end
 			
 			# Store a new user with a value
@@ -261,7 +265,7 @@ module SilverPlatter
 			end
 
 			def inspect # :nodoc:
-				"#<%s:0x%x %s %s (%d users)" %  [self.class, object_id, @name, @connection, size]
+				"#<%s:0x%x %s connection: %08x (%d users)>" %  [self.class, object_id>>1, @connection.object_id>>1, size]
 			end
 
 			private

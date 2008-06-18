@@ -7,7 +7,7 @@
 # This file is instance_eval'ed on a SilverPlatter::IRC::Parser, so see there for
 # available methods
 
-alter("005", :ISUPPORT) { |connection, message|
+alter("005", :ISUPPORT) { |connection, message, fields|
 	hash = {}
 	message.params.sub(/\s+:.*?$/, '').split(/ /)[1..-1].each { |support|
 		name, value = support.split(/=/,2)
@@ -24,13 +24,11 @@ alter("005", :ISUPPORT) { |connection, message|
 			else value
 		end
 	}
-	isupport = hash.dup
-	connection.isupport.__hash__.each { |key, value|
-		isupport[key] = value
-	}
+	isupport            = connection.isupport.__hash__.merge(hash)
 	isupport[:prefixes] = isupport[:prefix].values.join('') if isupport.has_key?(:prefix)
 
 	connection.use_casemapping(hash[:casemapping]) if hash[:casemapping]
+	connection.write_with_eol("CAPAB IDENTIFY-MSG") if (connection.isupport.capab && !connection.msg_identify)
 	connection.parser.reset(isupport)
 
 	message[:support] = hash
@@ -54,20 +52,22 @@ add("266", :RPL_GLOBALUSERS)
 # Seen:
 #   - hyperion-1.0.2b (irc.freenode.net)
 #   States what kind of messages will be identified
-add("290", :RPL_IDENTIFY_MSG) { |message, parser|
+add("290", :RPL_IDENTIFY_MSG, /(\S+) :?(.*)/, [:nick, :types]) { |connection, message, fields|
 	types = {}
-	message.params.scan(/\S+/).each { |k| types[k] = true }
-	message.create_member(:types, types)
+	message[:types].scan(/\S+/).each { |k| types[k] = true }
+	message[:types] = types
+	connection.parser.msg_identify ||= types["IDENTIFY-MSG"]
 }
 
 # Seen:
 #  - ConferenceRoom (irc.bluewin.ch), sent if a nick is registered
 add("307", :RPL_REGISTERED_INFO)	
 add("320", :RPL_IDENTIFIED_TO_SERVICES) # possibly hyperion only
+add("328", :UNK_328)		# freenode.net, on join
 add("329", :RPL_CHANNEL_INFO)		#channel creation time
 
 # :irc.server.net 333 YourNickname #channel SetByNick 1139902138
-add("333", :RPL_TOPIC_INFO, /^(\S+) (\S+) (\S+) (\d+)/, [:for, :channel, :set_by, :set_at]) { |message, parser|
+add("333", :RPL_TOPIC_INFO, /^(\S+) (\S+) (\S+) (\d+)/, [:for, :channel, :set_by, :set_at]) { |connection, message, fields|
 	topic = message.channel.topic
 	topic.set_by = message[:set_by]
 	topic.set_at = message[:set_at]
@@ -80,10 +80,12 @@ add("386", :RPL_PASSWORDACCEPTED) # Custom (chatroom)
 
 # Seen:
 #   - ircu (undernet)
-add("396", :RPL_HOSTHIDDEN, /^(\S+) (?:(.*?)@)?([:\S]+) :(.*)/, [:nick, :user, :displayed_host, :text]) { |message, parser|
+add("396", :RPL_HOSTHIDDEN, /^(\S+) (?:(.*?)@)?([:\S]+) :(.*)/, [:nick, :user, :displayed_host, :text]) { |connection, message, fields|
 	connection.myself.update(nil, message.displayed_host, nil)
 }
 
 add("410", :ERR_SERVICES_OFFLINE)
 
 add("505", :ERR_NOPRIVMSG)
+
+add("901", :UNK_901) # logged in confirmation on freenode

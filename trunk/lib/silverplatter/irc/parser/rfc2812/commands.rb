@@ -29,7 +29,7 @@ add("kill",    :KILL,   /^(\S*) (\S*) (.*)/, [:channel, :recipient, :text]) { |c
 add("mode",    :MODE,   /^(\S*) (.*)/, [:recipient, :arguments]) { |connection, message, fields|
 	modifiers       = message[:arguments].split(" ")
 	modes           = modifiers.shift.split("")
-	flags           = {"o" => User::Flags::OP, "v" => User::Flags::VOICE, "u" => User::Flags::UOP}
+	flags           = {"o" => User::Op, "v" => User::Voice, "u" => User::Uop}
 	message[:modes] = []
 	argument_index  = 0
 	direction       = "+"
@@ -43,9 +43,9 @@ add("mode",    :MODE,   /^(\S*) (.*)/, [:recipient, :arguments]) { |connection, 
 		elsif ("kovu".include?(mode) || (mode == "l" && direction == "+")) then
 			if "ovu".include?(mode) then
 				if (direction == "+") then
-					connection.users[modifiers[argument_index]].add_flags(channel, flags[mode]) #adding flags to user
+					connection.users.by_nick(modifiers[argument_index]).add_flags(channel, flags[mode]) #adding flags to user
 				else
-					connection.users[modifiers[argument_index]].delete_flags(channel, flags[mode]) #removing flags from user
+					connection.users.by_nick(modifiers[argument_index]).delete_flags(channel, flags[mode]) #removing flags from user
 				end
 			end
 			message.modes << [direction, mode, modifiers[argument_index]]
@@ -210,8 +210,6 @@ add("353", :RPL_NAMEREPLY, /(\S+) [=@*] (\S+) :(.*)/, [:recipient, :channel, :us
 	users            = fields[:users]
 	delete_who_flags = connection.parser.expression.delete_who_flags
 	
-	p [:RPL_NAMEREPLY, message.raw, message.channel, message]
-
 	message[:users] = users.split(/ /).map { |nick|
 		user	= connection.create_user(nick.sub(delete_who_flags, ''))
 		user.add_channel(message.channel, :joined)

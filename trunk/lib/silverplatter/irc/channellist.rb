@@ -81,7 +81,11 @@ module SilverPlatter
 
 			# Get the value associated with a channel
 			def [](channel)
-				@channels[channel]
+				if channel.kind_of(Channel) then
+					@channels[channel]
+				else
+					by_name(channel)
+				end
 			end
 
 			# Store a new channel with a value
@@ -215,7 +219,7 @@ module SilverPlatter
 			end
 
 			def inspect # :nodoc:
-				"#<%s:0x%x %s (%d users)" %  [self.class, object_id, @connection, size]
+				"#<%s:0x%x connection=%08x (%d channels)>" %  [self.class, object_id>>1, @connection.object_id>>1, size]
 			end
 
 			private

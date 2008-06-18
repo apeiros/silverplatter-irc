@@ -316,7 +316,7 @@ module SilverPlatter
 			# If called without arguments it will return a ChannelList with all known channels in this connection
 			# If called with arguments it will return an Array with channels mapped to those names (possibly nil)
 			def channels(*names)
-				if channels.empty? then
+				if names.empty? then
 					@channels
 				else
 					@message_lock.synchronize {
@@ -399,7 +399,9 @@ module SilverPlatter
 			end
 
 			def quit(reason=nil)
-				send_quit(reason)
+				prepare do
+					send_quit(reason)
+				end.wait_for :ERROR
 				self
 			end
 

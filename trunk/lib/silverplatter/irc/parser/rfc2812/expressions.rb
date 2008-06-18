@@ -7,7 +7,7 @@
 # This file is instance_eval'ed on a SilverPlatter::IRC::Parser, so see there for
 # available methods
 
-add_expression :who_flags,  /[@+]/
+add_expression :who_flags,  /[#{Regexp.escape(@isupport.prefixes)}]{0,#{@isupport.prefixes.size}}/
 add_expression :delete_who_flags, /\A#{expression.who_flags}/
 
 add_expression :special,    /[\[\]\\`_^{|}]/
