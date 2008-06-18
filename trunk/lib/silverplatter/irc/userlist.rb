@@ -91,7 +91,7 @@ module SilverPlatter
 
 			# Get the value associated with a user
 			def [](user)
-				if user.kind_of(User) then
+				if user.kind_of?(User) then
 					@users[user]
 				else
 					by_nick(user)

@@ -3,7 +3,7 @@
 == Indexing
 * Author:  Stefan Rusterholz <apeiros@gmx.net>
 * Version: 1.0.0
-* Website: http://silverplatter.rubyforge.org
+* Website: http://silverplatter.rubyforge.org/irc
 
 == About
 SilverPlatter::IRC is an easy to use library for IRC clients. For an example use
@@ -12,32 +12,36 @@ implement an IRC bot.
 
 == Installing
 === Via RubyGems
-	gem install silverplatter_irc
-	sudo botcontrol setup
 
-=== From SVN
-	svn checkout svn://rubyforge.org/var/svn/silverplatter/irc/trunk
+	gem install silverplatter-irc
+
+Note: you might have to use 'sudo gem install silverplatter-irc'
+
+=== From Github
+
+	curl http://github.com/apeiros/silverplatter-irc/tarball/master
 	cd trunk
-	sudo rake install_gem
+	rake gem:install
 
-Notice, if checkout fails, try a few minutes later. Rubyforge drops anonymous svn connections on
-higher load.
+Note: you might have to use 'sudo rake gem:install'
 
-== Synopsis
+== Examples
+See in the examples dir for code examples.
 
 == Design
 SilverPlatter::IRC is designed in layers, the following layers exist:
-* Socket: consists of irc/socket.rb only, it works independently
-* Connection: consists of irc/connection.rb and depends on:
-	* Socket: see above
-	* Channel: represents a single channel Connection knows of
-	* ChannelList: a list of channels (e.g. a user is known to be in)
-	* Message: a higher representation of a single server message with proper methods
-	* Parser: converts the messages of the server into 
-	* User: represents a single user Connection knows of
-	* UserList
-* Client: deals with multiple connections
-	* Connection
+* Socket:
+	Provides many abstracted write methods and send-queues to protect your client from
+	accidentally flooding (sending too many messages at once)
+	Reading messages will only give a string
+* Connection:
+	Provides imperative and evented interfaces to reading commands, which additionally are converted
+	to IRC::Message's and provide a nicer interface than plain Strings.
+	Keeps track of IRC::User's you're talking to (or that talk to you) and IRC::Channel's you're in.
+	Both, IRC::User and IRC::Channel are multitons, that means a given user or channel will always
+	be represented by the same object.
+* Client:
+	Deals with multiple connections
 
 Socket only provides the simplemost functionality and is "dumb" by design (no automatisms).
 Connection is sufficient to build a client allowing a connection to a single server at a

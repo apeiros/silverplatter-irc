@@ -1,22 +1,14 @@
-<<<<<<< .mine
-BUGS
+
+  BUGS
 ================
 
 * User#quit & User#kill unimplemented
 * Following seems buggy (no length): add_expression :chanstring, /[^\x00\x07\x10\x0D\x20,:]/
-
-=======
-BUGS
-================
-
 * rfc2812/commands.rb has some parser.expression calls
 
 
->>>>>>> .r149
-TODO
+  TODO
 ================
-
-<<<<<<< .mine
 
 * isupport.channelprefixes - check if that's the correct name for the property
 * Check whether channel expressions should be adapted to isupports chanlen
@@ -39,4 +31,3 @@ TODO
 * FIXMEs
 * Docs
 * Specs
->>>>>>> .r149

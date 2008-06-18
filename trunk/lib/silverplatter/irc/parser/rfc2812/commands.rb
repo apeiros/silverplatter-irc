@@ -43,9 +43,9 @@ add("mode",    :MODE,   /^(\S*) (.*)/, [:recipient, :arguments]) { |connection, 
 		elsif ("kovu".include?(mode) || (mode == "l" && direction == "+")) then
 			if "ovu".include?(mode) then
 				if (direction == "+") then
-					connection.users.by_nick(modifiers[argument_index]).add_flags(channel, flags[mode]) #adding flags to user
+					connection.users.by_nick(modifiers[argument_index]).add_flag(channel, flags[mode]) #adding flags to user
 				else
-					connection.users.by_nick(modifiers[argument_index]).delete_flags(channel, flags[mode]) #removing flags from user
+					connection.users.by_nick(modifiers[argument_index]).delete_flag(channel, flags[mode]) #removing flags from user
 				end
 			end
 			message.modes << [direction, mode, modifiers[argument_index]]

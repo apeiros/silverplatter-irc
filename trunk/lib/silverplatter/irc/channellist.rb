@@ -81,7 +81,7 @@ module SilverPlatter
 
 			# Get the value associated with a channel
 			def [](channel)
-				if channel.kind_of(Channel) then
+				if channel.kind_of?(Channel) then
 					@channels[channel]
 				else
 					by_name(channel)
