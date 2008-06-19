@@ -44,10 +44,7 @@ module SilverPlatter
 		# If you set the connection of the UserList, all users stored in it should
 		# use the same connection object.
 		#
-		# The code assumes Object#dup, Hash#[] and Hash#[] to be atomic, in other
-		# words it doesn't synchronize those methods. It also assumes Hash#each,
-		# Hash#each_key and Hash#each_value to be working correctly with other threads
-		# deleting members while iterating.
+		# The code assumes Hash methods to be ACID.
 		#
 		# The connection object is expected to have the following methods:
 		# * ==
@@ -141,9 +138,7 @@ module SilverPlatter
 			# Get the associated value of a user by nick
 			# Also see IRC::Connection#strip_user_prefixes
 			def value_by_nick(nick)
-				@lock.synchronize {
-					@users[by_nick(nick)]
-				}
+				@users[by_nick(nick)]
 			end			
 
 			# Return all users in this list if no argument is given
@@ -154,14 +149,10 @@ module SilverPlatter
 					@users.keys
 				elsif @connection then
 					users = nicks.map { |nick| @connection.user_by_nick(nick) }
-					@lock.synchronize {
-						users.select { |user| @users.include?(user) }
-					}
+					users.select { |user| @users.include?(user) }
 				else
 					nicks = Hash[*nicks.map { [casemap(nick), true] }.flatten]
-					@lock.synchronize {
-						@users.select { |user| nicks[user.compare] }
-					}
+					@users.select { |user| nicks[user.compare] }
 				end
 			end
 			
@@ -188,10 +179,8 @@ module SilverPlatter
 			# same host and same username)
 			def strong_clones(min=2)
 				sieve	= Hash.new { |h,k| h[k] = [] }
-				@lock.synchronize {
-					@users.each_key { |user|
-						sieve[user.hostmask(true)] << user if (user.user && user.host)
-					}
+				@users.each_key { |user|
+					sieve[user.hostmask(true)] << user if (user.user && user.host)
 				}
 				sieve.reject { |host, users| users.size < min }
 			end
@@ -204,10 +193,8 @@ module SilverPlatter
 			# same host and same username)
 			def weak_clones(min=2)
 				sieve	= Hash.new { |h,k| h[k] = [] }
-				@lock.synchronize {
-					@users.each_key { |user|
-						sieve[user.hostmask(true, true)] << user if user.host
-					}
+				@users.each_key { |user|
+					sieve[user.hostmask(true, true)] << user if user.host
 				}
 				sieve.reject { |host, users| users.size < min }
 			end
@@ -260,7 +247,7 @@ module SilverPlatter
 			
 			# Delete a user, the reason is passed on to observers
 			def delete(user, reason=nil)
-				@lock.synchronize { @users.delete(user) }
+				@users.delete(user)
 			end
 			alias delete_user delete
 			
@@ -277,7 +264,7 @@ module SilverPlatter
 			
 			# Remove all users from the list
 			def clear
-				@lock.synchronize { @users.clear }
+				@users.clear
 			end
 			
 			# Test if userlist is empty

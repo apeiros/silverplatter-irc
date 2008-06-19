@@ -40,8 +40,7 @@ module SilverPlatter
 		# If you set the connection of the ChannelList, all channels stored in it should
 		# use the same connection object.
 		#
-		# The code assumes Object#dup, Hash#[] and Hash#[] to be atomic, in other
-		# words it doesn't synchronize those methods.
+		# The code assumes Hash methods to be ACID.
 		# 
 		# == Known Bugs
 		# Currently none
@@ -101,7 +100,7 @@ module SilverPlatter
 					@channels.has_key?(channel) ? channel : nil
 				else
 					name = casemap(name)
-					@channels.keys.find { |channel| channel.compare == name }
+					@channels.find { |channel, _| channel.compare == name }.first
 				end
 			end			
 
@@ -122,9 +121,7 @@ module SilverPlatter
 
 			# Get the associated value of a channel by name
 			def value_by_name(name)
-				@lock.synchronize {
-					@channels[by_name(name)]
-				}
+				@channels[by_name(name)]
 			end			
 
 			# Return all channels in this list if no argument is given
@@ -135,14 +132,10 @@ module SilverPlatter
 					@channels.keys
 				elsif @connection then
 					names = names.map { |name| @connection.channel_by_name(name) }
-					@lock.synchronize {
-						names.select { |name| @channels.include?(name) }
-					}
+					names.select { |name| @channels.include?(name) }
 				else
 					names = Hash[*names.map { [casemap(name), true] }.flatten]
-					@lock.synchronize {
-						@channels.select { |channel| names[channel.compare] }
-					}
+					@channels.select { |channel| names[channel.compare] }
 				end
 			end
 
@@ -193,7 +186,7 @@ module SilverPlatter
 
 			# Delete a channel, the reason is passed on to observers
 			def delete(channel, reason=nil)
-				@lock.synchronize { @channels.delete(channel) }
+				@channels.delete(channel)
 			end
 			alias delete_channel delete
 
@@ -215,7 +208,7 @@ module SilverPlatter
 
 			# Remove all channels from the list
 			def clear
-				@lock.synchronize { @channels.clear }
+				@channels.clear
 			end
 
 			def inspect # :nodoc:

@@ -592,10 +592,10 @@ module SilverPlatter
 			def leave_server(message, user, reason1, reason2) # :nodoc:
 				if user.equal?(@myself) then
 					user.delete_user(user, reason2)
-					connection.delete_user(user, reason2)
+					delete_user(user, reason2)
 				else
 					user.delete_user(user, reason1)
-					connection.delete_user(user, reason1)
+					delete_user(user, reason1)
 				end
 				user.clear
 			end

@@ -241,13 +241,10 @@ module SilverPlatter
 
 				# Parse prefix if possible (<nick>!<user>@<host>)
 				from	= @connection.create_user($1, $2, $3) if prefix and prefix =~ @simple_hostmask
-				x = $1, $2, $3
 
 				# in depth analyzis of the message
 				processor = @commands[command.downcase]
 				symbol    = processor.symbol
-				
-				#p [prefix, @simple_hostmask, x] if symbol == :JOIN
 				
 				fields    = {}
 				if regex = processor.regex then
