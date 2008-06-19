@@ -590,9 +590,14 @@ module SilverPlatter
 			# all his channels and remove all channels from the user, it also drops the user
 			# from the connections userlist.
 			def leave_server(message, user, reason1, reason2) # :nodoc:
-				user.delete_user(user, reason)
+				if user.equal?(@myself) then
+					user.delete_user(user, reason2)
+					connection.delete_user(user, reason2)
+				else
+					user.delete_user(user, reason1)
+					connection.delete_user(user, reason1)
+				end
 				user.clear
-				connection.delete_user(user, reason)
 			end
 			
 			# See CAPAB-IDENTIFY in the ISUPPORT draft.
