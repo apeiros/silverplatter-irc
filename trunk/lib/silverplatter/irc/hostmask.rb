@@ -29,6 +29,16 @@ module SilverPlatter
 		# * SilverPlatter::IRC::Channel
 		# * http://www.faqs.org/rfcs/rfc1459.html Section 4.2.3.1
 		class Hostmask
+
+			# Include StringHelper into String to have String#to_hostmask
+			module StringHelper
+				# Create a hostmask from a hostmask-string, e.g. "nick!user@host.tld"
+				# Also see Butler::IRC::User#hostmask
+				def to_hostmask(connection=nil)
+					SilverPlatter::IRC::Hostmask.from_string(self, connection)
+				end
+			end
+
 			include RFC1459_CaseMapping
 			
 			# Regex used to split up a stringform hostmask into its parts
@@ -36,16 +46,16 @@ module SilverPlatter
 
 			# Create a hostmask from a hostmask-string, e.g. "nick!user@host.tld"
 			# Also see Butler::IRC::User#hostmask
-			def self.from_mask(string, connection=nil)
-				raise ArgumentError, "Invalid Hostmask '#{string}'" unless match = string.match(ScanMask)
+			def self.from_string(string, connection=nil)
+				raise ArgumentError, "Invalid Hostmask '#{string}'" unless match = string.to_str.match(ScanMask)
 				nick, user, host = *match.captures
 				new(nick, user, host, connection)
 			end
 			
 			# Return the stringform of the hostmask, e.g. "nick!user@host.tld"
 			attr_reader :hostmask
-			alias to_s   hostmask
-			alias to_str hostmask
+			alias to_str :hostmask
+			attr_reader :to_s
 			
 			# Return the connection this hostmask uses
 			attr_reader :connection
@@ -63,6 +73,7 @@ module SilverPlatter
 			def initialize(nick, user, host, connection=nil)
 				@data       = nick, user, host
 				@connection = connection
+				@to_s       = "#{nick}!#{user}@#{host}".freeze
 				nick        = casemap(nick)
 				@hostmask   = "#{nick}!#{user}@#{host}".freeze
 				nick, user, host = *[nick, user, host].map { |part|
@@ -96,13 +107,14 @@ module SilverPlatter
 				@hostmask.hash
 			end
 			
-			def eql?(other)
+			# A hostmask is eql? if the casemapped hostmask-string is identical.
+			def eql?(other) # :nodoc:
 				other.kind_of?(Hostmask) && @hostmask == other.hostmask
 			end
 			alias == eql?
 
 			def inspect # :nodoc:
-				"#<Hostmask #{@hostmask} (#{@regex.inspect})>"
+				"#<Hostmask #{@to_s} (#{@regex.inspect})>"
 			end
 
 			private
