@@ -44,6 +44,7 @@ $LOAD_PATH.unshift libdir if File.exist?(libdir)
 # Require the necessary libraries
 begin; require 'rubygems'; rescue LoadError; end
 require 'silverplatter/irc/connection'
+require 'pp' # everybody and his/her mom need pp
 
 include SilverPlatter
 Bot = IRC::Connection.new(nil, BotConfig)
