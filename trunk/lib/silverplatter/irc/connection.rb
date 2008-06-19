@@ -139,9 +139,13 @@ module SilverPlatter
 			#     port   8001
 			#   end
 			def initialize(server=nil, options={}, &description)
-				options              = DefaultOptions.merge(options)
 				options.update(ConnectionDSL.new(server, &description).__config__) if description
 				options[:server]   ||= server # options overrides server
+				DefaultOptions.each { |k,v| # prefer over merge as it allows to have nil values replaced
+					options[k] ||= v
+				}
+				options[:username] ||= options[:nickname]
+				options[:realname] ||= "#{options[:nickname]} (silverplatter-irc)"
 
 				@events              = {}
 				@logger              = options.delete(:logger)
@@ -268,7 +272,7 @@ module SilverPlatter
 
 			# Should only be used by the Parser
 			# Updates the information of a User
-			def update_user(user_obj, nick, user, host, real) # nicklist, userlist
+			def update_user(user_obj, nick, user=nil, host=nil, real=nil) # nicklist, userlist
 				@users.synchronize {
 					update_user_unsynchronized(user_obj, nick, user, host, real)
 				}
@@ -600,7 +604,7 @@ module SilverPlatter
 				end
 			end
 			
-			def update_user_unsynchronized(user_obj, nick, user, host, real) # nicklist, userlist
+			def update_user_unsynchronized(user_obj, nick, user=nil, host=nil, real=nil) # nicklist, userlist
 				old_compare = user_obj.compare
 				user_obj.update(nick, user, host, real)
 				if old_compare != user_obj.compare then

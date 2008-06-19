@@ -91,9 +91,18 @@ module SilverPlatter
 				mask	= mask.hostmask if mask.kind_of?(User)
 				@regex.match(mask.to_str)
 			end
+			
+			def hash # :nodoc:
+				@hostmask.hash
+			end
+			
+			def eql?(other)
+				other.kind_of?(Hostmask) && @hostmask == other.hostmask
+			end
+			alias == eql?
 
 			def inspect # :nodoc:
-				"#<Hostmask #{@mask} (#{@regex.inspect})>"
+				"#<Hostmask #{@hostmask} (#{@regex.inspect})>"
 			end
 
 			private

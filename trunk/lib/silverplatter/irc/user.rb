@@ -152,7 +152,7 @@ module SilverPlatter
 					!wildnick && @nick || '*',
 					!wilduser && @user || '*',
 					!wildhost && @host || '*',
-					@parser
+					@connection
 				)
 			end
 	
@@ -186,14 +186,14 @@ module SilverPlatter
 			end
 	
 			def inspect # :nodoc:
-				sprint "#<%s:0x%x %s!%s@%s (%s) in %s>",
+				sprintf "#<%s:0x%x %s!%s@%s (%s) in %s>",
 					self.class,
 					object_id<<1,
 					@nick || "?",
 					@user || "?",
 					@host || "?",
 					@real || "?",
-					@channels.keys.map { |c| c.name }
+					@channels.keys.map { |c| c.name }.join(', ')
 				# /sprintf
 			end
 			

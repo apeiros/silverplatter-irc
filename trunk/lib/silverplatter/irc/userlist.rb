@@ -184,7 +184,7 @@ module SilverPlatter
 				sieve	= Hash.new { |h,k| h[k] = [] }
 				@lock.synchronize {
 					@users.each_key { |user|
-						sieve["*!#{user.user}@#{user.host}"] << user if (user.user && user.host)
+						sieve[user.hostmask(true)] << user if (user.user && user.host)
 					}
 				}
 				sieve.reject { |host, users| users.size < min }
@@ -200,7 +200,7 @@ module SilverPlatter
 				sieve	= Hash.new { |h,k| h[k] = [] }
 				@lock.synchronize {
 					@users.each_key { |user|
-						sieve["*!*@#{user.host}"] << user if user.host
+						sieve[user.hostmask(true, true)] << user if user.host
 					}
 				}
 				sieve.reject { |host, users| users.size < min }
