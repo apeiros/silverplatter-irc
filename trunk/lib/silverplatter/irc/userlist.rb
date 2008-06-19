@@ -205,6 +205,11 @@ module SilverPlatter
 				}
 				sieve.reject { |host, users| users.size < min }
 			end
+			
+			# Gives a list of users that are in all given userlists.
+			def common_users(*with)
+				raise ArgumentError, "No Userlist given" if with.empty?
+				
 
 			# iterate over [user, value]
 			# be aware that a user might become deleted while you iterate, so a yielded user might no
@@ -277,6 +282,11 @@ module SilverPlatter
 			# Return the nick casemapped
 			def casemap(nick)
 				@connection ? @connection.casemap(nick) : super
+			end
+			
+			def initialize_copy(template)
+				@users      = @users.dup # don't share the users-hash
+				@lock       = Mutex.new  # don't share the mutex
 			end
 		end
 	end

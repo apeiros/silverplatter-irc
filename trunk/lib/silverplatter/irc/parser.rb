@@ -95,10 +95,10 @@ module SilverPlatter
 				@msg_identify = false
 				@command_sets = command_sets
 				@isupport     = OpenStruct.new(
-					:nicklen         => 8,
-					:channellen      => 50,
-					:prefixes        => "@+",
-					:channelprefixes => "\#+&!" # FIXME lookup the correct name, adapt expressions accordingly
+					:nicklen         => 9,      # RFC2812, Section 1.2.2 "Services"
+					:channellen      => 50,     # RFC2812, Section 1.3 "Channels"
+					:prefixes        => "@+",   # RFC2812, Section 5.1 "Command responses" (319, 352)
+					:channelprefixes => "\#+&!" # RFC2812, Section 1.3 "Channels"
 				)
 				reset
 			end
