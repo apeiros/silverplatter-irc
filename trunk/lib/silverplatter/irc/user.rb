@@ -72,8 +72,10 @@ module SilverPlatter
 			
 			# last time the SilverPlatter::IRC::Connection has seen this user
 			attr_reader :last_seen
-	
-			attr_writer :myself # :nodoc:
+
+			# Returns whether this user represents the client
+			attr_reader :me
+			alias me? me
 
 			def initialize(nick=nil, user=nil, host=nil, real=nil, connection=nil)
 				super(connection)
@@ -90,13 +92,8 @@ module SilverPlatter
 				set_compare
 
 				@channels   = Hash.new(NoModes) # IRC::Channel => flags
-				@myself     = false
+				@me         = false
 				@away       = nil
-			end
-
-			# Returns whether this user represents the client
-			def me?
-				@myself
 			end
 
 			# Iterate over all channels this user shares with your client
@@ -210,7 +207,7 @@ module SilverPlatter
 			# parser methods
 
 			# This method is intended to be used by IRC::Parser or IRC::Client
-			# in case the server alters parts about 'myself'
+			# in case the server alters parts about the user
 			# examples: some ircd's change the 'user' part (prefix it), some
 			# ircd's allow hiding the host, ...
 			def update(nick=nil, user=nil, host=nil, real=nil) #:nodoc:

@@ -49,7 +49,7 @@ module SilverPlatter
 		#
 		# == Notes
 		# A User has two possible states in relation to a connection:
-		# * visible: the user shares at least one channel with the connection's User (connection.myself)
+		# * visible: the user shares at least one channel with the connection's User (connection.me)
 		# * invisible: the user was seen quitting (or being killed) or doesn't share any channel
 		# The connections own UserList will drop users on leave_server (quit, kill, ...), it will
 		# retain users that leave_channel (part, kick, ...) and become invisible. This is to help
@@ -113,7 +113,7 @@ module SilverPlatter
 			attr_reader   :channel_encoding
 			
 			# The SilverPlatter::IRC::User that represents the client of this connection
-			attr_reader   :myself
+			attr_reader   :me
 			
 			# The callback invoked when the client is disconnected
 			attr_accessor :disconnect_callback
@@ -174,7 +174,7 @@ module SilverPlatter
 				@case_mapping        = options.delete(:case_mapping)
 				@ping_delay          = options.delete(:ping_delay)
 				@ping_loop           = nil
-				@myself              = nil
+				@me                  = nil
 				@read_thread         = Thread.new {} # create a dead thread which can be tested for .alive?
 				@parser              = Parser.new(self, "rfc2812", "generic")
 				@default             = {
@@ -380,12 +380,12 @@ module SilverPlatter
 				on_nick_error ||= @events[:nick_error] || RaiseOnNickError
 				nick_change     = nil
 				number          = 0
-				@myself         = User.new(nick, user, nil, real, self)
-				@myself.myself  = true
+				@me             = create_user(nick, nil, nil, real)
+				@me.instance_variable_set(:@me, true)
 				@events[:old_nick_error] = @events[:nick_error]
 				@events[:nick_error] = proc {
-					@myself.nick = @events[:old_nick_error].call(self, nick, @myself.nick, number+=1)
-					send_nick(@myself.nick)
+					@me.nick = @events[:old_nick_error].call(self, nick, @me.nick, number+=1)
+					send_nick(@me.nick)
 				}
 
 				if @read_thread.alive? then
@@ -573,10 +573,10 @@ module SilverPlatter
 				if message.from && message.channel then
 					message.from.delete_channel(message.channel, reason1)
 					message.channel.delete_user(message.from, reason1)
-					if message.from.equal?(@myself) then
+					if message.from.equal?(@me) then
 						@channels.delete(message.channel)
 						@users.delete_channel(message.channel, reason2)
-					elsif !message.from.common_channels?(@myself) then
+					elsif !message.from.common_channels?(@me) then
 						if message.from.change_visibility(false) then
 						# FIXME: inform UserManager
 						end
@@ -590,7 +590,7 @@ module SilverPlatter
 			# all his channels and remove all channels from the user, it also drops the user
 			# from the connections userlist.
 			def leave_server(message, user, reason1, reason2) # :nodoc:
-				if user.equal?(@myself) then
+				if user.equal?(@me) then
 					user.delete_user(user, reason2)
 					delete_user(user, reason2)
 				else
