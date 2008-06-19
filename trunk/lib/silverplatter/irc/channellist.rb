@@ -232,6 +232,11 @@ module SilverPlatter
 			def casemap(string)
 				@connection ? @connection.casemap(string) : super
 			end
+
+			def initialize_copy(template)
+				@channels   = @channels.dup # don't share the channels-hash
+				@lock       = Mutex.new     # don't share the mutex
+			end
 		end
 	end
 end
