@@ -30,9 +30,8 @@ module SilverPlatter
 		# 
 		# == Description
 		# Parses messages, automatically converts 
-		# provides a parser that automatically connects users and channels
-		# regarding who myself is (out_of_sight, back_in_sight for users)
-		# allows creation of dialogs from privmsg and notice messages
+		# provides a parser that automatically connects users and channels, puts them in relation to
+		# the clients 'me', manages visibility of users and retrieves more information as required.
 		# 
 		# == Notes
 		# Parser is +unsynchronized+. This only plays a role regarding Parser#load.
