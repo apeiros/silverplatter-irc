@@ -265,7 +265,7 @@ module SilverPlatter
 			end
 
 			def inspect # :nodoc:
-				sprintf "#<%s:0x%x %s connection: %08x (%d users)>"
+				sprintf "#<%s:0x%x %s connection: %08x (%d users)>",
 					self.class,
 					object_id<<1,
 					@connection.object_id>>1,

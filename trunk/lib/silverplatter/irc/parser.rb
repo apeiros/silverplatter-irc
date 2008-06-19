@@ -208,7 +208,7 @@ module SilverPlatter
 			end
 			
 			def inspect # :nodoc:
-				sprintf "#<%s:0x%x %s>"
+				sprintf "#<%s:0x%x %s>",
 					self.class,
 					object_id<<1,
 					@command_sets.join(', ')
