@@ -58,7 +58,7 @@ add("mode",    :MODE,   /^(\S*) (.*)/, [:recipient, :arguments]) { |connection, 
 }
 add("nick",    :NICK,    /^:?(.*)/, [:nick]) { |connection, message, fields|
 	message[:old_nick] = message.from.nick
-	connection.update_user(from, message.nick) if message.from
+	connection.update_user(message.from, message.nick) if message.from
 }
 add("notice",  :NOTICE,  /(\S+) :(.*)/, [:recipient, :text]) { |connection, message, fields|
 	if connection.msg_identify then

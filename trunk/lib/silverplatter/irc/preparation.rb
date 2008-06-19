@@ -15,6 +15,7 @@ require 'thread'
 
 module SilverPlatter
 	module IRC
+
 		# Used by Connection#prepare
 		class Preparation # :nodoc:
 			def initialize(connection, block)

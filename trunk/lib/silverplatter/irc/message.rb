@@ -206,14 +206,14 @@ module SilverPlatter
 			def inspect #:nodoc:
 				fields = @data.select { |k,v| v }.map { |k,v| "#{k}=#{v}" }.sort.join(", ")
 				comma  = fields.empty? ? "" : ", "
-				"#<%s:0x%x %s %s%s%s>" %  [
+				sprintf "#<%s:0x%x %s %s%s%s>",
 					self.class,
 					object_id<<1,
 					@raw.inspect,
 					inspect_fields,
 					comma,
 					fields
-				]
+				# /sprintf
 			end
 			
 			def method_missing(m, *args, &block) # :nodoc:

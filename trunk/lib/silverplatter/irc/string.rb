@@ -8,6 +8,7 @@
 
 module SilverPlatter
 	module IRC
+
 		# This module is included in the String-class and provides some methods helping with irc
 		# related issues.
 		module StringHelpers

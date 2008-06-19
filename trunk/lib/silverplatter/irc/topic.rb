@@ -27,12 +27,12 @@ module SilverPlatter
 		# * http://www.faqs.org/rfcs/rfc1459.html Section 4.2.3.1
 		class Topic < Struct.new(:text, :set_by, :set_at)
 			def inspect
-				"#<%s %s --%s on %s>" %  [
+				sprintf "#<%s %s --%s on %s>",
 					self.class,
 					text,
 					set_by,
 					set_at.strftime("%Y-%m-%d %H:%M")
-				]
+				# /sprintf
 			end
 		end
 	end

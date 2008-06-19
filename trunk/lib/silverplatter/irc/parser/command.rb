@@ -14,11 +14,8 @@ module SilverPlatter
 	module IRC
 		class Parser
 
-			# == Indexing
-			# * Author:   Stefan Rusterholz
-			# * Contact:  apeiros@gmx.net>
-			# * Revision: $Revision$
-			# * Date:     $Date$
+			# == Authors
+			# * Stefan Rusterholz <apeiros@gmx.net>
 			#
 			# == About
 			# Provides parsing information about specific commands.
@@ -32,8 +29,8 @@ module SilverPlatter
 			# * regex:     The regular expression for the parameter part of the message
 			# * mapping:   The fields associated with the regex' captures
 			# * processor: A proc to process the message further, possibly having side-effects
-			# See Butler::IRC::COMMANDS for samples on instanciation of
-			# Butler::IRC::Command objects.
+			# See SilverPlatter::IRC::COMMANDS for samples on instanciation of
+			# SilverPlatter::IRC::Command objects.
 			#
 			# == Notes
 			#

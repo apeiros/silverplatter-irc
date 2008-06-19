@@ -219,7 +219,12 @@ module SilverPlatter
 			end
 
 			def inspect # :nodoc:
-				"#<%s:0x%x connection=%08x (%d channels)>" %  [self.class, object_id>>1, @connection.object_id>>1, size]
+				sprintf "#<%s:0x%x connection=%08x (%d channels)>",
+					self.class,
+					object_id<<1,
+					@connection.object_id<<1,
+					size
+				# /sprintf
 			end
 
 			private

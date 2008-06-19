@@ -130,6 +130,7 @@ module SilverPlatter
 				raise ArgumentError, "Unknown arguments: #{options.keys.inspect}" unless options.empty?
 			end
 			
+			# Whether this Socket is currently connected to a server or not.
 			def connected?
 				@connected
 			end
@@ -231,13 +232,13 @@ module SilverPlatter
 			end
 	
 			# identify nickname to nickserv
-			# FIXME, figure out what the server supports, possibly requires it
-			# to be moved to Butler::IRC::Client (to allow ghosting, nickchange, identify)
+			# FIXME: figure out what the server supports, possibly requires it
+			# to be moved to SilverPlatter::IRC::Connection (to allow ghosting, nickchange, identify)
 			def send_identify(password)
 				write_with_eol("NS :IDENTIFY #{password}")
 			end
 			
-			# FIXME, figure out what the server supports, possibly requires it
+			# FIXME: figure out what the server supports, possibly requires it
 			# to be moved to SilverPlatter::IRC::Connection (to allow ghosting, nickchange, identify)
 			def send_ghost(nickname, password)
 				write_with_eol("NS :GHOST #{nickname} #{password}")
@@ -353,6 +354,7 @@ module SilverPlatter
 			
 			# Give Op to user in channel
 			# User can be a nick or IRC::User, either one or an array.
+			# FIXME: check number of targets MODE can take
 			def send_multiple_mode(channel, pre, flag, targets)
 				(0...targets.length).step(10) { |i|
 					slice = targets[i,10]
@@ -423,15 +425,15 @@ module SilverPlatter
 			end
 			
 			def inspect # :nodoc:
-				"#<%s:0x%08x %s:%s from %s using '%s', stats: %s>" %  [
+				sprintf "#<%s:0x%08x %s:%s from %s using '%s', stats: %s>",
 					self.class,
-					object_id << 1,
+					object_id<<1,
 					@server,
 					@port,
 					@host || "<default>",
 					@eol.inspect[1..-2],
 					@count.inspect
-				]
+				# /sprintf
 			end
 		end
 	end

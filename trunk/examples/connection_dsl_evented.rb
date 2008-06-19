@@ -42,7 +42,7 @@ client = IRC::Connection.new do
 	# and either FIXME.
 	on_disconnect { |connection, reason|
 		puts "Disconnected due to #{reason}"
-		IRC::Client::DefaultProc::OnDisconnect.call(client, connection, reason)
+		IRC::Connection::OnDisconnect.call(client, connection, reason)
 	}
 end
 

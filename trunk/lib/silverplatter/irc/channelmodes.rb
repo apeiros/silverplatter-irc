@@ -31,6 +31,9 @@ module SilverPlatter
 		# * SilverPlatter::IRC::Connection
 		# * SilverPlatter::IRC::Channel
 		# * http://www.faqs.org/rfcs/rfc1459.html Section 4.2.3.1
+		#
+		# == TODO
+		# Change implementation to use a String instead of a Hash.
 		class ChannelModes
 			include RFC1459_ChannelModes
 
@@ -112,6 +115,6 @@ module SilverPlatter
 			def __hash__
 				@modes
 			end
-		end
-	end
-end
+		end # ChannelModes
+	end # IRC
+end # SilverPlatter

@@ -34,7 +34,7 @@ module SilverPlatter
 		#   list.delete_nick(nickname) # delete a user from which you only know the nick
 		# 
 		# == Description
-		# UserList is used to keep a list of user. It can be used standalone, but it is
+		# UserList is used to keep a list of users. It can be used standalone, but it is
 		# supposed to be used in conjunction with an IRC::Connection which is used for
 		# lookups by nick and for the appropriate casemapping.
 		# UserList is Enumerable over all users, yielding user => value
@@ -265,7 +265,12 @@ module SilverPlatter
 			end
 
 			def inspect # :nodoc:
-				"#<%s:0x%x %s connection: %08x (%d users)>" %  [self.class, object_id>>1, @connection.object_id>>1, size]
+				sprintf "#<%s:0x%x %s connection: %08x (%d users)>"
+					self.class,
+					object_id<<1,
+					@connection.object_id>>1,
+					size
+				# /sprintf
 			end
 
 			private

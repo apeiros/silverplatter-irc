@@ -208,7 +208,11 @@ module SilverPlatter
 			end
 			
 			def inspect # :nodoc:
-				"#<%s:0x%x %s>" %  [self.class, object_id, @command_sets.join(', ')]
+				sprintf "#<%s:0x%x %s>"
+					self.class,
+					object_id<<1,
+					@command_sets.join(', ')
+				# /sprintf
 			end
 
 			# parses an incomming message and returns a Message object from which you
@@ -216,7 +220,7 @@ module SilverPlatter
 			# Expects the newlines to be already chomped off.
 			# Process a message and set the additional fields
 			# process can have side-effects on the associated Connection
-			# FIXME fix documentation of this method
+			# FIXME: documentation of this method
 			def server_message(raw)
 				prefix, command, params, symbol, from = nil
 				from, recipient, channel, text, identified = nil

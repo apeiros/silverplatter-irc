@@ -186,15 +186,15 @@ module SilverPlatter
 			end
 	
 			def inspect # :nodoc:
-				"#<%s:0x%x %s!%s@%s (%s) in %s>" %  [
+				sprint "#<%s:0x%x %s!%s@%s (%s) in %s>",
 					self.class,
-					object_id,
+					object_id<<1,
 					@nick || "?",
 					@user || "?",
 					@host || "?",
 					@real || "?",
 					@channels.keys.map { |c| c.name }
-				]
+				# /sprintf
 			end
 			
 			# Users can't be duped
@@ -263,23 +263,23 @@ module SilverPlatter
 			# user.add_flag(@channels["#foo], "@")
 			def add_flag(channel, flag) #:nodoc:
 				raise ArgumentError, "User #{self} is not listed in #{channel}" unless @channels.has_key?(channel)
-				raise ArgumentError, "Invalid flag '#{flag}'" unless Flags.include?(flag)
+				#raise ArgumentError, "Invalid flag '#{flag}'" unless UserModes.include?(flag)
 				current            = @channels[channel]
-				@channels[channel] = (current+flag).split.sort.join unless current.include?(flag)
+				@channels[channel] = (current+flag).unpack("C*").uniq.sort.pack("C*")
 			end
 
 			# user.add_flags(@channels["#foo], "@+")
 			def add_flags(channel, flags) #:nodoc:
 				raise ArgumentError, "User #{self} is not listed in #{channel}" unless @channels.has_key?(channel)
-				#raise ArgumentError, "Invalid flag '#{flag}'" unless Flags.include?(flag)
+				#raise ArgumentError, "Invalid flag '#{flag}'" unless UserModes.include?(flag)
 				current            = @channels[channel]
-				@channels[channel] = (current+flags).split.uniq.sort.join
+				@channels[channel] = (current+flags).unpack("C*").uniq.sort.pack("C*")
 			end
 
 			# user.delete_flag(@channels["#foo], "@")
 			def delete_flag(channel, flag) #:nodoc:
 				raise ArgumentError, "User #{self} is not listed in #{channel}" unless @channels.has_key?(channel)
-				raise ArgumentError, "Invalid flag '#{flag}'" unless Flags.include?(flag)
+				#raise ArgumentError, "Invalid flag '#{flag}'" unless UserModes.include?(flag)
 				@channels[channel] = @channels[channel].delete(flag)
 			end
 			

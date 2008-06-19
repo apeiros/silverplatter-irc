@@ -144,7 +144,13 @@ module SilverPlatter
 			end
 
 			def inspect # :nodoc:
-				"#<%s:0x%x %s %s (%d users)" %  [self.class, object_id, @name, @connection, size]
+				sprintf "#<%s:0x%x %s %s (%d users)"
+					self.class,
+					object_id<<1,
+					@name,
+					@connection,
+					size
+				# /sprintf
 			end
 
 			# Channels can't be duped
