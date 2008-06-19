@@ -420,8 +420,7 @@ module SilverPlatter
 	
 			# closes the connection to the irc-server
 			def close
-				raise "Socket not open" unless @socket
-				@socket.close unless @socket.closed?
+				@socket.close
 			end
 			
 			def inspect # :nodoc:

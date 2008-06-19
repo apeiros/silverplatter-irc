@@ -14,16 +14,16 @@ add("join",    :JOIN,   /^:(.*)/, [:channel]) { |connection, message, fields|
 	if message.from && message.channel then
 		message.from.add_channel(message.channel, :join)
 		message.channel.add_user(message.from, :join)
+		if message.from.change_visibility(true) then
+			# FIXME: inform UserManager
+		end
 	end
 }
 add("kick",    :KICK,   /^(\S*) (\S*) :(.*)/, [:channel, :recipient, :text]) { |connection, message, fields|
 	connection.leave_channel(message, :kick, :kicked)
 }
 add("kill",    :KILL,   /^(\S*) (\S*) (.*)/, [:channel, :recipient, :text]) { |connection, message, fields|
-	if message.recipient then
-		message.recipient.kill
-		connection.delete_user(message.recipient, :kill)
-	end
+	connection.leave_server(message, message.recipient, :kill, :killed)
 }
 # FIXME, take another look at this (code, isupport)
 add("mode",    :MODE,   /^(\S*) (.*)/, [:recipient, :arguments]) { |connection, message, fields|
@@ -75,13 +75,11 @@ add("pong",    :PONG)
 add("privmsg", :PRIVMSG, /(\S+) :(.*)/, [:recipient, :text]) { |connection, message, fields|
 	if connection.msg_identify then
 		message.instance_variable_set(:@identified, message.text.slice!(/^[+-]/) == '+')
+		# FIXME: inform UserManager if message.from.invisible?
 	end
 }
 add("quit",    :QUIT,    /(.*)/, [:text]) { |connection, message, fields|
-	if message.from then
-		message.from.delete_user(message.from, :quit) # a user that quit is in no channel he was anymore
-		connection.delete_user(message.from, :quit)   # a user that is in no channel is unknown to the connection
-	end
+	connection.leave_server(message, message.from, :quit, :quitted)
 }
 add("topic",   :TOPIC, /(\S+) :(.*)/, [:channel, :text])
 

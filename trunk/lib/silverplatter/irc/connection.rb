@@ -48,6 +48,13 @@ module SilverPlatter
 		# itself.
 		#
 		# == Notes
+		# A User has two possible states in relation to a connection:
+		# * visible: the user shares at least one channel with the connection's User (connection.myself)
+		# * invisible: the user was seen quitting (or being killed) or doesn't share any channel
+		# The connections own UserList will drop users on leave_server (quit, kill, ...), it will
+		# retain users that leave_channel (part, kick, ...) and become invisible. This is to help
+		# keeping
+		#
 		# If you set the connection of the UserList, all users stored in it should
 		# use the same connection object.
 		#
@@ -248,7 +255,7 @@ module SilverPlatter
 							new_user = old_user
 
 						# if old user was out of sight the new user overrides the old
-						elsif DropOnStatus.include?(old_user.status) then
+						elsif old_user.invisible? then
 							@nicknames.delete(old_user.compare)
 							@nicknames[new_user.compare]	= new_user
 							@users[new_user] = true
@@ -272,7 +279,7 @@ module SilverPlatter
 
 			# Should only be used by the Parser
 			# Updates the information of a User
-			def update_user(user_obj, nick, user=nil, host=nil, real=nil) # nicklist, userlist
+			def update_user(user_obj, nick, user=nil, host=nil, real=nil) # :nodoc:
 				@users.synchronize {
 					update_user_unsynchronized(user_obj, nick, user, host, real)
 				}
@@ -281,7 +288,10 @@ module SilverPlatter
 
 			# Should only be used by the Parser
 			# Deletes a user, returns whether a User has been actually deleted
-			def delete_user(user, reason=nil) # nicklist, userlist
+			def delete_user(user, reason=nil) # :nodoc:
+				if user.change_visibility(false) then
+					# FIXME: inform UserManager
+				end
 				@users.synchronize {
 					!!(@nicknames.delete(user.compare) || @users.delete(user))
 				}
@@ -289,7 +299,7 @@ module SilverPlatter
 			
 			# Should only be used by the parser
 			# Create a Channel if necessary. Returns the new or existing Channel.
-			def create_channel(name) # namelist, channellist
+			def create_channel(name) # :nodoc:
 				@channels.synchronize {
 					channel = (@channelnames[casemap(name)] ||= Channel.new(name, self))
 					@channels[channel] = true
@@ -299,7 +309,7 @@ module SilverPlatter
 			
 			# Should only be used by the parser
 			# Delete a channel, returns whether a channel has been actually deleted
-			def delete_channel(name, reason=nil) # namelist, channellist
+			def delete_channel(name, reason=nil) # :nodoc:
 				@channels.synchronize {
 					!!(@channels.delete(channel) || @channelnames.delete(channel.compare))
 				}
@@ -381,8 +391,8 @@ module SilverPlatter
 				if @read_thread.alive? then
 					prepare do
 						super(nick, user, real, serverpass)
-					end.wait_for([:RPL_WELCOME, :ERR_NOMOTD])
-				else
+					end.wait_for :RPL_WELCOME
+				else # can't use wait_for if there's no read_thread running
 					super(nick, user, real, serverpass)
 					begin
 						message = read_message
@@ -402,10 +412,12 @@ module SilverPlatter
 				self
 			end
 
+			# Quits, closes the connection and updates all users (visibility)
 			def quit(reason=nil)
 				prepare do
 					send_quit(reason)
-				end.wait_for :ERROR
+				end.wait_for :ERROR # rfc2812, 3.1.7, Servers acknowledge a QUIT with an ERROR
+				close
 				self
 			end
 
@@ -557,15 +569,30 @@ module SilverPlatter
 
 			# This method is intended for developer use only, it will remove a user from
 			# a channel and the channel from the user
-			def leave_channel(message, reason1, reason2)
+			def leave_channel(message, reason1, reason2) # :nodoc:
 				if message.from && message.channel then
 					message.from.delete_channel(message.channel, reason1)
 					message.channel.delete_user(message.from, reason1)
 					if message.from.equal?(@myself) then
 						@channels.delete(message.channel)
 						@users.delete_channel(message.channel, reason2)
+					elsif !message.from.common_channels?(@myself) then
+						if message.from.change_visibility(false) then
+						# FIXME: inform UserManager
+						end
 					end
+				else
+					debug "Unexpected leave_channel (no from or channel)", nil, :message => message
 				end
+			end
+			
+			# This method is intended for developer use only, it will remove a user from
+			# all his channels and remove all channels from the user, it also drops the user
+			# from the connections userlist.
+			def leave_server(message, user, reason1, reason2) # :nodoc:
+				user.delete_user(user, reason)
+				user.clear
+				connection.delete_user(user, reason)
 			end
 			
 			# See CAPAB-IDENTIFY in the ISUPPORT draft.

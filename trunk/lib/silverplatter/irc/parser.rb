@@ -220,7 +220,14 @@ module SilverPlatter
 			# Expects the newlines to be already chomped off.
 			# Process a message and set the additional fields
 			# process can have side-effects on the associated Connection
-			# FIXME: documentation of this method
+			#
+			# == Notes
+			# There are several 'magic' fields which the parser will automatically convert:
+			# * :channel - will automatically be replaced by the corresponding Channel object (by name)
+			# * :recipient - will automatically be replaced by the corresponding User object (by nick)
+			#
+			# == FIXME
+			# * documentation of this method
 			def server_message(raw)
 				prefix, command, params, symbol, from = nil
 				from, recipient, channel, text, identified = nil
@@ -234,10 +241,14 @@ module SilverPlatter
 
 				# Parse prefix if possible (<nick>!<user>@<host>)
 				from	= @connection.create_user($1, $2, $3) if prefix and prefix =~ @simple_hostmask
+				x = $1, $2, $3
 
 				# in depth analyzis of the message
 				processor = @commands[command.downcase]
 				symbol    = processor.symbol
+				
+				#p [prefix, @simple_hostmask, x] if symbol == :JOIN
+				
 				fields    = {}
 				if regex = processor.regex then
 					if match = regex.match(params) then

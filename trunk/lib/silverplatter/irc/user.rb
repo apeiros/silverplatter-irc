@@ -27,7 +27,6 @@ module SilverPlatter
 		# == Description
 		#
 		# == Notes
-		#
 		# The code assumes Object#dup, Hash#[] and Hash#[] to be atomic, in other
 		# words it doesn't synchronize those methods.
 		# 
@@ -86,6 +85,7 @@ module SilverPlatter
 				@host       = host.freeze if host
 				@real       = real.freeze if real
 				@last_seen  = Time.now
+				@visibility = false
 
 				set_compare
 
@@ -244,7 +244,7 @@ module SilverPlatter
 			
 			# True if the user shares no channel with the SilverPlatter::IRC::Connection
 			def invisible?
-				@visibility
+				!@visibility
 			end
 
 			# This method is intended to be used by IRC::Parser or IRC::Client

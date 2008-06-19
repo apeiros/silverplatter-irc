@@ -16,7 +16,7 @@ add_expression :hex,        /[\dA-Fa-f]/
 add_expression :channel_id, /[A-Z\d]{5}/
 add_expression :chanstring, /[^\x00\x07\x10\x0D\x20,:]/
 add_expression :channel,    /(?:[#+&]|!#{expression.channel_id})#{expression.chanstring}(?::#{expression.chanstring})?/
-add_expression :user,       /[^\x00\x10\x0D\x20@]/
+add_expression :user,       /[^\x00\x10\x0D\x20@]+/
 add_expression :nick,       /[A-Za-z\[\]\\`_^{|}][A-Za-z\d\[\]\\`_^{|}-]{0,7}/
 add_expression :command,    /[A-Za-z]+|\d{3}/
 add_expression :ip4addr,    /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
