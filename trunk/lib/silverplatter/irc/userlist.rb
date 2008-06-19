@@ -118,6 +118,12 @@ module SilverPlatter
 					@users.any? { |k,v| k.compare == nick }
 				end
 			end
+			
+			# Get the value associated with a user
+			def by_user(user)
+				raise TypeError, "User expected, #{user.class} given." unless user.kind_of?(User)
+				@users[user]
+			end
 
 			# Get a user by nick
 			# Also see IRC::Connection#strip_user_prefixes
@@ -205,10 +211,25 @@ module SilverPlatter
 				}
 				sieve.reject { |host, users| users.size < min }
 			end
+
+			# Users this userlist shares with another one
+			#   userlist_a.common_users(userlist_b) # => UserList
+			def common_users(with_other)
+				common = @users.keys & with_other.users
+				users  = @users # @users would refer to the lists @users
+				list   = UserList.new(@connection)
+				list.instance_eval {
+					common.each { |user|
+						@users[user] = users[user]
+					}
+				}
+				list
+			end
 			
-			# Gives a list of users that are in all given userlists.
-			def common_users(*with)
-				raise ArgumentError, "No Userlist given" if with.empty?
+			# Whether this userlist shares users with another one			
+			def common_users?(with_other)
+				!common_users_array(@users.keys & with_other.users).empty?
+			end
 				
 
 			# iterate over [user, value]
