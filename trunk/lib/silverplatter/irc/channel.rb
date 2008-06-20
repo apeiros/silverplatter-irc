@@ -64,16 +64,20 @@ module SilverPlatter
 			# The modes this channel has (a String with the mode letters)
 			attr_reader :mode
 			
+			# The Time this channel was created (NB: not supported by all irc servers)
+			attr_accessor :created_at
+			
 			# Create a Butler::IRC::Channel-object.
 			# If this channel object is a life channel, you should set
 			# a connection and notify to true, so the channel gets informed
 			# about nickchanges
 			def initialize(name, connection=nil)
 				super(connection)
-				@name    = name.freeze
-				@topic   = Topic.new("", nil, nil)
-				@compare = casemap(name)
-				@mode    = ChannelModes.new
+				@name       = name.freeze
+				@topic      = Topic.new("", nil, nil)
+				@compare    = casemap(name)
+				@mode       = ChannelModes.new
+				@created_at = nil
 			end
 			
 			# Add a user, optionally set his flags (will be frozen)

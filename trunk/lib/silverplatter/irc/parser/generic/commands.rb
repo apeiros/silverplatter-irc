@@ -40,7 +40,7 @@ rpl_identify_msg = proc { |connection, message, fields|
 	connection.parser.msg_identify ||= types["IDENTIFY-MSG"]
 }
 rpl_channel_info = proc { |connection, message, fields|
-	message.channel.created_at = Time.at(fields[:created_at])
+	message.channel.created_at = Time.at(fields[:created_at].to_i)
 }
 rpl_topic_info = proc { |connection, message, fields|
 	topic = message.channel.topic
@@ -64,7 +64,7 @@ add("290", :RPL_IDENTIFY_MSG, :nick, :types, &rpl_identify_msg) # irc.freenode.o
 add("307", :RPL_REGISTERED_INFO) # irc.bluewin.ch [ConferenceRoom]: sent on whois if a nick is registered
 add("320", :RPL_IDENTIFIED_TO_SERVICES) # possibly hyperion only
 add("328", :UNK_328) # freenode.net, on join
-add("329", :RPL_CHANNEL_INFO, :recipient, :channel, :created, &rpl_channel_info) #channel creation time
+add("329", :RPL_CHANNEL_INFO, :recipient, :channel, :created_at, &rpl_channel_info) #channel creation time
 add("333", :RPL_TOPIC_INFO, :for, :channel, :set_by, :set_at, &rpl_topic_info)
 add("343", :RPL__MAINTENANCE)	#mainenance notice?
 add("377", :UNK_377)

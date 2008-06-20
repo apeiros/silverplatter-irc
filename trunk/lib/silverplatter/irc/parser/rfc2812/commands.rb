@@ -100,12 +100,14 @@ rpl_topic = proc { |connection, message, fields|
 	message.channel.topic.text = message[:topic]
 }
 rpl_whoreply = proc { |connection, message, fields|
-	# :for, :channel", "user", "host", "server", "nick", "status", "flags", "hopcount", "real"
-	user      = connection.create_user(fields[:nick], fields[:user], fields[:host], fields[:real])
-	user.away = fields[:status] == AwayStatus
+	# :for, :channel", :user, :host, :server, :nick, :status, :flags", "hopcount", "real"
+	n, u, h, r    = fields.values_at(:nick, :user, :host, :real)
+	user          = connection.create_user(n, u, h, r.split(/ /, 2).last)
+	status, flags = fields[:status].match(/([HG])\*?(.*)/).captures
+	user.away     = status == AwayStatus
 	user.add_channel(message.channel, :joined)
 	message.channel.add_user(user, :joined)
-	user.add_flags(message.channel, fields[:flags])
+	user.add_flags(message.channel, flags)
 }
 rpl_namereply = proc { |connection, message, fields|
 	users            = fields[:users]
@@ -236,8 +238,8 @@ add("347", :RPL_ENDOFINVITELIST)
 add("348", :RPL_EXCEPTLIST)
 add("349", :RPL_ENDOFEXCEPTLIST)
 add("351", :RPL_VERSION)
-add("352", :RPL_WHOREPLY, :recipient, :channel, :user, :host, :server, :nick, :status, :flags, :hopcount, :real, &rpl_whoreply)
-add("353", :RPL_NAMEREPLY, :recipient, :channel, :users, &rpl_namereply)
+add("352", :RPL_WHOREPLY, :recipient, :channel, :user, :host, :server, :nick, :status, :real, &rpl_whoreply)
+add("353", :RPL_NAMEREPLY, :recipient, :channel_setting, :channel, :users, &rpl_namereply)
 add("361", :RPL_KILLDONE)
 add("362", :RPL_CLOSING)
 add("363", :RPL_CLOSEEND)
