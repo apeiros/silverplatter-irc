@@ -13,15 +13,11 @@
 * Add mode argument support in USER (can set +w and +i)
 * isupport.channelprefixes - check if that's the correct name for the property
 * Check whether channel expressions should be adapted to isupports chanlen
-* Check whether we should really wait for RPL_WELCOME/ERR_NOMOTD (probably only RPL_WELCOME) in Connection#login
 * Check threading validity of Connection#(create/delete)_(user/channel)
 * Send events to @usermanager
 * Notification system (Channel, ChannelList, User, UserList)
-* formatting or formating?
 * Improve situation with altering commands (avoid having to copy blocks e.g.)
-* Proper IRC lexer (params part)
 * Improve the penalty system (rbot, limechat, original ircd)
-* me vs. myself, me? vs. myself?
 * FIXMEs
 * Docs
 * Specs
