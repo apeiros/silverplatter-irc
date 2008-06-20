@@ -248,7 +248,7 @@ module SilverPlatter
 			# add a channel to the user (should only be used by SilverPlatter::IRC::Parser)
 			def add_channel(channel, reason=nil) #:nodoc:
 				raise TypeError, "Channel required, #{channel.class} given" unless Channel === channel
-				@channels[channel] = "" unless @channels.has_key?(channel)
+				@channels[channel] = NoModes unless @channels.has_key?(channel)
 			end
 	
 			# remove a channel from the user (should only be used by SilverPlatter::IRC::Parser)
