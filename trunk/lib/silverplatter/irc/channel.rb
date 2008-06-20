@@ -148,7 +148,7 @@ module SilverPlatter
 			end
 
 			def inspect # :nodoc:
-				sprintf "#<%s:0x%x %s %s (%d users)",
+				sprintf "#<%s:0x%08x %s %s (%d users)",
 					self.class,
 					object_id<<1,
 					@name,

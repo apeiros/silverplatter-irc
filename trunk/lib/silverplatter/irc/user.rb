@@ -183,7 +183,7 @@ module SilverPlatter
 			end
 	
 			def inspect # :nodoc:
-				sprintf "#<%s:0x%x %s!%s@%s (%s) in %s>",
+				sprintf "#<%s:0x%08x %s!%s@%s (%s) in %s>",
 					self.class,
 					object_id<<1,
 					@nick || "?",
