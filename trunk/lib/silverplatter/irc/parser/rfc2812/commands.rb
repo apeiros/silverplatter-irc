@@ -7,10 +7,10 @@
 # This file is instance_eval'ed on a SilverPlatter::IRC::Parser, so see there for
 # available methods
 
-# --- Text based ----------------------------------------
-add("error",   :ERROR)		# ERROR :<error-message>
-add("invite",  :INVITE, /^(\S*) :(.*)/, [:invited, :channel])
-add("join",    :JOIN,   /^:(.*)/, [:channel]) { |connection, message, fields|
+# --- procs      ----------------------------------------
+AwayStatus = "G".freeze unless defined? AwayStatus
+
+join = proc { |connection, message, fields|
 	from    = message.from
 	channel = message.channel
 	if from && channel then
@@ -26,15 +26,15 @@ add("join",    :JOIN,   /^:(.*)/, [:channel]) { |connection, message, fields|
 		end
 	end
 }
-add("kick",    :KICK,   /^(\S*) (\S*) :(.*)/, [:channel, :recipient, :text]) { |connection, message, fields|
+kick = proc { |connection, message, fields|
 	connection.leave_channel(message, :kick, :kicked)
 }
-add("kill",    :KILL,   /^(\S*) (\S*) (.*)/, [:channel, :recipient, :text]) { |connection, message, fields|
+kill = proc { |connection, message, fields|
 	connection.leave_server(message, message.recipient, :kill, :killed)
 }
 # FIXME, take another look at this (code, isupport)
-add("mode",    :MODE,   /^(\S*) (.*)/, [:recipient, :arguments]) { |connection, message, fields|
-	modifiers       = message[:arguments].split(" ")
+mode = proc { |connection, message, fields|
+	modifiers       = fields[:arguments].split(" ")
 	modes           = modifiers.shift.split("")
 	flags           = {"o" => User::Op, "v" => User::Voice, "u" => User::Uop}
 	message[:modes] = []
@@ -63,32 +63,86 @@ add("mode",    :MODE,   /^(\S*) (.*)/, [:recipient, :arguments]) { |connection, 
 		end
 	}
 }
-add("nick",    :NICK,    /^:?(.*)/, [:nick]) { |connection, message, fields|
+nick = proc { |connection, message, fields|
 	message[:old_nick] = message.from.nick
 	connection.update_user(message.from, message.nick) if message.from
 }
-add("notice",  :NOTICE,  /(\S+) :(.*)/, [:recipient, :text]) { |connection, message, fields|
+notice = proc { |connection, message, fields|
 	if connection.msg_identify then
 		message.instance_variable_set(:@identified, message.text.slice!(/^[+-]/) == '+')
 	end
 }
-add("part",    :PART,    /^([^\x00\x07\x10\x0D\x20,:]+)(?: :(.*))?/, [:channel, :reason]) { |connection, message, fields|
+part = proc { |connection, message, fields|
 	connection.leave_channel(message, :part, :parted)
 }
-add("ping",    :PING,    /^:?(.*)/, [:pong]) { |connection, message, fields|
+pong = proc { |connection, message, fields|
 	connection.send_pong(fields[:pong])
 }
-add("pong",    :PONG)
-add("privmsg", :PRIVMSG, /(\S+) :(.*)/, [:recipient, :text]) { |connection, message, fields|
+privmsg = proc { |connection, message, fields|
 	if connection.msg_identify then
 		message.instance_variable_set(:@identified, message.text.slice!(/^[+-]/) == '+')
 		# FIXME: inform UserManager if message.from.invisible?
 	end
 }
-add("quit",    :QUIT,    /(.*)/, [:text]) { |connection, message, fields|
+quit = proc { |connection, message, fields|
 	connection.leave_server(message, message.from, :quit, :quitted)
 }
-add("topic",   :TOPIC, /(\S+) :(.*)/, [:channel, :text])
+rpl_whoisidle = proc { |connection, message, fields|
+	values       = fields[:values].split(" ");
+	descriptions = fields[:descriptions].split(", ").map { |desc| desc.gsub(" ", "_").to_sym };
+	message.delete(:values)
+	message.delete(:descriptions)
+	0.upto([values.length, descriptions.length].min-1) { |index|
+		message[descriptions[index]]	= values[index]
+	}
+}
+rpl_topic = proc { |connection, message, fields|
+	message.channel.topic.text = message[:topic]
+}
+rpl_whoreply = proc { |connection, message, fields|
+	# :for, :channel", "user", "host", "server", "nick", "status", "flags", "hopcount", "real"
+	user      = connection.create_user(fields[:nick], fields[:user], fields[:host], fields[:real])
+	user.away = fields[:status] == AwayStatus
+	user.add_channel(message.channel, :joined)
+	message.channel.add_user(user, :joined)
+	user.add_flags(message.channel, fields[:flags])
+}
+rpl_namereply = proc { |connection, message, fields|
+	users            = fields[:users]
+	delete_who_flags = connection.parser.expression.delete_who_flags
+	
+	fields[:users] = users.split(/ /).map { |nick|
+		user	= connection.create_user(nick.sub(delete_who_flags, ''))
+		user.add_channel(message.channel, :joined)
+		message.channel.add_user(user, :joined)
+		user
+	}
+}
+rpl_banlist = proc { |connection, message, fields| #367 nickname #channel nick!user@host nickname 1140125288
+	message[:bantime]	= Time.at(fields[:bantime].to_i)
+	message[:banmask]	= Hostmask.new(fields[:banmask])
+}
+err_nicknameinuse = proc { |connection, message, fields|
+	connection.event(:nick_error, message)
+}
+
+
+
+# --- Text based ----------------------------------------
+add("error",   :ERROR,   :text)		# ERROR :<error-message>
+add("invite",  :INVITE,  :invited, :channel)
+add("join",    :JOIN,    :channel, &join) 
+add("kick",    :KICK,    :channel, :recipient, :text, &kick)
+add("kill",    :KILL,    :channel, :recipient, :text, &kill)
+add("mode",    :MODE,    :recipient, :arguments, &mode)
+add("nick",    :NICK,    :nick, &nick)
+add("notice",  :NOTICE,  :recipient, :text, &notice)
+add("part",    :PART,    :channel, :reason, &part)
+add("ping",    :PING,    :pong, &pong)
+add("pong",    :PONG)
+add("privmsg", :PRIVMSG, :recipient, :text, &privmsg)
+add("quit",    :QUIT,    :text, &quit)
+add("topic",   :TOPIC,   :channel, :text)
 
 
 
@@ -96,9 +150,8 @@ add("topic",   :TOPIC, /(\S+) :(.*)/, [:channel, :text])
 add("001", :RPL_WELCOME)
 add("002", :RPL_YOURHOST)
 add("003", :RPL_CREATED)
-add("004", :RPL_MYINFO, /(\S+) (\S+) (\S+) (\S+)/, [:servername, :version, :user_modes, :channel_modes])
+add("004", :RPL_MYINFO, :servername, :version, :user_modes, :channel_modes)
 add("005", :RPL_BOUNCE)
-
 
 
 
@@ -123,15 +176,12 @@ add("216", :RPL_STATSKLINE)
 add("217", :RPL_STATSQLINE)
 add("218", :RPL_STATSYLINE)
 add("219", :RPL_ENDOFSTATS)
-
 add("221", :RPL_UMODEIS)
-
 add("231", :RPL_SERVICEINFO)
 add("232", :RPL_ENDOFSERVICES)
 add("233", :RPL_SERVICE)
 add("234", :RPL_SERVLIST)
 add("235", :RPL_SERVLISTEND)
-
 add("240", :RPL_STATSVLINE)
 add("241", :RPL_STATSLLINE)
 add("242", :RPL_STATSUPTIME)
@@ -150,10 +200,8 @@ add("256", :RPL_ADMINME)
 add("257", :RPL_ADMINLOC1)
 add("258", :RPL_ADMINLOC2)
 add("259", :RPL_ADMINEMAIL)
-
 add("261", :RPL_TRACELOG)
 add("262", :RPL_TRACEEND)
-
 add("263", :RPL_TRYAGAIN)
 
 
@@ -165,33 +213,22 @@ add("302", :RPL_USERHOST)
 add("303", :RPL_ISON)
 add("305", :RPL_UNAWAY)
 add("306", :RPL_NOWAWAY)
-add("311", :RPL_WHOISUSER, /^(\S+) (\S+) (\S+) (\S+) \* :(.*)/, [:recipient, :nick, :user, :host, :real])
+add("311", :RPL_WHOISUSER, :recipient, :nick, :user, :host, :real)
 add("312", :RPL_WHOISSERVER)
 add("313", :RPL_WHOISOPERATOR)
 add("314", :RPL_WHOWASUSER)
-add("315", :RPL_ENDOFWHO)
+add("315", :RPL_ENDOFWHO, :recipient, :channel)
 add("316", :RPL_WHOISCHANOP)
-add("317", :RPL_WHOISIDLE, /^(\S+) (\S+) ([^:]+) :(.*)/, [:recipient, :nick, :values, :descriptions]) { |connection, message, fields|
-	values			= message[:values].split(" ");
-	descriptions	= message[:descriptions].split(", ").map { |desc| desc.gsub(" ", "_").to_sym };
-	message.delete(:values)
-	message.delete(:descriptions)
-	0.upto([values.length, descriptions.length].min-1) { |index|
-		message[descriptions[index]]	= values[index]
-	}
-}
+add("317", :RPL_WHOISIDLE, :recipient, :nick, :values, :descriptions, &rpl_whoisidle)
 add("318", :RPL_ENDOFWHOIS)
-add("319", :RPL_WHOISCHANNELS, /^(\S+) (\S+) :(.*)/, [:recipient, :nick, :channels]) # only add channels shared with butler to a user - that happens elsewhere already
+add("319", :RPL_WHOISCHANNELS, :recipient, :nick, :channels)
 add("321", :RPL_LISTSTART)
-add("322", :RPL_LIST, /^(\S+) (\S+) (\d+) :(.*)/, [:recipient, :channelname, :usercount, :topic])
+add("322", :RPL_LIST, :recipient, :channelname, :usercount, :topic)
 add("323", :RPL_LISTEND)
-add("324", :RPL_CHANNELMODEIS)
+add("324", :RPL_CHANNELMODEIS) # FIXME recipient, channel, +modes
 add("325", :RPL_UNIQOPIS)
 add("331", :RPL_NOTOPIC)
-		# :irc.server.net 332 YourNickname #channel :Topic
-add("332", :RPL_TOPIC, /^(\S+) (\S+) :(.*)/, [:recipient, :channel, :topic]) { |connection, message, fields|
-	message.channel.topic.text = message[:topic]
-}
+add("332", :RPL_TOPIC, :recipient, :channel, :topic, &rpl_topic)
 add("341", :RPL_INVITING)
 add("342", :RPL_SUMMONING)
 add("346", :RPL_INVITELIST)
@@ -199,44 +236,16 @@ add("347", :RPL_ENDOFINVITELIST)
 add("348", :RPL_EXCEPTLIST)
 add("349", :RPL_ENDOFEXCEPTLIST)
 add("351", :RPL_VERSION)
-		# :irc.server.net 352 YourNickname <channel> <user> <host> <server> <nick> ( "H" / "G" > ["*"] [ ( "@" / "+" ) ] :<hopcount> <real name>
-add("352", :RPL_WHOREPLY,
-			/(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) ([HG])\*?(#{expression.who_flags}) :(\d+) (.*)/,
-			[:recipient, :channel, :user, :host, :server, :nick, :status, :flags, :hopcount, :real]) { |connection, message, fields|
-#"for", "channel", "user", "host", "server", "nick", "status", "flags", "hopcount", "real"
-	user	= connection.create_user(message[:nick])
-	connection.update_user(user, message[:nick], message[:user], message[:host], message[:real])
-	user.away	= message[:status] == "G"
-	user.add_channel(message.channel, :joined)
-	message.channel.add_user(user, :joined)
-	user.add_flags(message.channel, message[:flags])
-}
-add("353", :RPL_NAMEREPLY, /(\S+) [=@*] (\S+) :(.*)/, [:recipient, :channel, :users]) { |connection, message, fields|
-	users            = fields[:users]
-	delete_who_flags = connection.parser.expression.delete_who_flags
-	
-	message[:users] = users.split(/ /).map { |nick|
-		user	= connection.create_user(nick.sub(delete_who_flags, ''))
-		user.add_channel(message.channel, :joined)
-		message.channel.add_user(user, :joined)
-		user
-	}
-}
+add("352", :RPL_WHOREPLY, :recipient, :channel, :user, :host, :server, :nick, :status, :flags, :hopcount, :real, &rpl_whoreply)
+add("353", :RPL_NAMEREPLY, :recipient, :channel, :users, &rpl_namereply)
 add("361", :RPL_KILLDONE)
 add("362", :RPL_CLOSING)
 add("363", :RPL_CLOSEEND)
 add("364", :RPL_LINKS)
 add("365", :RPL_ENDOFLINKS)
 add("366", :RPL_ENDOFNAMES)
-add("367", :RPL_BANLIST,
-			/(\S+) (\S+) (\S+) (\S+) (\d+)/,
-			[:recipient, :channel, :banmask, :banned_by, :bantime]
-) { |connection, message, fields| #367 nickname #channel nick!user@host nickname 1140125288
-	message[:bantime]	= Time.at(message[:bantime].to_i)
-	message[:banmask]	= Hostmask.new(message[:banmask])
-}
+add("367", :RPL_BANLIST, :recipient, :channel, :banmask, :banned_by, :bantime, &rpl_banlist)
 add("369", :RPL_ENDOFWHOWAS)
-
 add("368", :RPL_ENDOFBANLIST)
 add("371", :RPL_INFO)
 add("372", :RPL_MOTD)
@@ -277,9 +286,7 @@ add("423", :ERR_NOADMININFO)
 add("424", :ERR_FILEERROR)
 add("431", :ERR_NONICKNAMEGIVEN)
 add("432", :ERR_ERRONEUSNICKNAME)
-add("433", :ERR_NICKNAMEINUSE) { |connection, message, fields|
-	connection.event(:nick_error, message)
-}
+add("433", :ERR_NICKNAMEINUSE, &err_nicknameinuse)
 add("436", :ERR_NICKCOLLISION)
 add("437", :ERR_UNAVAILRESOURCE)
 add("441", :ERR_USERNOTINCHANNEL)

@@ -397,21 +397,24 @@ module SilverPlatter
 					end.wait_for :RPL_WELCOME
 				else # can't use wait_for if there's no read_thread running
 					super(nick, user, real, serverpass)
-					begin
-						message = read_message
-					end until [:RPL_WELCOME, :ERR_NOMOTD].include?(message.symbol)
+					read_message_until :RPL_WELCOME
 				end
 
 				true
 			ensure
 				@events[:nick_error] = @events.delete(:old_nick_error)
 			end
-
+			
 			# Quits, closes the connection and updates all users (visibility)
 			def quit(reason=nil)
-				prepare do
+				if @read_thread.alive? then
+					prepare do
+						send_quit(reason)
+					end.wait_for :ERROR # rfc2812, 3.1.7, Servers acknowledge a QUIT with an ERROR
+				else
 					send_quit(reason)
-				end.wait_for :ERROR # rfc2812, 3.1.7, Servers acknowledge a QUIT with an ERROR
+					read_message_until :ERROR
+				end
 				close
 				self
 			end
@@ -526,6 +529,18 @@ module SilverPlatter
 			def terminate(stop_reading=true)
 			end
 			
+			# Read the next messages from the server until one of the
+			# specified commands comes up or the Connection is disconnected
+			# Returns a SilverPlatter::IRC::Message or nil on disconnect.
+			# Does NOT dispatch.
+			def read_message_until(*command)
+				while string = read
+					message = @parser.server_message(string)
+					return message if command.include?(message.symbol)
+				end
+				nil
+			end
+
 			# Read the next message from the server. Returns a
 			# SilverPlatter::IRC::Message or nil on disconnect.
 			# Does NOT dispatch.

@@ -10,6 +10,10 @@
 add_expression :who_flags,  /[#{Regexp.escape(@isupport.prefixes)}]{0,#{@isupport.prefixes.size}}/
 add_expression :delete_who_flags, /\A#{expression.who_flags}/
 
+
+
+# These expressions implement RFC2812, Section 2.3.1
+
 add_expression :special,    /[\[\]\\`_^{|}]/
 add_expression :letter,     /[A-Za-z]/
 add_expression :hex,        /[\dA-Fa-f]/
@@ -25,13 +29,25 @@ add_expression :hostaddr,   /#{expression.ip4addr}|#{expression.ip6addr}/
 add_expression :shortname,  /[A-Za-z0-9][A-Za-z0-9-]*/
 add_expression :hostname,   /#{expression.shortname}(?:\.#{expression.shortname})*/
 add_expression :host,       /#{expression.hostname}|#{expression.hostaddr}/
-add_expression :prefix,     /(#{expression.hostname})|(#{expression.nick})(?:(?:!(#{expression.user}))?@(#{expression.host}))?/
-add_expression :params,     /.*/ # FIXME
+add_expression :prefix,     /
+  # HOSTNAME
+  (#{expression.hostname})|
+  # HOSTMASK
+    # NICK
+    (#{expression.nick})
+    # USER
+    (?:(?:!(#{expression.user}))?
+    # HOST
+    @(#{expression.host}))?
+/x
+add_expression :middle,     /[^\x00\x20\r\n:][^\x00\x20\r\n]*/
+add_expression :trailing,   /[^\x00\r\n]*/
+add_expression :params,     /((?:\x20#{expression.middle}){0,14}(?:\x20:?#{expression.trailing})?)/
 add_expression :message,    /^
 # PREFIX
 (:#{expression.prefix}\x20)?
 # COMMAND
 (#{expression.command})
 # PARAMS
-(#{expression.params})?
+(?:#{expression.params})?
 $/x

@@ -8,3 +8,5 @@
 # available methods
 
 alter_expression :nick,       /[A-Za-z\[\]\\`_^{|}][A-Za-z\d\[\]\\`_^{|}-]{0,#{isupport.nicklen-1}}/
+add_expression   :cloak,      /[^\x20]+/
+alter_expression :host,       /#{expression.hostname}|#{expression.hostaddr}|#{expression.cloak}/

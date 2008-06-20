@@ -48,6 +48,9 @@ module SilverPlatter
 		# * SilverPlatter::IRC
 		# * SilverPlatter::IRC::Connection
 		class Parser
+		
+			# The regex used to scan the params
+			ParamScanRegex = /[^\x00\x20\r\n:][^\x00\x20\r\n]*|:[^\x00\r\n]*/
 
 			# enables chdirs, path to the command-sets
 			BasePath = (File.expand_path(File.dirname(__FILE__))+'/parser').freeze
@@ -140,13 +143,8 @@ module SilverPlatter
 				commands.each { |comfile|
 					instance_eval(File.read(comfile), comfile)
 				}
-				@loading = nil
-
-				@simple_message  = /\A(?::([^ \0]+) )?([A-Za-z\d]+|\d{3})(?: (.*))?\z/
-				@simple_hostmask = /(#{expression.nick})(?:(?:!(#{expression.user}))?@(#{expression.host}))?/
-				
-				@expression.simple_message  = @simple_message
-				@expression.simple_hostmask = @simple_hostmask
+				@loading        = nil
+				@message_regex  = @expression.message # performance
 			end
 
 			def load(*files)
@@ -232,27 +230,21 @@ module SilverPlatter
 				from, recipient, channel, text, identified = nil
 
 				# Basic analysis of the message
-				raise InvalidMessageFormat, raw unless matched = raw =~ @simple_message
-				prefix  = $1
-				command = $2
-				params	= $3
+				#raise InvalidMessageFormat, raw unless matched = raw =~ @simple_message
+				raise InvalidMessageFormat, raw unless matched = raw.match(@message_regex)
+				# $1: prefix, $2: hostname, $3: nick, $4: user, $5: host, $6: command, $7: params
+				prefix, servername, nick, user, real, command, params = *matched.captures
+				from    = @connection.create_user(nick, user, real) if nick
+				params  = params ? params.scan(ParamScanRegex) : []
+				params.last.sub!(/^:/, '') if params.last
 				command.downcase!
-
-				# Parse prefix if possible (<nick>!<user>@<host>)
-				from	= @connection.create_user($1, $2, $3) if prefix and prefix =~ @simple_hostmask
 
 				# in depth analyzis of the message
 				processor = @commands[command.downcase]
 				symbol    = processor.symbol
 				
 				fields    = {}
-				if regex = processor.regex then
-					if match = regex.match(params) then
-						processor.mapping.zip(match.captures) { |name, value| fields[name] = value }
-					else
-						raise MatchingFailure.new(symbol, params, regex)
-					end
-				end
+				processor.mapping.zip(params) { |name, value| fields[name] = value }
 
 				channel   = fields.delete(:channel)
 				recipient = fields.delete(:recipient)

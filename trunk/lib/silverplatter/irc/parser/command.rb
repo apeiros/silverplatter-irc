@@ -43,9 +43,9 @@ module SilverPlatter
 			# * SilverPlatter::IRC
 			# * SilverPlatter::IRC::Parser
 			# * SilverPlatter::IRC::Connection
-			class Command < Struct.new(:raw, :symbol, :regex, :mapping, :processor)
-				def initialize(raw, symbol, regex=nil, mapping=nil, &processor)
-					super(raw, symbol, regex, mapping, processor)
+			class Command < Struct.new(:raw, :symbol, :mapping, :processor)
+				def initialize(raw, symbol, *mapping, &processor)
+					super(raw, symbol, mapping, processor)
 				end
 			end # Command
 		end # Parser

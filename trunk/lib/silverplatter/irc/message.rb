@@ -149,6 +149,11 @@ module SilverPlatter
 				@data.has_key?(key.to_sym)
 			end
 			
+			# Remove data
+			def delete(key)
+				@data.delete(key)
+			end
+			
 			# Possible realms are:
 			# * :channel: The message was sent in a channel
 			# * :private: The message was sent as PRIVMSG/NOTICE addressed to you directly
