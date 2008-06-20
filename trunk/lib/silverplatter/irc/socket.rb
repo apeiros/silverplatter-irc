@@ -348,8 +348,8 @@ module SilverPlatter
 			end
 			
 			# send a mode command to a channel
-			def send_mode(channel, mode)
-				write_with_eol("MODE #{channel} #{mode}")
+			def send_mode(channel, mode=nil)
+				write_with_eol(mode ? "MODE #{channel} #{mode}" : "MODE #{channel}")
 			end
 			
 			# Give Op to user in channel
