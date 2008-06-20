@@ -78,7 +78,7 @@ module SilverPlatter
 			
 			# Add a user, optionally set his flags (will be frozen)
 			#   IRC::Channel.new("#test").add_user(IRC::User.new("test"))
-			def add_user(user, flags=NoModes)
+			def add_user(user, reason=nil, flags=NoModes)
 				@lock.synchronize {
 					@users[user] = flags.freeze
 				}
