@@ -11,10 +11,17 @@
 add("error",   :ERROR)		# ERROR :<error-message>
 add("invite",  :INVITE, /^(\S*) :(.*)/, [:invited, :channel])
 add("join",    :JOIN,   /^:(.*)/, [:channel]) { |connection, message, fields|
-	if message.from && message.channel then
-		message.from.add_channel(message.channel, :join)
-		message.channel.add_user(message.from, :join)
-		if message.from.change_visibility(true) then
+	from    = message.from
+	channel = message.channel
+	if from && channel then
+		from.add_channel(channel, :join)
+		channel.add_user(from,   :join)
+		if from.me? then
+			# advantage of doing it here: it is done after join (who might fail otherwise),
+			# disatvantage: +1 condition for every join
+			connection.send_mode(channel)
+			connection.send_who(channel)
+		elsif from.change_visibility(true) then
 			# FIXME: inform UserManager
 		end
 	end

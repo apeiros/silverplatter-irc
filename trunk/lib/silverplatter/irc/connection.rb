@@ -245,6 +245,7 @@ module SilverPlatter
 			
 			# Should only be used by the Parser
 			# Create a new User if necessary or update an old one, returns the new or existing User.
+			# FIXME: might be streamlineable
 			def create_user(nick, user=nil, host=nil, real=nil) # nicklist, userlist
 				new_user, old_user = nil, nil
 				@users.synchronize {
@@ -261,13 +262,15 @@ module SilverPlatter
 							@users[new_user] = true
 							@users.delete(old_user)
 	
-						else # Must NOT happen
-							old_user.status = :mutated
+						# thanks to the FU that is IRC, some ircds change hosts w/o notification, so:
+						elsif old_user.visible? then 
+							update_user(old_user, nick, user, host, real)
+
+						else
 							@nicknames.delete(old_user.compare)
 							@nicknames[new_user.compare]	= new_user
 							@users[new_user] = true
 							@users.delete(old_user)
-							raise "A user mutated #{old_user.inspect} -> #{new_user.inspect}"
 						end
 					else
 						@nicknames[new_user.compare]	= new_user
@@ -402,14 +405,6 @@ module SilverPlatter
 				true
 			ensure
 				@events[:nick_error] = @events.delete(:old_nick_error)
-			end
-
-			# Similar to send_join, but performs a WHO command on each channel joined to fill
-			# the userlists. Use this instead of send_join.
-			def join(*args)
-				send_join(*args)
-				args.each { |chan,pass| send_who(chan) }
-				self
 			end
 
 			# Quits, closes the connection and updates all users (visibility)
