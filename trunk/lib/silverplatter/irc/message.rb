@@ -233,7 +233,7 @@ module SilverPlatter
 			
 			private
 			def inspect_fields
-				"symbol=#{@symbol}"
+				"symbol=#{@symbol.inspect}"
 			end
 		end # Message
 	end # IRC

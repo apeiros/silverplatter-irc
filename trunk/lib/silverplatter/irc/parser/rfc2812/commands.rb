@@ -34,34 +34,34 @@ kill = proc { |connection, message, fields|
 }
 # FIXME, take another look at this (code, isupport)
 mode = proc { |connection, message, fields|
-	modifiers       = fields[:arguments].split(" ")
-	modes           = modifiers.shift.split("")
+	modes, *targets = message.params[1..-1] # drop recipient
 	flags           = {"o" => User::Op, "v" => User::Voice, "u" => User::Uop}
-	message[:modes] = []
-	argument_index  = 0
-	direction       = "+"
+	processed       = []
+	index           = 0
+	add_flag        = true # true is "+"
 	channel         = message.channel
 
-	modes.each { |mode|
-		# MODEs direction
+	modes.scan(/./) { |mode|
+		# MODE direction
 		if (%w[+ -].include?(mode)) then
-			direction	= mode
+			add_flag = (mode == "+")
 		# MODEs taking an argument
 		elsif ("kovu".include?(mode) || (mode == "l" && direction == "+")) then
 			if "ovu".include?(mode) then
-				if (direction == "+") then
-					connection.users.by_nick(modifiers[argument_index]).add_flag(channel, flags[mode]) #adding flags to user
+				if add_flag then
+					connection.users.by_nick(targets[index]).add_flag(channel, flags[mode]) #adding flags to user
 				else
-					connection.users.by_nick(modifiers[argument_index]).delete_flag(channel, flags[mode]) #removing flags from user
+					connection.users.by_nick(targets[index]).delete_flag(channel, flags[mode]) #removing flags from user
 				end
 			end
-			message.modes << [direction, mode, modifiers[argument_index]]
-			argument_index += 1
+			processed << [add_flag, mode, targets[index]]
+			index += 1
 		# MODEs without argument
 		else
-			message.modes << [direction, mode, nil]
+			processed << [add_flag, mode, nil]
 		end
 	}
+	message[:modes] = processed
 }
 nick = proc { |connection, message, fields|
 	message[:old_nick] = message.from.nick
@@ -136,7 +136,7 @@ add("invite",  :INVITE,  :invited, :channel)
 add("join",    :JOIN,    :channel, &join) 
 add("kick",    :KICK,    :channel, :recipient, :text, &kick)
 add("kill",    :KILL,    :channel, :recipient, :text, &kill)
-add("mode",    :MODE,    :recipient, :arguments, &mode)
+add("mode",    :MODE,    :recipient, &mode)
 add("nick",    :NICK,    :nick, &nick)
 add("notice",  :NOTICE,  :recipient, :text, &notice)
 add("part",    :PART,    :channel, :reason, &part)
