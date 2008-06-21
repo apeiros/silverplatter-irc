@@ -51,6 +51,11 @@ module SilverPlatter
 			def remove(mode)
 				@modes.delete(mode)
 			end
+			
+			# True if no mode is set at all.
+			def empty?
+				@modes.empty?
+			end
 
 			# Test whether the channel has a given mode set
 			#   channel.mode.set?(IRC::RFC1459_ChannelModes::Private)
@@ -98,6 +103,10 @@ module SilverPlatter
 				@modes[Password]
 			end
 			
+			def [](mode, value=true)
+				@modes[mode] = value
+			end
+
 			def []=(mode, value=true)
 				@modes[mode] = value
 			end
