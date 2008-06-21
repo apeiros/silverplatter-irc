@@ -2,7 +2,6 @@
   BUGS
 ================
 
-* User#quit & User#kill unimplemented
 * Following seems buggy (no length): add_expression :chanstring, /[^\x00\x07\x10\x0D\x20,:]/
 * rfc2812/commands.rb has some parser.expression calls
 
@@ -10,13 +9,13 @@
   TODO
 ================
 
+* Release wait_for and similar methods on disconnect
 * Add mode argument support in USER (can set +w and +i)
 * isupport.channelprefixes - check if that's the correct name for the property
 * Check whether channel expressions should be adapted to isupports chanlen
 * Check threading validity of Connection#(create/delete)_(user/channel)
 * Send events to @usermanager
 * Notification system (Channel, ChannelList, User, UserList)
-* Improve situation with altering commands (avoid having to copy blocks e.g.)
 * Improve the penalty system (rbot, limechat, original ircd)
 * FIXMEs
 * Docs
