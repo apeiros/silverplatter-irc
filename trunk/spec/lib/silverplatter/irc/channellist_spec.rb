@@ -29,9 +29,9 @@ end
 describe 'A populated channellist' do
 	before do
 		@list  = ChannelList.new
-		@chan1 = flexmock("channel 1", :compare => "#test1", :name => "#test1")
-		@chan2 = flexmock("channel 2", :compare => "#test2", :name => "#test2")
-		@chan3 = flexmock("channel 3", :compare => "#test3", :name => "#test3")
+		@chan1 = flexmock(Channel.new("#test1"), :compare => "#test1", :name => "#test1")
+		@chan2 = flexmock(Channel.new("#test2"), :compare => "#test2", :name => "#test2")
+		@chan3 = flexmock(Channel.new("#test3"), :compare => "#test3", :name => "#test3")
 		@list[@chan1] = true
 		@list[@chan2] = true
 	end

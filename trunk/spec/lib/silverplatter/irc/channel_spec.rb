@@ -33,9 +33,9 @@ end
 describe 'A populated channel' do
 	before do
 		@channel  = UserList.new
-		@user1 = flexmock("user 1", :compare => "#test1", :nick => "#test1")
-		@user2 = flexmock("user 2", :compare => "#test2", :nick => "#test2")
-		@user3 = flexmock("user 3", :compare => "#test3", :nick => "#test3")
+		@user1 = flexmock(SilverPlatter::IRC::User.new, "user 1", :compare => "#test1", :nick => "#test1")
+		@user2 = flexmock(SilverPlatter::IRC::User.new, "user 2", :compare => "#test2", :nick => "#test2")
+		@user3 = flexmock(SilverPlatter::IRC::User.new, "user 3", :compare => "#test3", :nick => "#test3")
 		@channel[@user1] = true
 		@channel[@user2] = true
 	end
@@ -45,7 +45,7 @@ describe 'A populated channel' do
 	end
 	
 	it 'should report the correct size' do
-		@channel.size.should.equal 2
+		@channel.size.should == 2
 	end
 	
 	it 'should include the user' do
