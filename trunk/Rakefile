@@ -2,17 +2,15 @@
 # configured in this Rakefile. The .rake files in the tasks directory
 # are where the options are used.
 
-load 'rake/setup.rb'
-
-ensure_in_path 'lib'
-require 'silverplatter/irc'
+require 'rake/initialize'
 
 task :default => 'spec:run'
 
-PROJ.name       = 'silverplatter-irc'
-PROJ.url        = 'http://silverplatter.rubyforge.org/irc'
-PROJ.rf.project = 'silverplatter'
-PROJ.rf.path    = 'silverplatter/irc'
+Project.meta.name             = 'silverplatter-irc'
+Project.meta.version          = version_proc("SilverPlatter::IRC::VERSION")
+Project.meta.website          = 'http://silverplatter.rubyforge.org/irc'
+Project.meta.bugtracker       = 'http://'
+Project.meta.feature_requests = 'http://'
 
-
-PROJ.spec.opts << '--color'
+Project.rubyforge.project     = 'silverplatter'
+Project.rubyforge.path        = 'silverplatter/irc'
