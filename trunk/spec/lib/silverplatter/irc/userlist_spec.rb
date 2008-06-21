@@ -29,9 +29,9 @@ end
 describe 'A populated userlist' do
 	before do
 		@list  = UserList.new
-		@user1 = flexmock("user 1", :compare => "#test1", :nick => "#test1")
-		@user2 = flexmock("user 2", :compare => "#test2", :nick => "#test2")
-		@user3 = flexmock("user 3", :compare => "#test3", :nick => "#test3")
+		@user1 = flexmock(User.new, :compare => "#test1", :nick => "#test1")
+		@user2 = flexmock(User.new, :compare => "#test2", :nick => "#test2")
+		@user3 = flexmock(User.new, :compare => "#test3", :nick => "#test3")
 		@list[@user1] = true
 		@list[@user2] = true
 	end

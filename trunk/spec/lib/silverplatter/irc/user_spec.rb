@@ -93,21 +93,20 @@ end
 
 describe "constructed with arguments (with relation to parser)" do
 	before do
-		@server = "irc.freenode.org:6667".freeze  
 		@user = User.new("NICK[\\]^", "x", "x", "x")
 	end
 	
 	it "should set compare when constructing" do
 		@user.compare.should == 'nick{|}~'
 	end 
+
 	it "should call set_compare when assigning to #nick" do
 		flexmock(@user).should_receive(:set_compare).once
-		
 		@user.nick = 'some nick'
 	end
+
 	it "should be able to use set_compare to set the #compare field" do
 		@user.nick = 'OTHER[\\]^'
-		
 		@user.compare.should == 'other{|}~'
 	end
 	
@@ -118,48 +117,45 @@ describe "constructed with arguments (with relation to parser)" do
 		@user.instance_variable_set('@nick', nick)
 		@user.send :set_compare
 	end
-	it "should use the given parser" do
-		parser = flexmock(:parser)
-		parser.should_receive(:casemap).at_least.once.and_return(:return_value)
+
+	it "should use the given connection's casemap" do
+		connection = flexmock(:connection, :casemap => :return_value)
+		user       = User.new("NICK[\\]^", "x", "x", "x", connection)
 		
-		@user.parser = parser
-		@user.nick = 'OTHER[\\]^'
+		user.nick = 'OTHER[\\]^'
 		
-		@user.compare.should == :return_value
+		user.compare.should == :return_value
 	end
+
 	it "should return Incomparable if there is no nick" do
-		user = User.new(@server)
-		
+		user = User.new
 		user.compare.should == User::Incomparable
 	end
 end
 
 describe 'when comparing objects' do
 	before do
-		@server = "irc.freenode.org:6667".freeze  
-		@a = User.new(@server, "testnick", "testuser", "testhost", "testreal")
-		@b = User.new(@server, "testnick", "testuser", "testhost", "testreal")
+		@a = User.new("testnick", "testuser", "testhost", "testreal")
+		@b = User.new("testnick", "testuser", "testhost", "testreal")
 	end
 	
-	it "should be the same user (==)" do
+	it "should be equal users (==)" do
 		@a.should == @b
 	end
-	it "should not be the same user anymore after we modify an attribute" do
+
+	it "should not be an equal user anymore after modification of an attribute" do
 		@b.nick = 'foo'
-		
-		@a.should_not == @b
+		@a.should.not == @b
 	end 
 end
 
 describe 'when sorting' do
 	before do
-		@server = "irc.freenode.org:6667".freeze  
-		
 		@users = []
-		@users << User.new(@server, "aa", "x", "x", "x")
-		@users << User.new(@server, "Ab", "b", "b", "b")
-		@users << User.new(@server, "b", "a", "a", "a")
-		@users << User.new(@server)
+		@users << User.new("aa", "x", "x", "x")
+		@users << User.new("Ab", "b", "b", "b")
+		@users << User.new("b", "a", "a", "a")
+		@users << User.new
 	end
 	
 	it "should allow sorting into a given order (as in @users)" do
