@@ -49,9 +49,9 @@ mode = proc { |connection, message, fields|
 		elsif ("kovu".include?(mode) || (mode == "l" && direction == "+")) then
 			if "ovu".include?(mode) then
 				if add_flag then
-					connection.users.by_nick(targets[index]).add_flag(channel, flags[mode]) #adding flags to user
+					connection.user_by_nick(targets[index]).add_flag(channel, flags[mode]) #adding flags to user
 				else
-					connection.users.by_nick(targets[index]).delete_flag(channel, flags[mode]) #removing flags from user
+					connection.user_by_nick(targets[index]).delete_flag(channel, flags[mode]) #removing flags from user
 				end
 			end
 			processed << [add_flag, mode, targets[index]]
@@ -114,6 +114,12 @@ rpl_namereply = proc { |connection, message, fields|
 	delete_who_flags = connection.parser.expression.delete_who_flags
 	
 	fields[:users] = users.split(/ /).map { |nick|
+		# FIXME: remove
+		unless connection.valid_nickname?(nick.sub(delete_who_flags, '')) then
+			warn "Invalid nick #{nick.sub(delete_who_flags, '').inspect} - :RPL_NAMEREPLY"
+		end
+		# ------ endfixme
+
 		user	= connection.create_user(nick.sub(delete_who_flags, ''))
 		user.add_channel(message.channel, :joined)
 		message.channel.add_user(user, :joined)

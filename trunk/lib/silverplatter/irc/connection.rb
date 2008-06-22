@@ -325,6 +325,15 @@ module SilverPlatter
 					!!(@channels.delete(channel) || @channelnames.delete(channel.compare))
 				}
 			end
+			
+			# Retrieve a Channel or User by channelname or nickname respectively.
+			def [](entity)
+				if valid_channelname?(entity) then
+					channel_by_name(entity)
+				else
+					user_by_nick(entity)
+				end
+			end
 
 			# If called without arguments it will return a UserList with all known users in this connection
 			# If called with arguments it will return an Array with users mapped to those nicks (possibly nil)
@@ -349,19 +358,15 @@ module SilverPlatter
 					}
 				end
 			end
-
+			
 			# Get a user by his nickname (the method takes care of casemapping)
 			def user_by_nick(nick) # => User
-				@message_lock.synchronize {
-					@nicknames[casemap(nick)]
-				}
+				@nicknames[casemap(nick)]
 			end
 
 			# Get a channel by its name (the method takes care of casemapping)
 			def channel_by_name(name) # => Channel
-				@message_lock.synchronize {
-					@channelnames[casemap(name)]
-				}
+				@channelnames[casemap(name)]
 			end
 			
 			# test whether two nicknames are the same, e.g. according to RFC1459-strict the
@@ -636,7 +641,7 @@ module SilverPlatter
 			#   connection.valid_nickname?("butler") # => true
 			#   connection.valid_nickname?("@butler") # => false
 			def valid_nickname?(name)
-				name =~ @parser.expressions.nick
+				name =~ @parser.expression.nick
 			end
 			
 			# Define which casemapping this connection uses

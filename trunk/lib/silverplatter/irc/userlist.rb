@@ -28,7 +28,7 @@ module SilverPlatter
 		#   list[user] = "o" # add a user with op flag
 		#   list[user] # get the associated value of a user
 		#   list.each { |user, flags| puts "#{user.nick} has the flags #{value}" }
-		#   list.by_nick(nickname) # get the userobject for which you only know the nick
+		#   list.user(nickname) # get the userobject for which you only know the nick
 		#   list.value_by_nick(nickname) # get the associated value
 		#   list.delete(user) # delete a user
 		#   list.delete_nick(nickname) # delete a user from which you only know the nick
@@ -49,7 +49,7 @@ module SilverPlatter
 		# The connection object is expected to have the following methods:
 		# * ==
 		# * casemap
-		# * user_by_nick
+		# * user
 		# 
 		# == Known Bugs
 		# Currently none
@@ -87,22 +87,37 @@ module SilverPlatter
 			end
 
 			# Get the value associated with a user
+			# Accepts either a nick or a User as argument
+			# Also see: UserList#value_by_user, UserList#value_by_nick and UserList#user
 			def [](user)
 				if user.kind_of?(User) then
 					@users[user]
 				else
-					by_nick(user)
+					@users[user(user)]
 				end
 			end
 			
-			# Store a new user with a value
-			# Also see IRC::Connection#create_user
+			# Associate a value with a user
+			# Accepts either a nick or a User as argument
 			def []=(user, value)
-				@users[user] = value
+				if user.kind_of?(User) then
+					@users[user] = value
+				else
+					@users[user(user)] = value
+				end
 			end
-			
+
 			# Test whether a given user is in this userlist.
 			def include?(user)
+				if user.kind_of?(User) then
+					@users.has_key?(user)
+				else
+					include_nick?(user)
+				end
+			end
+
+			# Test whether a given user is in this userlist.
+			def include_user?(user)
 				@users.has_key?(user)
 			end
 
@@ -116,16 +131,10 @@ module SilverPlatter
 				end
 			end
 			
-			# Get the value associated with a user
-			def by_user(user)
-				raise TypeError, "User expected, #{user.class} given." unless user.kind_of?(User)
-				@users[user]
-			end
-
 			# Get a user by nick
 			# Also see IRC::Connection#strip_user_prefixes
 			# You should use Connection#user_by_nick if you can
-			def by_nick(nick)
+			def user(nick)
 				if @connection then
 					user = @connection.user_by_nick(nick)
 					@users.has_key?(user) ? user : nil
@@ -133,7 +142,13 @@ module SilverPlatter
 					nick = casemap(nick)
 					@users.keys.find { |user| user.compare == nick }
 				end
-			end			
+			end
+
+			# Get the value associated with a user
+			def value_by_user(user)
+				raise TypeError, "User expected, #{user.class} given." unless user.kind_of?(User)
+				@users[user]
+			end
 
 			# Get the associated value of a user by nick
 			# Also see IRC::Connection#strip_user_prefixes
@@ -162,11 +177,11 @@ module SilverPlatter
 			end
 			
 			# Return all values associated with users
-			def values
-				@users.values
+			def values(*users)
+				users.empty? ? @users.values : @users.values_at(*users)
 			end
 
-			# Returns amount of users in this list
+			# Returns number of users in this list
 			def size
 				@users.size
 			end
