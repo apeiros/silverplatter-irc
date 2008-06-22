@@ -100,8 +100,6 @@ module SilverPlatter
 				:max_users_backlog => 8192, # maximum number of users offline/out_of_sight
 				:max_users_age     => 3*3600, # maximum age of users that are offline/out_of_sight
 			}
-			
-			DropOnStatus = [:out_of_sight, :unknown].freeze # :nodoc:
 
 			# The encoding of the client (defaults to utf-8)
 			attr_accessor :client_encoding
@@ -177,6 +175,16 @@ module SilverPlatter
 				@me                  = nil
 				@read_thread         = Thread.new {} # create a dead thread which can be tested for .alive?
 				@parser              = Parser.new(self, "rfc2812", "generic")
+				@dispatch            = Queue.new
+				@dispatcher          = Thread.new {
+					while job = @dispatch.shift
+						begin
+							job.shift.call(*job)
+						rescue Exception => e
+							exception(e)
+						end
+					end
+				}
 				@default             = {
 					:serverpass => options.delete(:serverpass),
 					:nickname   => options.delete(:nickname),
@@ -264,7 +272,7 @@ module SilverPlatter
 	
 						# thanks to the FU that is IRC, some ircds change hosts w/o notification, so:
 						elsif old_user.visible? then 
-							update_user(old_user, nick, user, host, real)
+							update_user_unsynchronized(old_user, nick, user, host, real)
 
 						else
 							@nicknames.delete(old_user.compare)
@@ -551,14 +559,14 @@ module SilverPlatter
 
 			# Reads as long as the connection is up, dispatches the read messages
 			# Rescues any exception but Interrupt and logs it as exception
-			def read_loop
+			def read_loop(&block)
 				while string = read
 					begin
 						message = @parser.server_message(string)
 						@subscriptions.each_for(message.symbol) { |listener|
-							listener.call(message)
+							@dispatch << [listener, message]
 						}
-						yield(message) if block_given?
+						@dispatch << [block, message] if block_given?
 					rescue Interrupt, Errno::EPIPE
 						raise
 					rescue Exception => e
