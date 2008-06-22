@@ -13,11 +13,12 @@ module SilverPlatter
 		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
 		# == About
-		# IRC::ConnectionSet provides connection pooling and method delegation
+		# IRC::ConnectionSet provides an augmented set collection for your connections, including
+		# selecting, dispatching and merging.
 		# 
 		# == Synopsis
 		#   # using imperative style
-		#   pool = SilverPlatter::IRC::Pool.new
+		#   pool = SilverPlatter::IRC::ConnectionSet.new
 		#
 		# == Description
 		# ...
@@ -47,7 +48,7 @@ module SilverPlatter
 				other_named = other.instance_variable_get(:@named)
 				connections = @connections.merge(other_con) { |key, a,b| a|b }
 				named       = @named.merge(other_named) { |key, a,b| a|b }
-				connection  = Connection.new
+				connection  = ConnectionSet.new
 				connection.instance_eval {
 					@connections = connections
 					@named       = named
@@ -84,29 +85,30 @@ module SilverPlatter
 			
 			# Add unnamed connections, see add_named
 			def add(*connections)
-				@connections.each { |con|
+				connections.each { |con|
 					names = [
-						@connections.port,
-						@connections.server,
-						":#{@connections.port}",
-						"#{@connections.server}:#{@connections.port}",
+						con.port,
+						con.server,
+						":#{con.port}",
+						"#{con.server}:#{con.port}",
 					]
 					@connections[con] ||=  []
-					@connections.concat(names)
+					@connections[con].concat(names)
 					names.each { |name|
 						@named[name] ||= []
-						@named[name]   = con
+						@named[name]  << con
 					}
 				}
 				self
 			end
 			
-			# Add a name for a connection, see ConnectionPool#[]
+			# Add a name for a connection, see ConnectionSet#[]
 			def add_name(connection, name)
 				name           = name.to_str
 				@named[name] ||= []
 				@named[name]  << connection
-				@connections[connection] << name
+				@connections[connection] ||= []
+				@connections[connection]  << name
 				self
 			end
 			
@@ -149,19 +151,19 @@ module SilverPlatter
 			end
 				
 			
-			# Get a ConnectionPool with matching server and port (or only server or only port)
+			# Get a ConnectionSet with matching server and port (or only server or only port)
 			# examples:
-			#   pool["irc.freenode.org:6667"] # => ConnectionPool, all connections having server="irc.freenode.org" AND port=6667
-			#   pool["irc.freenode.org"]      # => ConnectionPool, all connections having server="irc.freenode.org" and any port
-			#   pool[":6667"]                 # => ConnectionPool, all connections having any server and port=6667
-			#   pool[6667]                    # => ConnectionPool, all connections having any server and port=6667
-			#   pool[:name]                   # => ConnectionPool, all connections having name :name
+			#   pool["irc.freenode.org:6667"] # => ConnectionSet, all connections having server="irc.freenode.org" AND port=6667
+			#   pool["irc.freenode.org"]      # => ConnectionSet, all connections having server="irc.freenode.org" and any port
+			#   pool[":6667"]                 # => ConnectionSet, all connections having any server and port=6667
+			#   pool[6667]                    # => ConnectionSet, all connections having any server and port=6667
+			#   pool[:name]                   # => ConnectionSet, all connections having name :name
 			def [](name)
 				case name
 					when String, Integer
-						ConnectionPool.new(*@named[name])
+						ConnectionSet.new(*@named[name])
 					else
-						ConnectionPool.new(*@named.values_at(*@named.keys.grep(name)).flatten)
+						ConnectionSet.new(*@named.values_at(*@named.keys.grep(name)).flatten)
 				end
 			end
 
@@ -221,6 +223,10 @@ module SilverPlatter
 				rv = {}
 				@connections.each_key { |con| rv[con] = con.quit(quit_reason) }
 				rv
+			end
+			
+			def to_a
+				@connections.keys
 			end
 		end # Client
 	end # IRC
