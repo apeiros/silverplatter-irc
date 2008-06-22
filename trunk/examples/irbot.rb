@@ -7,6 +7,8 @@
 #   load 'irbbot.rb'
 #
 # The bot is available to you in the constant Bot
+# It features a few little conveniences for you, e.g. the following works:
+# 
 #
 # Configure as you wish
 
@@ -48,6 +50,15 @@ require 'pp' # everybody and his/her mom need pp
 
 include SilverPlatter
 Bot = IRC::Connection.new(nil, BotConfig)
+
+class IRC::UserList; alias / []; end
+class IRC::ChannelList; alias / []; end
+class <<Bot
+	def /(value)
+		valid_channelname?(value) ? channel_by_name(value) : user_by_nick(value)
+	end
+end
+
 Bot.connect
 Bot.run
 Bot.login
