@@ -41,14 +41,27 @@ module SilverPlatter
 				@modes = {}
 			end
 			
-			# Add a mode with a value to this channel, for valueless modes the value is true.
-			# The value will be frozen.
-			def add(mode, value=true)
-				@modes[mode] = value.freeze
+			# Sets a flag-mode to true
+			def add(mode)
+				@modes[mode] = true
+			end
+			
+			# Get the value of a mode (true for flag-modes, nil if a mode isn't set)
+			def [](mode)
+				@modes[mode]
+			end
+
+			# Set the value of a mode (true for flag-modes, nil to remove a mode)
+			def []=(mode, value=true)
+				if value then
+					@modes[mode] = value
+				else
+					delete(mode)
+				end
 			end
 
 			# Remove a mode from this channel
-			def remove(mode)
+			def delete(mode)
 				@modes.delete(mode)
 			end
 			
@@ -101,14 +114,6 @@ module SilverPlatter
 			# Test whether this channel has the rfc1459 password protected flag (k) set
 			def password?
 				@modes[Password]
-			end
-			
-			def [](mode, value=true)
-				@modes[mode] = value
-			end
-
-			def []=(mode, value=true)
-				@modes[mode] = value
 			end
 			
 			def method_missing(m, *args)
