@@ -8,13 +8,41 @@ module BoneSplitter
 	class <<BoneSplitter
 		attr_accessor :libs
 	end
+	
+	def dependencies(*libs, &msg)
+		lib=nil
+		libs.each { |lib|
+			require lib
+		}
+	rescue LoadError => e
+		abort(block_given? ? yield(lib) : e.message)
+	end
+	alias dependency dependencies
+	
+	def optional_task(name, depends_on_constant)
+		# puts "#{name} requires #{depends_on_constant}: #{!!deep_const(depends_on_constant)}"
+		if deep_const(depends_on_constant) then
+			yield
+		else
+			task name do
+				"You're missing a dependency to run this thread (#{depends_on_constant})"
+			end
+		end
+	end
+	
+	def deep_const(name)
+		name.split(/::/).inject(Object) { |nesting, name|
+			return nil unless nesting.const_defined?(name)
+			nesting.const_get(name)
+		}
+	end
 
 	def version_proc(constant)
 		proc {
 			file    = constant.gsub(/::/, '/').downcase
-			names   = constant.split(/::/)
 			require(file)
-			version = names.inject(Object) { |nesting, name| nesting.const_get(name) }
+			version = deep_const(constant)
+			version && version.to_s
 		}
 	end
 	
@@ -26,6 +54,7 @@ module BoneSplitter
 				end
 				BoneSplitter.libs[lib.gsub(/\//, '_').to_sym] = true
 			rescue LoadError
+				puts "Not found: #{lib}"
 			end
 		}
 	end

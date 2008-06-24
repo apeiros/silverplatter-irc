@@ -1,3 +1,4 @@
+require 'pp'
 $LOAD_PATH.unshift(File.expand_path("#{__FILE__}/../lib"))
 
 begin; require 'rubygems'; rescue LoadError; end
@@ -9,6 +10,8 @@ detect_libs %w[
 	allison
 	bacon
 	rcov
+	accesscode
+	spec/rake/spectask
 ]
 Project = ProjectClass.new
 
@@ -43,7 +46,7 @@ Project.meta = ProjectClass.new({
 
 # File Annotations
 Project.notes = ProjectClass.new({
-	:include    => %w[trunk/lib/**/*.rb, trunk/{bin,ext}/**/*],
+	:include    => %w[lib/**/*.rb {bin,ext}/**/*],
 	:exclude    => %w[],
 	:tags       => %w[FIXME OPTIMIZE TODO],
 })
