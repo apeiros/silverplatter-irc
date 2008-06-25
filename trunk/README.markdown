@@ -19,6 +19,11 @@ take a look at the butler project: http://butler.rubyforge.org which uses it to
 implement an IRC bot.
 
 
+Description
+-----------
+FIXME
+
+
 
 Installing
 ----------
@@ -42,6 +47,8 @@ Examples
 --------
 
 See in the examples dir for code examples.
+
+
 
 Design
 ------
@@ -67,6 +74,7 @@ commands as reply, collecting those and making them accessible in a nice format.
 Client improves further on that as it can have multiple connections, deals with pings
 and provides nice mechanisms to get messages dispatched to methods.
 	
+
 
 Links
 -----
