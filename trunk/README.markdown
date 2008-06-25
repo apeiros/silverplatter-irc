@@ -22,7 +22,6 @@ implement an IRC bot.
 
 Installing
 ----------
-
 ### Via RubyGems ###
 
 	gem install silverplatter-irc
@@ -44,7 +43,8 @@ Examples
 
 See in the examples dir for code examples.
 
-== Design
+Design
+------
 SilverPlatter::IRC is designed in layers, the following layers exist:
 * Socket:
 	Provides many abstracted write methods and send-queues to protect your client from
@@ -68,6 +68,7 @@ Client improves further on that as it can have multiple connections, deals with 
 and provides nice mechanisms to get messages dispatched to methods.
 	
 
-== Links
+Links
+-----
 * SilverPlatter-IRCs home: http://silverplatter.rubyforge.org/irc
 * The project site: http://rubyforge.org/projects/silverplatter
