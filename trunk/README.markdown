@@ -1,23 +1,35 @@
-= README for SilverPlatter::IRC
 
-== Indexing
+SilverPlatter::IRC
+==================
+
+
+
+Indexing
+--------
 * Author:  Stefan Rusterholz <apeiros@gmx.net>
 * Version: 1.0.0
 * Website: http://silverplatter.rubyforge.org/irc
 
-== About
+
+
+Summary
+-------
 SilverPlatter::IRC is an easy to use library for IRC clients. For an example use
 take a look at the butler project: http://butler.rubyforge.org which uses it to
 implement an IRC bot.
 
-== Installing
-=== Via RubyGems
+
+
+Installing
+----------
+
+### Via RubyGems ###
 
 	gem install silverplatter-irc
 
 Note: you might have to use 'sudo gem install silverplatter-irc'
 
-=== From Github
+### From Github ###
 
 	curl http://github.com/apeiros/silverplatter-irc/tarball/master
 	cd trunk
@@ -25,7 +37,11 @@ Note: you might have to use 'sudo gem install silverplatter-irc'
 
 Note: you might have to use 'sudo rake gem:install'
 
-== Examples
+
+
+Examples
+--------
+
 See in the examples dir for code examples.
 
 == Design
