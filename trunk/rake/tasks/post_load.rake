@@ -8,6 +8,16 @@ Project.meta.summary     ||= extract_summary()
 Project.meta.description ||= extract_description()
 
 
+# defaultize rdoc task
+if Project.rdoc then
+	Project.rdoc.files   ||= []
+	Project.rdoc.files    += FileList.new(Project.rdoc.include || %w[lib/**/* *.{txt markdown rdoc}])
+	Project.rdoc.files    -= FileList.new(Project.rdoc.exclude) if Project.rdoc.exclude
+	Project.rdoc.files.reject! { |f| File.directory?(f) }
+	Project.rdoc.title   ||= "#{Project.meta.name}-#{Project.meta.version} Documentation"
+	Project.rdoc.options ||= []
+	Project.rdoc.options.push('-t', Project.rdoc.title)
+end
 
 # defaultize gem task
 if Project.gem then
@@ -27,6 +37,8 @@ if Project.gem then
 	Project.gem.rdoc_options          ||= Project.rdoc && Project.rdoc.options
 	Project.gem.extra_rdoc_files      ||= Project.rdoc && Project.rdoc.extra_files
 	Project.gem.rdoc_options          ||= Project.rdoc && Project.rdoc.options
+	
+	# gem_file needs the generated gemspec and package object and is hence defaultized in gem.rake
 end
 
 Project.__hash__.each_value { |sub|

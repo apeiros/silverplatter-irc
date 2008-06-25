@@ -1,7 +1,13 @@
 namespace :notes do
-	desc "Enumerate all annotations"
-	task :show do |t|
-		regex = /^.*(?:#{Project.notes.tags.map { |e| Regexp.escape(e) }.join('|')}).*$/
+	desc "Show all annotations"
+	task :show, :tags do |t, args|
+		tags = if args.tags then
+			args.tags.split(/,\s*/)
+		else
+			Project.notes.tags
+		end
+		regex = /^.*(?:#{tags.map { |e| Regexp.escape(e) }.join('|')}).*$/
+		puts "Searching for tags #{tags.join(', ')}"
 		Project.notes.include.each { |glob|
 			Dir.glob(glob) { |file|
 				data   = File.read(file)
@@ -18,4 +24,5 @@ namespace :notes do
 	end
 end # namespace :notes
 
+desc "Alias for notes:show. You have to use notes:show directly to use arguments."
 task :notes => 'notes:show'

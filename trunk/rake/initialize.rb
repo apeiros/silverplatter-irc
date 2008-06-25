@@ -26,6 +26,7 @@ Project.gem = ProjectClass.new({
 	:executables  => nil,
 	:extensions   => FileList['ext/**/extconf.rb'],
 	:files        => nil,
+	:has_rdoc     => true,
 	:need_tar     => true,
 	:need_zip     => false,
 	:extras       => {},
@@ -36,7 +37,7 @@ Project.meta = ProjectClass.new({
 	:name             => nil,
 	:version          => nil,
 	:author           => "Stefan Rusterholz",
-	:contact          => "apeiros@gmx.net",
+	:email            => "apeiros@gmx.net",
 	:summary          => nil,
 	:website          => nil,
 	:bugtracker       => nil,
@@ -73,18 +74,18 @@ Project.rcov = ProjectClass.new({
 
 # Rdoc
 Project.rdoc = ProjectClass.new({
-	:opts       => %w[
+	:options    => %w[
                    --inline-source
                    --line-numbers
                    --charset utf-8
                    --tab-width 2
                  ],
-	:include    => %w[^lib/ ^bin/ ^ext/ \.txt$],
-	:exclude    => %w[extconf.rb$ ^Manifest.txt$],
-	:main       => 'README.markdown',
-	:dir        => 'docs',
+	:include    => %w[{lib,bin,ext}/**/* *.{txt,markdown,rdoc}], # globs
+	:exclude    => %w[**/*/extconf.rb Manifest.txt],             # globs
+	:main       => 'README.markdown',                            # path
+	:output_dir => 'docs',                                       # path
 	:remote_dir => 'irc/docs',
-	:template   => lib?(:allison) && Gem.searcher.find("allison").full_gem_path+"/lib/allison",
+	#:template   => lib?(:allison) && Gem.searcher.find("allison").full_gem_path+"/lib/allison",
 })
 
 # Rubyforge

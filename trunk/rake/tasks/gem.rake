@@ -32,7 +32,7 @@ namespace :gem do
 		elsif Project.gem.test_files
 			s.test_files = Project.gem.test_files
 		end
-
+		
 		# Do any extra stuff the user wants
 		Project.gem.extras.each do |msg, val|
 			case val
@@ -47,26 +47,30 @@ namespace :gem do
 	# A prerequisites task that all other tasks depend upon
 	task :prerequisites
 
-	desc 'Show information about the gem'
-	task :debug => 'gem:prerequisites' do
-		puts Project.gem.spec.to_ruby
-	end
-
 	pkg = Rake::PackageTask.new(Project.gem.name, Project.gem.version) do |pkg|
 		pkg.need_tar      = Project.gem.need_tar
 		pkg.need_zip      = Project.gem.need_zip
-		pkg.package_files = Project.gem.package_files if Project.gem.package_files
+		pkg.package_files = Project.gem.files if Project.gem.files
 	end
 	#Rake::Task['gem:package'].instance_variable_set(:@full_comment, nil)
 
+	Project.gem.gem_file ||= (Project.gem.spec.platform == Gem::Platform::RUBY) ? "#{pkg.package_name}.gem" : "#{pkg.package_name}-#{Project.gem.spec.platform}.gem"
+
+	desc 'Show information about the gem'
+	task :debug => 'gem:prerequisites' do
+		puts "package_files:"
+		puts Project.gem.files
+		puts Project.gem.spec.to_ruby
+	end
+
 	desc "Build the gem file #{Project.gem.gem_file}"
-	task :package => %W[gem:prereqs #{pkg.package_dir}/#{Project.gem.gem_file}]
+	task :package => %W[gem:prerequisites #{pkg.package_dir}/#{Project.gem.gem_file}]
 
 	file "#{pkg.package_dir}/#{Project.gem.gem_file}" => [pkg.package_dir, *Project.gem.files] do
 		when_writing("Creating GEM") {
 			Gem::Builder.new(Project.gem.spec).build
 			verbose(true) {
-				mv gem_file, "#{pkg.package_dir}/#{gem_file}"
+				mv Project.gem.gem_file, "#{pkg.package_dir}/#{Project.gem.gem_file}"
 			}
 		}
 	end
