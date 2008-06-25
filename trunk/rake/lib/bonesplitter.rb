@@ -9,6 +9,7 @@ module BoneSplitter
 		attr_accessor :libs
 	end
 	
+	private
 	def dependencies(*libs, &msg)
 		lib=nil
 		libs.each { |lib|
@@ -77,5 +78,37 @@ module BoneSplitter
 	
 	def lib?(name)
 		BoneSplitter.libs[name.to_sym]
+	end
+	
+	def manifest(mani=Project.meta.manifest)
+		File.read(mani).split(/\n/)
+	end
+	
+	def manifest_candidates
+		cands = Dir['**/*']
+		if Project.manifest.ignore then
+			Project.manifest.ignore.map { |glob| cands -= Dir[glob] }
+		end
+		cands - Dir['**/*/'].map { |e| e.chop }
+	end
+
+	# requires that 'readme' is a file in markdown format and that Markdown exists
+	def extract_summary(file=Project.meta.readme)
+		return nil unless File.readable?(file)
+		require 'hpricot'
+		(Hpricot(Markdown.new(File.read(file)).to_html)/"h2[text()=Summary]").first.next_sibling.inner_text
+	rescue => e
+		warn "Failed extracting the summary: #{e}"
+		nil
+	end
+	
+	# requires that 'readme' is a file in markdown format and that Markdown exists
+	def extract_description(file=Project.meta.readme)
+		return nil unless File.readable?(file)
+		require 'hpricot'
+		(Hpricot(Markdown.new(File.read(file)).to_html)/"h2[text()=Description]").first.next_sibling.inner_text
+	rescue => e
+		warn "Failed extracting the description: #{e}"
+		nil
 	end
 end

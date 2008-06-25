@@ -12,5 +12,7 @@ Project.meta.website          = 'http://silverplatter.rubyforge.org/irc'
 Project.meta.bugtracker       = 'http://'
 Project.meta.feature_requests = 'http://'
 
+Project.manifest.ignore       = %w[web/**/*]
+
 Project.rubyforge.project     = 'silverplatter'
 Project.rubyforge.path        = 'silverplatter/irc'

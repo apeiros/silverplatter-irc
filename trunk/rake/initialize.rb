@@ -1,9 +1,14 @@
 require 'pp'
-$LOAD_PATH.unshift(File.expand_path("#{__FILE__}/../lib"))
+$LOAD_PATH.unshift(File.expand_path("#{__FILE__}/../../lib")) # trunk/lib
+$LOAD_PATH.unshift(File.expand_path("#{__FILE__}/../lib"))    # trunk/rake/lib
 
 begin; require 'rubygems'; rescue LoadError; end
 require 'projectclass'
 require 'bonesplitter'
+require 'rdiscount'
+
+# bonesplitter requires a Markdown constant
+Markdown = RDiscount
 
 include BoneSplitter
 detect_libs %w[
@@ -32,6 +37,7 @@ Project.meta = ProjectClass.new({
 	:version          => nil,
 	:author           => "Stefan Rusterholz",
 	:contact          => "apeiros@gmx.net",
+	:summary          => nil,
 	:website          => nil,
 	:bugtracker       => nil,
 	:feature_requests => nil,
@@ -40,13 +46,19 @@ Project.meta = ProjectClass.new({
 	:changelog        => "CHANGELOG.markdown",
 	:todo             => "TODO.markdown",
 	:readme           => "README.markdown",
+	:manifest         => "MANIFEST.txt",
 	:gem_host         => :rubyforge,
 	:configurations   => "~/Library/Application Support/Bonesplitter",
 })
 
+# Manifest
+Project.manifest = ProjectClass.new({
+	:ignore     => nil,
+})
+
 # File Annotations
 Project.notes = ProjectClass.new({
-	:include    => %w[lib/**/*.rb {bin,ext}/**/*],
+	:include    => %w[lib/**/*.rb {bin,ext}/**/*], # NOTE: use post_load and set to manifest()?
 	:exclude    => %w[],
 	:tags       => %w[FIXME OPTIMIZE TODO],
 })

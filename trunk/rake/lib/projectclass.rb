@@ -21,8 +21,8 @@ class ProjectClass
 		@__hash__ = values || {}
 	end
 	
-	def []
-		@__hash__[key.to_sym] = value
+	def [](key)
+		@__hash__[key.to_sym]
 	end
 	
 	def []=(key,value)
