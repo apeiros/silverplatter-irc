@@ -70,13 +70,13 @@ end
 
 
 
-require 'log/comfort'
-require 'log/converter'
-require 'log/entry'
-require 'log/forward'
-require 'log/fakeio'
-require 'log/file'
-require 'log/nolog'
+require 'silverplatter/log/comfort'
+require 'silverplatter/log/converter'
+require 'silverplatter/log/entry'
+require 'silverplatter/log/forward'
+require 'silverplatter/log/fakeio'
+require 'silverplatter/log/file'
+require 'silverplatter/log/nolog'
 
 
 
