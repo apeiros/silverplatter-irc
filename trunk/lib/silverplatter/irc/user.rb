@@ -7,6 +7,7 @@
 
 
 require 'silverplatter/irc/channellist'
+require 'silverplatter/irc/hostmask'
 require 'silverplatter/irc/rfc1459_casemapping'
 require 'silverplatter/irc/rfc1459_usermodes'
 
