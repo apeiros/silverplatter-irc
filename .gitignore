@@ -3,3 +3,6 @@
 /coverage
 /conflicts
 /unversioned
+/trunk/docs
+/trunk/pkg
+/trunk/web
