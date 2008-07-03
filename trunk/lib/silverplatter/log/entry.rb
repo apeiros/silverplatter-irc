@@ -7,7 +7,7 @@
 
 
 require 'enumerator'
-require 'log'
+require 'silverplatter/log'
 
 
 

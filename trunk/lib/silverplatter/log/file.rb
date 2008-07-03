@@ -6,9 +6,9 @@
 
 
 
-require 'log/converter'
-require 'log/fakeio'
-require 'log/methods'
+require 'silverplatter/log/converter'
+require 'silverplatter/log/fakeio'
+require 'silverplatter/log/methods'
 
 
 

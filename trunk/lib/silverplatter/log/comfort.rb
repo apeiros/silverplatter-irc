@@ -6,7 +6,7 @@
 
 
 
-require 'log/entry'
+require 'silverplatter/log/entry'
 
 
 
