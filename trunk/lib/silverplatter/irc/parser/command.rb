@@ -6,7 +6,7 @@
 
 
 
-require 'log/comfort'
+require 'silverplatter/log/comfort'
 
 
 
