@@ -1,4 +1,10 @@
+#
 class Exception
+
+	# Extend an Exception with Exception::Detailed to add details to an
+	# exception. Useful when rescuing lots of different exceptions and then
+	# reraising a single type of exception.
+	#
 	module Detailed
 		def self.extended(obj)
 			obj.initialize_details
