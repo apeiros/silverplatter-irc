@@ -216,6 +216,9 @@ module SilverPlatter
 			# Subscribe to one, many or all messages (by symbol)
 			# Creates a new Listener, subscribes (see subscribe_listener) and
 			# returns it.
+			# You can subscribe to the same message as often as you want. They
+			# will be run after each other. If they have different priority, then
+			# the higher the priority the earlier it will run.
 			# See IRC::SilverPlatter::Listener::new for more info.
 			def subscribe(symbols=nil, priority=0, *args, &callback)
 				listener = Listener.new(symbols, priority, *args, &callback)
