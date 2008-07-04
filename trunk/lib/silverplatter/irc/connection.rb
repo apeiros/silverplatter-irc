@@ -462,7 +462,7 @@ module SilverPlatter
 			rescue Timeout::Error
 				nil
 			ensure
-				listener.unsubscribe
+				listener.unsubscribe if listener
 			end
 			
 			# prepare do preparation_stuff end.wait_for :SYMBOL is the same as
@@ -636,7 +636,7 @@ module SilverPlatter
 			# === Synopsis
 			#   connection.valid_channelname?("#silverplatter") # => true
 			def valid_channelname?(name)
-				name =~ @parser.expression.channel
+				!(name !~ @parser.expression.channel)
 			end
 			
 			# Test whether a string is a valid nickname (without prefixes)
@@ -644,7 +644,7 @@ module SilverPlatter
 			#   connection.valid_nickname?("butler") # => true
 			#   connection.valid_nickname?("@butler") # => false
 			def valid_nickname?(name)
-				name =~ @parser.expression.nick
+				!(name !~ @parser.expression.nick)
 			end
 			
 			# Define which casemapping this connection uses
