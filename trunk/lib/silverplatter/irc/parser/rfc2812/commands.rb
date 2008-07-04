@@ -111,22 +111,15 @@ rpl_whoreply = proc { |connection, message, fields|
 }
 rpl_namereply = proc { |connection, message, fields|
 	users            = fields[:users]
-	delete_who_flags = connection.parser.expression.delete_who_flags
 	
 	fields[:users] = users.split(/ /).map { |nick|
-		# FIXME: remove
-		unless connection.valid_nickname?(nick.sub(delete_who_flags, '')) then
-			warn "Invalid nick #{nick.sub(delete_who_flags, '').inspect} - :RPL_NAMEREPLY"
-		end
-		# ------ endfixme
-
-		user	= connection.create_user(nick.sub(delete_who_flags, ''))
+		user	= connection.create_user(nick.sub(/^[^A-Za-z\[\]\\\`_\^\{\|\}]*/, '')) # remove flags
 		user.add_channel(message.channel, :joined)
 		message.channel.add_user(user, :joined)
 		user
 	}
 }
-rpl_banlist = proc { |connection, message, fields| #367 nickname #channel nick!user@host nickname 1140125288
+rpl_banlist = proc { |connection, message, fields|
 	message[:bantime]	= Time.at(fields[:bantime].to_i)
 	message[:banmask]	= Hostmask.new(fields[:banmask])
 }

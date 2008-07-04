@@ -92,6 +92,9 @@ module SilverPlatter
 			# Filter the msg_identify prefix?
 			attr_accessor :msg_identify
 	
+			# This two are only used during #reset
+			attr_reader :new_commands, :new_expression # :nodoc:
+
 			def initialize(connection, *command_sets)
 				@connection   = connection
 				@msg_identify = false
@@ -109,8 +112,8 @@ module SilverPlatter
 			# isupport data).
 			def reset(with_isupport=nil)
 				@isupport   = OpenStruct.new(with_isupport) if with_isupport
-				@expression = OpenStruct.new
-				@commands   = Hash.new { |h,k| raise IndexError, "Unknown command #{k}" }
+				@new_expression = OpenStruct.new
+				@new_commands   = Hash.new { |h,k| raise IndexError, "Unknown command #{k}" }
 				
 				@loading    = {:status => {}, :firstrun => true}
 
@@ -144,7 +147,12 @@ module SilverPlatter
 					instance_eval(File.read(comfile), comfile)
 				}
 				@loading        = nil
-				@message_regex  = @expression.message # performance
+				@message_regex  = @new_expression.message # performance
+				@expression     = @new_expression
+				@commands       = @new_commands
+				@new_expression = nil
+				@new_commands   = nil
+				self
 			end
 
 			def load(*files)
@@ -158,12 +166,12 @@ module SilverPlatter
 			# existing expression you MUST use alter_expression instead. This is to avoid mistakes.
 			def add_expression(name, value)
 				if @loading[:firstrun] then
-					raise "Expression #{name} already added, did you want alter_expression?" if @expression[name]
-					@expression[name] = value
+					raise "Expression #{name} already added, did you want alter_expression?" if @new_expression[name]
+					@new_expression[name] = value
 				else
 					case @loading[:status][name]
 						when nil
-							@expression[name] = value
+							@new_expression[name] = value
 						when :added # should never happen
 							raise "Expression #{name} already added, did you want alter_expression?"
 						when :altered # ignore
@@ -176,12 +184,12 @@ module SilverPlatter
 			# alter_expression instead of add_expression
 			def alter_expression(name, value)
 				if @loading[:firstrun] then
-					raise "Expression #{name} not yet added, did you want add_expression?" unless @expression[name]
-					@expression[name] = value
+					raise "Expression #{name} not yet added, did you want add_expression?" unless @new_expression[name]
+					@new_expression[name] = value
 				else
 					case @loading[:status][name]
 						when nil
-							@expression[name] = value
+							@new_expression[name] = value
 						when :added # should never happen
 							raise "Expression #{name} alteration prior to adding"
 						when :altered # ignore, newer altered takes precedence
@@ -193,15 +201,15 @@ module SilverPlatter
 			# Add a new command
 			# You must not use add to change an existing command, use alter for this.
 			def add(raw, *args, &proc)
-				raise IndexError, "Command #{raw} is already registered. Did you want 'alter'?" if @commands.has_key?(raw)
-				@commands[raw.downcase] = Command.new(raw, *args, &proc)
+				raise IndexError, "Command #{raw} is already registered. Did you want 'alter'?" if @new_commands.has_key?(raw)
+				@new_commands[raw.downcase] = Command.new(raw, *args, &proc)
 			end
 
 			# Alter an existing command
 			# You must not use alter to add a new command, use add for this.
 			def alter(raw, *args, &proc)
-				raise IndexError, "Command #{raw} is not registered. Did you want 'add'?" unless @commands.has_key?(raw)
-				@commands[raw.downcase] = Command.new(raw, *args, &proc)
+				raise IndexError, "Command #{raw} is not registered. Did you want 'add'?" unless @new_commands.has_key?(raw)
+				@new_commands[raw.downcase] = Command.new(raw, *args, &proc)
 			end
 			
 			def inspect # :nodoc:
