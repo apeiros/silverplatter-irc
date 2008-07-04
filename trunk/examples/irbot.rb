@@ -20,7 +20,7 @@ BotConfig = {
 	:port            => 6667,
 	:serverpass      => nil,
 
-	:nickname        => "silverp",
+	:nickname        => ENV["IRBOTNICK"] || "silverp",
 	:username        => "silver",
 	:realname        => "SilverPlatter-IRC",
 	
