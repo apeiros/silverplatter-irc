@@ -32,27 +32,39 @@ def extract(opt)
 end
 
 BotConfig = {
-	:server          => extract('--server') || ARGV.shift
+	:server          => extract('--server') || ARGV.shift,
 	:port            => extract('--port') || 6667,
 	:serverpass      => extract('--serverpass'),
 	
-	:join            => [],
-
-	:nickname        => extract('--nick') || 'irccat',
+	:nickname        => extract('--nick') || ENV['IRCATNICK'] || 'irccat',
 	:username        => extract('--user') || 'irccat',
 	:realname        => extract('--real') || 'silverplatter-irc-cat',
-	
+
 	:on_nick_error   => SilverPlatter::IRC::Connection::IncrementOnNickError,
 }
-BotConfig[:join] << ARGV.shift until File.exist?(ARGV.first)
+
+# Receivers can be channels and nicknames
+receivers = []
+receivers << ARGV.shift until (ARGV.first.nil? || File.exist?(ARGV.first))
 
 abort(Usage) unless BotConfig[:server]
 
 Bot = SilverPlatter::IRC::Connection.new(nil, BotConfig)
 Bot.connect
+
 Bot.run
-Bot.login
-while line = gets
-	Bot.send_privmsg(line.chomp, *BotConfig[:join])
+Bot.prepare do
+	Bot.login
+end.wait_for([:RPL_ENDOFMOTD, :ERR_NOMOTD]) # ensure valid_channelname? is used after isupport is known
+
+channels, users = *receivers.partition { |r| Bot.valid_channelname?(r) }
+channels.each { |channel| Bot.send_join(channel) }
+puts "Pasting to channels #{channels.empty? ? '<none>' : channels.join(', ')} and users #{users.empty? ? '<none>' : users.join(', ')}"
+
+while line = gets # ARGF.gets, will read passed files too
+	msg = line.chomp
+	Bot.send_privmsg(msg, *channels)
+	Bot.send_privmsg(msg, *users) unless users.empty?
 end
 Bot.quit "My work here is done."
+puts "Terminating"
