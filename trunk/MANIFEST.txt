@@ -2,7 +2,7 @@ CHANGELOG.txt
 History.txt
 LICENSE.txt
 Manifest.txt
-README.markdown
+README.rdoc
 Rakefile
 TODO.txt
 examples/connection_dsl_evented.rb
@@ -62,7 +62,7 @@ lib/silverplatter/irc/usermanager.rb
 lib/silverplatter/irc/version.rb
 lib/silverplatter/irc/whois.rb
 rake/initialize.rb
-rake/lib/accesscode.rb
+rake/lib/assesscode.rb
 rake/lib/bonesplitter.rb
 rake/lib/projectclass.rb
 rake/tasks/gem.rake
