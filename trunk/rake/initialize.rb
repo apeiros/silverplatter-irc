@@ -5,19 +5,19 @@ $LOAD_PATH.unshift(File.expand_path("#{__FILE__}/../lib"))    # trunk/rake/lib
 begin; require 'rubygems'; rescue LoadError; end
 require 'projectclass'
 require 'bonesplitter'
-require 'rdiscount'
-
-# bonesplitter requires a Markdown constant
-Markdown = RDiscount
 
 include BoneSplitter
-detect_libs %w[
-	allison
-	bacon
-	rcov
-	accesscode
-	spec/rake/spectask
-]
+
+REQUIRED_RAKE_VERSION = "0.8"
+abort("Requires rake version #{REQUIRED_RAKE_VERSION}") unless has_version?(RAKEVERSION, REQUIRED_RAKE_VERSION)
+
+# bonesplitter requires a Markdown constant
+unless lib?('markdown') then
+	if lib?('rdiscount') then
+		Markdown = RDiscount
+	end
+end
+
 Project = ProjectClass.new
 
 # Gem Packaging
@@ -86,6 +86,7 @@ Project.rdoc = ProjectClass.new({
 	:output_dir => 'docs',                                       # path
 	:remote_dir => 'irc/docs',
 	#:template   => lib?(:allison) && Gem.searcher.find("allison").full_gem_path+"/lib/allison",
+	# 'Allison gem, tasks: doc:html, creates nicer html rdoc output'
 })
 
 # Rubyforge

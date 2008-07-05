@@ -129,7 +129,7 @@ module SilverPlatter
 				@connected    = false
 				raise ArgumentError, "Unknown arguments: #{options.keys.inspect}" unless options.empty?
 			end
-			
+
 			# Whether this Socket is currently connected to a server or not.
 			def connected?
 				@connected
@@ -156,7 +156,7 @@ module SilverPlatter
 			else
 				@connected		= true
 			end
-	
+
 			# get next message (eol already chomped) from server, blocking, returns nil if closed
 			def read
 				if m = @socket.gets(@eol) then
@@ -171,7 +171,7 @@ module SilverPlatter
 				@connected = false
 				nil
 			end
-	
+
 			# Send a raw message to irc, eol will be appended
 			# Use specialized methods instead if possible since they will releave
 			# you from several tasks like translating newlines, take care of overlength
