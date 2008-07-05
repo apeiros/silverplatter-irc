@@ -1,6 +1,6 @@
 The SilverPlatter libraries are copyrighted free software by Stefan Rusterholz.
-You can redistribute it and/or modify it under either the terms of the GPL
-(see the GPL.txt file), or the conditions below:
+You can redistribute it and/or modify it under the terms o the conditions
+below (also known as the 'Ruby License'):
 
   1. You may make and give away verbatim copies of the source form of the
      software without restriction, provided that you duplicate all of the
