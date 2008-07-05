@@ -1,3 +1,11 @@
+#--
+# Copyright 2007-2008 by Stefan Rusterholz.
+# All rights reserved.
+# See LICENSE.txt for permissions.
+#++
+
+
+
 namespace :notes do
 	desc "Show all annotations"
 	task :show, :tags do |t, args|

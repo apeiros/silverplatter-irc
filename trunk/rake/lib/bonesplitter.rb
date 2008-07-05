@@ -1,16 +1,54 @@
+#--
+# Copyright 2007-2008 by Stefan Rusterholz.
+# All rights reserved.
+# See LICENSE.txt for permissions.
+#++
+
+
+
 require 'stringio'
+require 'ostruct'
 
 
 
+# fix pre-rubygems 1.3 nuisance
+begin
+	require 'rubygems'
+	module Kernel
+		private :gem
+		private :require
+		private :open
+	end
+rescue LoadError; end
+
+# needed for has_version?
 class Array
 	include Comparable
 end
 
+# The module BoneSplitter offers various helpful methods for rake tasks.
+#
 module BoneSplitter
+	def self.find_executable(*names)
+		path = ENV["PATH"].split(File::PATH_SEPARATOR)
+		names.each { |name|
+			found = path.map { |path| File.join(path, name) }.find { |e| File.executable?(e) }
+			return found if found
+		}
+		nil
+	end
+		
 	@libs = {}
+	@bin = OpenStruct.new(
+		:diff => find_executable('diff', 'gdiff', 'diff.exe'),
+		:sudo => find_executable('sudo'),
+		:rcov => find_executable('rcov', 'rcov.bat'),
+		:rdoc => find_executable('rdoc', 'rdoc.bat'),
+		:gem  => find_executable('gem', 'gem.bat')
+	)
 
 	class <<BoneSplitter
-		attr_accessor :libs
+		attr_accessor :libs, :bin
 	end
 	
 	private
@@ -79,8 +117,24 @@ module BoneSplitter
 		}.all? # map first so we get all messages at once
 	end
 	
+	# Add a lib as present. Use this to fake existence of a lib if you have
+	# an in-place substitute for it, like e.g. RDiscount for Markdown.
+	def has_lib!(*names)
+		names.each { |name|
+			BoneSplitter.libs[name] = true
+		}
+	end
+	
 	def manifest(mani=Project.meta.manifest)
-		File.read(mani).split(/\n/)
+		if File.exist?(mani) then
+			File.read(mani).split(/\n/)
+		else
+			[]
+		end
+	end
+	
+	def bin
+		BoneSplitter.bin
 	end
 	
 	def manifest_candidates
@@ -101,8 +155,16 @@ module BoneSplitter
 	# requires that 'readme' is a file in markdown format and that Markdown exists
 	def extract_summary(file=Project.meta.readme)
 		return nil unless File.readable?(file)
-		return "" unless lib?(%w[hpricot markdown], "Requires %s to extract the summary")
-		(Hpricot(Markdown.new(File.read(file)).to_html)/"h2[text()=Summary]").first.next_sibling.inner_text
+		return nil unless lib?('hpricot', "Requires %s to extract the summary")
+		html = case File.extname(file)
+			when '.rdoc'
+				return nil unless lib?('rdoc/markup/to_html', "Requires %s to extract the summary")
+				RDoc::Markup::ToHtml.new.convert(File.read('README.rdoc'))
+			when '.markdown'
+				return nil unless lib?('markdown', "Requires %s to extract the summary")
+				Markdown.new(File.read(file)).to_html
+		end
+		(Hpricot(html)/"h2[text()=Summary]").first.next_sibling.inner_text.strip
 	rescue => e
 		warn "Failed extracting the summary: #{e}"
 		nil
@@ -111,10 +173,73 @@ module BoneSplitter
 	# requires that 'readme' is a file in markdown format and that Markdown exists
 	def extract_description(file=Project.meta.readme)
 		return nil unless File.readable?(file)
-		return "" unless lib?(%w[hpricot markdown], "Requires %s to extract the description")
-		(Hpricot(Markdown.new(File.read(file)).to_html)/"h2[text()=Description]").first.next_sibling.inner_text
+		return nil unless lib?('hpricot', "Requires %s to extract the summary")
+		html = case File.extname(file)
+			when '.rdoc'
+				return nil unless lib?('rdoc/markup/to_html', "Requires %s to extract the summary")
+				RDoc::Markup::ToHtml.new.convert(File.read('README.rdoc'))
+			when '.markdown'
+				return nil unless lib?('markdown', "Requires %s to extract the summary")
+				Markdown.new(File.read(file)).to_html
+		end
+		(Hpricot(html)/"h2[text()=Description]").first.next_sibling.inner_text.strip
 	rescue => e
 		warn "Failed extracting the description: #{e}"
 		nil
 	end
-end
+	
+	# Create a Gem::Specification from Project.gem data.
+	def gem_spec(from)
+		Gem::Specification.new do |s|
+			s.name                  = from.name
+			s.version               = from.version
+			s.summary               = from.summary
+			s.authors               = from.authors
+			s.email                 = from.email
+			s.homepage              = from.homepage
+			s.rubyforge_project     = from.rubyforge_project
+			s.description           = from.description
+			s.required_ruby_version = from.required_ruby_version if from.required_ruby_version
+	
+			from.dependencies.each do |dep|
+				s.add_dependency(*dep)
+			end if from.dependencies
+	
+			s.files            = from.files
+			s.executables      = from.executables.map {|fn| File.basename(fn)}
+			s.extensions       = from.extensions
+	
+			s.bindir           = from.bin_dir
+			s.require_paths    = from.require_paths if from.require_paths
+	
+			s.rdoc_options     = from.rdoc_options
+			s.extra_rdoc_files = from.extra_rdoc_files
+			s.has_rdoc         = from.has_rdoc
+	
+			if from.test_file then
+				s.test_file  = from.test_file
+			elsif from.test_files
+				s.test_files = from.test_files
+			end
+			
+			# Do any extra stuff the user wants
+			from.extras.each do |msg, val|
+				case val
+					when Proc
+						val.call(s.send(msg))
+					else
+						s.send "#{msg}=", val
+				end
+			end
+		end # Gem::Specification.new
+	end
+
+	# Returns a good name for the gem-file using the spec and the package-name.	
+	def gem_file(spec, package_name)
+		if spec.platform == Gem::Platform::RUBY then
+			"#{package_name}.gem"
+		else
+			"#{package_name}-#{spec.platform}.gem"
+		end
+	end
+end # BoneSplitter

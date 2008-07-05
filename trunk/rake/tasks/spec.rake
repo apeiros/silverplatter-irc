@@ -1,3 +1,11 @@
+#--
+# Copyright 2007-2008 by Stefan Rusterholz.
+# All rights reserved.
+# See LICENSE.txt for permissions.
+#++
+
+
+
 namespace :spec do
 	desc 'Run all specs with basic output'
 	task :run do

@@ -1,3 +1,11 @@
+#--
+# Copyright 2007-2008 by Stefan Rusterholz.
+# All rights reserved.
+# See LICENSE.txt for permissions.
+#++
+
+
+
 namespace :loc do
 	desc 'Assess the number of code and comment lines'
 	task :assess do

@@ -1,3 +1,12 @@
+#--
+# Copyright 2007-2008 by Stefan Rusterholz.
+# All rights reserved.
+# See LICENSE.txt for permissions.
+#++
+
+
+
+# fix pre-rubygems 1.3 nuisance
 begin
 	require 'rubygems'
 	module Kernel
@@ -11,6 +20,8 @@ rescue LoadError; end
 
 # This class is not written for long running scripts as it leaks symbols.
 # It is openstructlike, but a bit more lightweight and blankslate so any method will work
+# You can set values to procs and call __finalize__ to get them replaced by the value
+# returned by the proc.
 class ProjectClass
 	names = public_instance_methods - %w[initialize inspect __id__ __send__]
 	names.each { |m| undef_method m }
@@ -27,6 +38,14 @@ class ProjectClass
 	
 	def []=(key,value)
 		@__hash__[key.to_sym] = value
+	end
+	
+	# All values that respond to .call are replaced by the value
+	# returned when calling.
+	def __finalize__
+		@__hash__.each { |k,v|
+			@__hash__[k] = v.call if v.respond_to?(:call)
+		}
 	end
 	
 	def method_missing(name, *args)

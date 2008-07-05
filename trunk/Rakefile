@@ -6,6 +6,12 @@ require 'rake/initialize'
 
 task :default => 'spec:run'
 
+
+
+# Project details (defaults are in rake/initialize, some cleanup is done per section in the
+# prerequisite task in each .task file, some other cleanup is done in post_load.rake)
+Project.gem.dependencies      = %w[silverplatter-log]
+
 Project.meta.name             = 'silverplatter-irc'
 Project.meta.version          = version_proc("SilverPlatter::IRC::VERSION")
 Project.meta.website          = 'http://silverplatter.rubyforge.org/irc'
