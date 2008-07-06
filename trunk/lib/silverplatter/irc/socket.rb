@@ -52,7 +52,44 @@ module SilverPlatter
 		# * Errno::EPIPE:        writing to a server-side closed connection, nil on gets, connection was terminated
 		#
 		class Socket
+
+			# SilverPlatter::IRC::Socket version
 			VERSION	= "1.0.0"
+			
+			# A single space character
+			Space   = " ".freeze
+			# AWAY command
+			AWAY    = "AWAY".freeze
+			# JOIN command
+			JOIN    = "JOIN".freeze
+			# KICK command
+			KICK    = "KICK".freeze
+			# MODE command
+			MODE    = "MODE".freeze
+			# NICK command
+			NICK    = "NICK".freeze
+			# NOTICE command
+			NOTICE  = "NOTICE".freeze
+			# NS command
+			NS      = "NS".freeze
+			# PART command
+			PART    = "PART".freeze
+			# PASS command
+			PASS    = "PASS".freeze
+			# PING command
+			PING    = "PING".freeze
+			# PONG command
+			PONG    = "PONG".freeze
+			# PRIVMSG command
+			PRIVMSG = "PRIVMSG".freeze
+			# USER command
+			USER    = "USER".freeze
+			# QUIT command
+			QUIT    = "QUIT".freeze
+			# WHO command
+			WHO     = "WHO".freeze
+			# WHOIS command
+			WHOIS   = "WHOIS".freeze
 
 			include Log::Comfort
 			include RFC1459_CaseMapping
@@ -171,7 +208,7 @@ module SilverPlatter
 				@connected = false
 				nil
 			end
-
+			
 			# Send a raw message to irc, eol will be appended
 			# Use specialized methods instead if possible since they will releave
 			# you from several tasks like translating newlines, take care of overlength
@@ -223,25 +260,32 @@ module SilverPlatter
 				raise
 			end 
 	
+			def send_raw(*arguments)
+				if arguments.last.include?(Space) || arguments.last[0] == ?: then
+					arguments[-1] = ":#{arguments.last}"
+				end
+				write_with_eol(arguments.join(Space))
+			end
+
 			# log into the irc-server (and connect if necessary)
 			def login(nickname, username, realname, serverpass=nil)
 				connect unless @connected
-				write_with_eol("PASS #{serverpass}") if serverpass
-				write_with_eol("NICK #{nickname}")
-				write_with_eol("USER #{username} 0 * :#{realname}")
+				send_raw(PASS, serverpass) if serverpass
+				send_raw(NICK, nickname)
+				send_raw(USER, username, "0", "*", realname)
 			end
 	
 			# identify nickname to nickserv
 			# FIXME: figure out what the server supports, possibly requires it
 			# to be moved to SilverPlatter::IRC::Connection (to allow ghosting, nickchange, identify)
 			def send_identify(password)
-				write_with_eol("NS :IDENTIFY #{password}")
+				send_raw(NS, "IDENTIFY #{password}")
 			end
 			
 			# FIXME: figure out what the server supports, possibly requires it
 			# to be moved to SilverPlatter::IRC::Connection (to allow ghosting, nickchange, identify)
 			def send_ghost(nickname, password)
-				write_with_eol("NS :GHOST #{nickname} #{password}")
+				send_raw(NS, "GHOST #{nickname} #{password}")
 			end
 			
 			# cuts the message-text into pieces of a maximum size
@@ -256,7 +300,7 @@ module SilverPlatter
 			def send_privmsg(message, *recipients)
 				normalize_message(message) { |message|
 					recipients.each { |recipient|
-						write_with_eol("PRIVMSG #{recipient} :#{message}")
+						send_raw(PRIVMSG, recipient, message)
 					}
 				}
 			end
@@ -265,7 +309,7 @@ module SilverPlatter
 			def send_action(message, *recipients)
 				normalize_message(message) { |message|
 					recipients.each { |recipient|
-						write_with_eol("PRIVMSG #{recipient} :\001ACTION #{message}\001")
+						send_raw(PRIVMSG, recipient, "\001ACTION #{message}\001")
 					}
 				}
 			end
@@ -277,18 +321,19 @@ module SilverPlatter
 			def send_notice(message, *recipients)
 				normalize_message(message) { |message|
 					recipients.each { |recipient|
-						write_with_eol("NOTICE #{recipient} :#{message}")
+						send_raw(NOTICE, recipient, message)
 					}
 				}
 			end
 	
+			# send a ping
+			def send_ping(*args)
+				send_raw(PING, *args)
+			end
+	
 			# send a pong
 			def send_pong(*args)
-				if args.empty? then
-					write_with_eol("PONG")
-				else
-					write_with_eol("PONG #{args.join(' ')}")
-				end
+				send_raw(PONG, *args)
 			end
 	
 			# join specified channels
@@ -302,12 +347,12 @@ module SilverPlatter
 			def send_join(*channels)
 				channels.map { |channel, password|
 					if password then
-						write_with_eol("JOIN #{channel} #{password}")
+						send_raw(JOIN, channel, password)
 					else
-						write_with_eol("JOIN #{channel}")
+						send_raw(JOIN, channel)
 					end
 					channel
-				}
+				} # need to map to get rid of the passwords
 			end
 	
 			# part specified channels
@@ -316,49 +361,52 @@ module SilverPlatter
 				if channels.empty?
 					channels = [reason]
 					reason   = nil
-				end
+				end # FIXME: leave this overloading in place or remove?
 				reason ||= "leaving"
 
 				# some servers still can't process lists of channels in part
 				channels.each { |channel|
-					write_with_eol("PART #{channel} #{reason}")
-				}
+					send_raw(PART, channel, reason)
+				} # each returns receiver
 			end
 	
 			# set your own nick
 			# does NO verification/validation of any kind
 			def send_nick(nick)
-				write_with_eol("NICK #{nick}")
+				send_raw(NICK, nick)
 			end
 	
 			# set your status to away with reason 'reason'
 			def send_away(reason="")
 				return back if reason.empty?
-				write_with_eol("AWAY :#{reason}")
+				send_raw(AWAY, reason)
 			end
 	
 			# reset your away status to back
 			def send_back
-				write_with_eol("AWAY")
+				send_raw(AWAY)
 			end
 	
 			# kick user in channel with reason
 			def send_kick(user, channel, reason)
-				write_with_eol("KICK #{channel} #{user} :#{reason}")
+				send_raw(KICK, channel, user, reason)
 			end
 			
 			# send a mode command to a channel
-			def send_mode(channel, mode=nil)
-				write_with_eol(mode ? "MODE #{channel} #{mode}" : "MODE #{channel}")
+			def send_mode(channel, *mode)
+				if mode.empty? then
+					send_raw(MODE, channel)
+				else
+					send_raw(MODE, channel, *mode)
+				end
 			end
 			
 			# Give Op to user in channel
 			# User can be a nick or IRC::User, either one or an array.
-			# FIXME: check number of targets MODE can take
 			def send_multiple_mode(channel, pre, flag, targets)
-				(0...targets.length).step(10) { |i|
-					slice = targets[i,10]
-					write_with_eol("MODE #{channel} +#{flag*slice.length} #{slice*' '}")
+				(0...targets.length).step(12) { |i|
+					slice = targets[i,12]
+					send_raw(MODE, channel, "#{pre}#{flag*slice.length}", *slice)
 				}
 			end
 	
@@ -398,17 +446,17 @@ module SilverPlatter
 
 			# Send a "who" to channel/user
 			def send_who(target)
-				write_with_eol("WHO #{target}")
+				send_raw(WHO, target)
 			end
 	
 			# Send a "whois" to server
 			def send_whois(nick)
-				write_with_eol("WHOIS #{nick}")
+				send_raw(WHOIS, nick)
 			end
 	
 			# send the quit message to the server
-			def send_quit(reason="leaving")
-				write_with_eol("QUIT :#{reason}")
+			def send_quit(reason=nil)
+				send_raw(QUIT, reason || "leaving")
 			end
 			
 			# send the quit message to the server
