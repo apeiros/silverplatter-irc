@@ -20,12 +20,44 @@ FIXME
 
 == Installing
 === Via RubyGems
+You need for the installation:
+* rubygems >= 1.2.0
+* silverplatter-log >= 0.1.0 (automatically installed by rubygems)
+
+You need for some of the rake tasks:
+* bacon
+* flexmock
+* git
+* hpricot
+* rcov
+* rdiscount (or markdown)
+* rdoc
+* rspec
+
+To install, do:
 
 	gem install silverplatter-irc
 
 Note: you might have to use 'sudo gem install silverplatter-irc'
 
 === From Github
+You need for the installation:
+* rubygems >= 1.2.0 (if you want to use any gem tasks)
+* hpricot >= 0.6.0 (needed for most rake tasks)
+* rdoc >= 2.0.0 (needed for most rake tasks)
+* silverplatter-log >= 0.1.0
+
+You need for some of the rake tasks:
+* bacon
+* flexmock
+* git
+* hpricot
+* rcov
+* rdiscount (or markdown)
+* rdoc
+* rspec
+
+To install, do:
 
 	curl http://github.com/apeiros/silverplatter-irc/tarball/master
 	cd trunk
