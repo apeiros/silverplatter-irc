@@ -44,7 +44,8 @@ module BoneSplitter
 		:sudo => find_executable('sudo'),
 		:rcov => find_executable('rcov', 'rcov.bat'),
 		:rdoc => find_executable('rdoc', 'rdoc.bat'),
-		:gem  => find_executable('gem', 'gem.bat')
+		:gem  => find_executable('gem', 'gem.bat'),
+		:git  => find_executable('git')
 	)
 
 	class <<BoneSplitter

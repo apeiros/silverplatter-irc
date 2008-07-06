@@ -11,7 +11,8 @@
 # dependencies.
 
 
-# defaultize meta data, have to do this here because it's needed by gem.rake before any task is run.
+# defaultize meta data, have to do this here because many tasks depend on Project.meta
+# for initialization and task creation.
 Project.meta.summary     ||= proc { extract_summary() }
 Project.meta.description ||= proc { extract_description() || extract_summary() }
 Project.meta.__finalize__
