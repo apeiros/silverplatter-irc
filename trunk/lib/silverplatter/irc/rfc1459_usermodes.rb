@@ -25,7 +25,7 @@ module SilverPlatter
 		# * SilverPlatter::IRC
 		# * SilverPlatter::IRC::Connection
 		# * SilverPlatter::IRC::User
-		# * 
+		#
 		module RFC1459_UserModes
 			# Op prefix
 			Op    = "o".freeze

@@ -24,11 +24,13 @@ module SilverPlatter
 			# 
 			# == Description
 			# Members of Command:
-			# * raw:       The full string of the command as received from the server
-			# * symbol:    The symbol representing the command (e.g. :PRIVMSG)
-			# * regex:     The regular expression for the parameter part of the message
-			# * mapping:   The fields associated with the regex' captures
-			# * processor: A proc to process the message further, possibly having side-effects
+			# raw::       The full string of the command as received from the server
+			# symbol::    The symbol representing the command (e.g. :PRIVMSG)
+			# mapping::   Names for the message's parameters
+			# processor:: A proc to process the message further, possibly having side-effects
+			#             Like sending who and mode to a channel on join or bookkeeping of
+			#             Users and Channels.
+			#
 			# See SilverPlatter::IRC::COMMANDS for samples on instanciation of
 			# SilverPlatter::IRC::Command objects.
 			#
@@ -43,6 +45,7 @@ module SilverPlatter
 			# * SilverPlatter::IRC
 			# * SilverPlatter::IRC::Parser
 			# * SilverPlatter::IRC::Connection
+			#
 			class Command < Struct.new(:raw, :symbol, :mapping, :processor)
 				def initialize(raw, symbol, *mapping, &processor)
 					super(raw, symbol, mapping, processor)

@@ -15,6 +15,21 @@ module SilverPlatter
 		# == About
 		# SilverPlatter::IRC::Topic is used to store the topic (text,
 		# nick of the user who set it, time it was set) of a channel.
+		# Usually you'll not use Topic on its own but in conjunction
+		# with a Channel. Also you should only read from a Topic, not
+		# write to it.
+		#
+		# == Synopsis
+		#   topic        = SilverPlatter::IRC::Topic.new
+		#   topic.text   = "this is the topic of this channel"
+		#   topic.set_by = "nickname"
+		#   topic.set_at = Time.at(time_topic_was_set)
+		#
+		# == Attributes
+		# SilverPlatter::IRC::Topic is a Struct with three attributes:
+		# text::   The text of the topic.
+		# set_by:: The nick of the user who set the current topic
+		# set_at:: A Time instance of the time when the current topic was set
 		# 
 		# == Known Bugs
 		# Currently none.

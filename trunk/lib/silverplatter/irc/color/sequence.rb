@@ -10,11 +10,8 @@ module SilverPlatter
 	module IRC
 		module Color
 
-			# == Indexing
-			# * Author:   Stefan Rusterholz
-			# * Contact:  apeiros@gmx.net>
-			# * Revision: $Revision: 145 $
-			# * Date:     $Date: 2008-03-14 18:29:06 +0100 (Fri, 14 Mar 2008) $
+			# == Authors
+			# * Stefan Rusterholz <apeiros@gmx.net>
 			#
 			# == About
 			# Add methods to

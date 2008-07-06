@@ -29,6 +29,7 @@ module SilverPlatter
 		# * SilverPlatter::IRC
 		# * http://www.faqs.org/ftp/internet-drafts/draft-brocklesby-irc-isupport-03.txt
 		#   section 3.1
+		#
 		module RFC1459Strict_CaseMapping
 			# RFC 1459 conform uppercase letters,  used to map cases
 			RFC1459Strict_Upper = "A-]".freeze

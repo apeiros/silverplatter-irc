@@ -19,7 +19,7 @@ module SilverPlatter
 		# == Authors
 		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
-		# ==Description
+		# == Description
 		# SilverPlatter::IRC::Socket is a TCPSocket, retrofitted for communication
 		# with IRC-Servers.
 		# It provides specialized methods for sending messages to IRC-Server.
@@ -36,7 +36,7 @@ module SilverPlatter
 		# message. If you are looking for queries (commands that get an answer from the
 		# server) take a look at SilverPlatter::IRC::Connection.
 		# 
-		# ==Synopsis
+		# == Synopsis
 		#   irc = SilverPlatter::IRC::Socket.new('irc.freenode.org', :port => 6667)
 		#   irc.connect
 		#   irc.login('your_nickname', 'YourUser', 'Your realname')
@@ -45,11 +45,11 @@ module SilverPlatter
 		#   irc.send_privmsg("Hi all of you in #channel1!", "#channel1")
 		#   irc.close
 		# 
-		# ==Notes
-		# * Errno::EHOSTUNREACH: server not reached
-		# * Errno::ECONNREFUSED: server is up, but refuses connection
-		# * Errno::ECONNRESET:   connection works, server did not yet accept connection, resets after
-		# * Errno::EPIPE:        writing to a server-side closed connection, nil on gets, connection was terminated
+		# == Notes
+		# Errno::EHOSTUNREACH:: server not reached
+		# Errno::ECONNREFUSED:: server is up, but refuses connection
+		# Errno::ECONNRESET::   connection works, server did not yet accept connection, resets after
+		# Errno::EPIPE::        writing to a server-side closed connection, nil on gets, connection was terminated
 		#
 		class Socket
 
@@ -107,10 +107,10 @@ module SilverPlatter
 			attr_reader :eol
 	
 			# contains counters:
-			# *:read_lines
-			# *:read_bytes
-			# *:sent_lines
-			# *:sent_bytes
+			# :read_lines:: Number of lines that have been read.
+			# :read_bytes:: Number of bytes that have been read.
+			# :sent_lines:: Number of lines that have been sent.
+			# :sent_bytes:: Number of bytes that have been sent.
 			attr_reader :count
 	
 			# contains limits for the protocol, burst times/counts etc.
@@ -134,10 +134,11 @@ module SilverPlatter
 			
 			# Initialize properties, doesn't connect automatically
 			# options:
-			# * :server: ip/domain of server (overrides a given server parameter)
-			# * :port:   port to connect on, defaults to 6667
-			# * :eol:    what character sequence terminates messages, defaults to \r\n
-			# * :host:   what host address to bind to, defaults to nil
+			# :server:: ip/domain of server (overrides a given server parameter)
+			# :port::   port to connect on, defaults to 6667
+			# :eol::    what character sequence terminates messages, defaults to \r\n
+			# :host::   what host address to bind to, defaults to nil
+			# :log::    any object that responds to puts in a meaningful way
 			#
 			def initialize(server, options={})
 				options       = DefaultOptions.merge(options)

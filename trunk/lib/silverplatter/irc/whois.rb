@@ -17,18 +17,18 @@ module SilverPlatter
 		# 
 		# == Description
 		# The attributes are:
-		# * connection: to what connection this whois is bound
-		# * exists:     true if user exists, false if not, if false, all other attributes will be nil
-		# * nick:       nickname
-		# * user:       username
-		# * host:       hostname
-		# * real:       realname
-		# * registered: whether the user is identified with nickserv or authserv, not all servers are
-		#               currently supported
-		# * channels:   Array of channelnames the server reports for this user (not necessarily all he
-		#               really is in - depends on privacy settings of the user and the channel)
-		# * idle:       seconds this user is idling
-		# * signon:     Time instance of when the user signed on to the server
+		# connection:: to what connection this whois is bound
+		# exists::     true if user exists, false if not, if false, all other attributes will be nil
+		# nick::       nickname
+		# user::       username
+		# host::       hostname
+		# real::       realname
+		# registered:: whether the user is identified with nickserv or authserv, not all servers are
+		#              currently supported
+		# channels::   Array of channelnames the server reports for this user (not necessarily all he
+		#              really is in - depends on privacy settings of the user and the channel)
+		# idle::       seconds this user is idling
+		# signon::     Time instance of when the user signed on to the server
 		# 
 		# == Known Bugs
 		# Currently none.

@@ -6,11 +6,8 @@
 
 
 
-# == Indexing
-# * Author:   Stefan Rusterholz
-# * Contact:  apeiros@gmx.net>
-# * Revision: 1
-# * Date:     2008-01-17
+# == Authors
+# * Stefan Rusterholz <apeiros@gmx.net>
 #
 # == About
 # SilverPlatter::IRC provides everything necessary to communicate with IRC.

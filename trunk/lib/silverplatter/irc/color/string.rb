@@ -10,11 +10,8 @@ module SilverPlatter
 	module IRC
 		module Color
 
-			# == Indexing
-			# * Author:   Stefan Rusterholz
-			# * Contact:  apeiros@gmx.net>
-			# * Revision: $Revision: 143 $
-			# * Date:     $Date: 2008-03-14 18:28:28 +0100 (Fri, 14 Mar 2008) $
+			# == Authors
+			# * Stefan Rusterholz <apeiros@gmx.net>
 			#
 			# == About
 			# Add the String#colorized method to String

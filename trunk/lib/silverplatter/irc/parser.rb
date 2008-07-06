@@ -47,6 +47,7 @@ module SilverPlatter
 		# == See Also
 		# * SilverPlatter::IRC
 		# * SilverPlatter::IRC::Connection
+		#
 		class Parser
 		
 			# The regex used to scan the params
@@ -54,13 +55,6 @@ module SilverPlatter
 
 			# enables chdirs, path to the command-sets
 			BasePath = (File.expand_path(File.dirname(__FILE__))+'/parser').freeze
-			
-			# Raised if the parameter part of a message could not be matched.
-			class MatchingFailure < RuntimeError
-				def initialize(symbol, params, regex)
-					super("Matching failed in #{symbol} for #{params.inspect} against #{regex.inspect}")
-				end
-			end
 			
 			# Raised if a message that doesn't follow rfc2812 is tried to be parsed.
 			class InvalidMessageFormat < RuntimeError; end
@@ -95,6 +89,15 @@ module SilverPlatter
 			# This two are only used during #reset
 			attr_reader :new_commands, :new_expression # :nodoc:
 
+			# Create a parser for the given connection with the supplied command sets
+			# Usually you'll want to load the parser with "rfc2812" and "generic"
+			# Notice that load order is important.
+			#
+			# If you use SilverPlatter::IRC::Connection or Client you will never have
+			# direct contact with Parser.
+			#
+			# = Synopsis
+			#   parser = SilverPlatter::IRC::Parser.new(connection, "rfc2812")
 			def initialize(connection, *command_sets)
 				@connection   = connection
 				@msg_identify = false
@@ -110,7 +113,7 @@ module SilverPlatter
 
 			# Reset the parser using the provided isupport data (if set to nil, it will keep the current
 			# isupport data).
-			def reset(with_isupport=nil)
+			def reset(with_isupport=nil) # :nodoc:
 				@isupport   = OpenStruct.new(with_isupport) if with_isupport
 				@new_expression = OpenStruct.new
 				@new_commands   = Hash.new { |h,k| raise IndexError, "Unknown command #{k}" }
@@ -155,6 +158,7 @@ module SilverPlatter
 				self
 			end
 
+			# Load additional command-sets.
 			def load(*files)
 				raise ArgumentError, "Requires at least one argument." if files.empty?
 				@command_sets.concat(files.map { |name| name.downcase })
@@ -162,7 +166,7 @@ module SilverPlatter
 			end
 			
 			# Add an expression to the parser, can be used via parser.expression.<name>
-			# You can only add an expression with a name that isn't yet added, if you want to change an
+			# You can only add an expression with a name that isn't yet added, if you want to change an
 			# existing expression you MUST use alter_expression instead. This is to avoid mistakes.
 			def add_expression(name, value)
 				if @loading[:firstrun] then
