@@ -17,6 +17,7 @@ Project.meta.version          = version_proc("SilverPlatter::IRC::VERSION")
 Project.meta.website          = 'http://silverplatter.rubyforge.org/irc'
 Project.meta.bugtracker       = 'http://'
 Project.meta.feature_requests = 'http://'
+Project.meta.use_git          = true
 
 Project.manifest.ignore       = %w[web/**/*]
 
