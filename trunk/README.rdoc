@@ -7,7 +7,6 @@ Version:: 1.0.0
 Website:: http://silverplatter.rubyforge.org/irc
 
 
-
 == Summary
 SilverPlatter::IRC is an easy to use library for IRC clients. For an example use
 take a look at the butler project: http://butler.rubyforge.org which uses it to
