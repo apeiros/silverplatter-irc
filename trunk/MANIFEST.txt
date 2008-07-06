@@ -1,10 +1,10 @@
-CHANGELOG.txt
-History.txt
+CHANGELOG.rdoc
+HISTORY.rdoc
 LICENSE.txt
-Manifest.txt
+MANIFEST.txt
 README.rdoc
 Rakefile
-TODO.txt
+TODO.rdoc
 examples/connection_dsl_evented.rb
 examples/connection_dsl_imperative.rb
 examples/irbot.rb
