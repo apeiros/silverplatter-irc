@@ -5,6 +5,7 @@
 Author::  Stefan Rusterholz <apeiros@gmx.net>
 Version:: 1.0.0
 Website:: http://silverplatter.rubyforge.org/irc
+License:: Ruby License (see LICENSE.txt)
 
 
 == Summary
@@ -75,11 +76,11 @@ SilverPlatter::IRC is designed in layers, the following layers exist:
 Socket::     Provides many abstracted write methods and send-queues to protect your client from
              accidentally flooding (sending too many messages at once)
              Reading messages will only give a string
-Connection:: Provides imperative and evented interfaces to reading commands, which additionally are converted
-             to IRC::Message's and provide a nicer interface than plain Strings.
-             Keeps track of IRC::User's you're talking to (or that talk to you) and IRC::Channel's you're in.
-             Both, IRC::User and IRC::Channel are multitons, that means a given user or channel will always
-             be represented by the same object.
+Connection:: Provides imperative and evented interfaces to reading commands, which additionally
+             are converted to IRC::Message's and provide a nicer interface than plain Strings.
+             Keeps track of IRC::User's you're talking to (or that talk to you) and IRC::Channel's
+             you're in. Both, IRC::User and IRC::Channel are multitons, that means a given user or
+             channel will always be represented by the same object.
 Client::     Deals with multiple connections
 
 Socket only provides the simplemost functionality and is "dumb" by design (no automatisms).
@@ -87,9 +88,20 @@ Connection is sufficient to build a client allowing a connection to a single ser
 time and is semi-intelligent as Parser, Channel and Users are tied to the connection and
 automatically updated apropriatly. Also it can properly deal with requests with multiple
 commands as reply, collecting those and making them accessible in a nice format.
-Client improves further on that as it can have multiple connections, deals with pings
-and provides nice mechanisms to get messages dispatched to methods.
+Client enables multiple connections in a nice manner.
 	
+
+== Contributing
+If you wish to contribute, then there are various ways to do so:
+Code::     If you wish to contribute code, simply fork the github project, clone and start to work.
+           Contact me when you think your modifications are ready to be pulled into the master
+           branch. Notice that all patches are required to be under the Ruby License or public
+           domain.
+Feedback:: Please give feedback on the libs. ALL feedback is good. Positive feedback to keep the
+           motivation up, negative (but constructive!) feedback to improve the code-base.
+Testing::  Testrun silverplatter-irc on different IRC servers and collect logged exceptions
+SSL::      Have a server with SSL to connect to? Tell me, I'd very much like to try enable ssl
+           connections.
 
 == Links
 SilverPlatter-IRCs home:: http://silverplatter.rubyforge.org/irc
