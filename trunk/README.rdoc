@@ -2,9 +2,10 @@
 
 
 == Indexing
-Author::           Stefan Rusterholz <apeiros@gmx.net>
+Author::           Stefan Rusterholz <stefan.rusterholz+silverplatter-irc at gmail.com>
 Version::          1.0.0
 Website::          http://silverplatter.rubyforge.org/irc
+Git Repository::   http://github.com/apeiros/silverplatter-irc
 Bugtracker::       http://rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse
 Feature Requests:: http://rubyforge.org/tracker/?atid=17333&group_id=4522&func=browse
 License::          Ruby License (see LICENSE.txt)
