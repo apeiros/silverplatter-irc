@@ -18,7 +18,7 @@ join = proc { |connection, message, fields|
 		channel.add_user(from,   :join)
 		if from.me? then
 			# advantage of doing it here: it is done after join (who might fail otherwise),
-			# disatvantage: +1 condition for every join
+			# disadvantage: +1 condition for every join
 			connection.send_mode(channel)
 			connection.send_who(channel)
 		elsif from.change_visibility(true) then
