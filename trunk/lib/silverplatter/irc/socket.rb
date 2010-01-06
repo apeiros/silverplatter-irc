@@ -262,8 +262,9 @@ module SilverPlatter
 			end 
 	
 			def send_raw(*arguments)
-				if arguments.last.include?(Space) || arguments.last[0] == ?: then
-					arguments[-1] = ":#{arguments.last}"
+				last_argument = arguments.last.to_s
+				if last_argument.include?(Space) || last_argument[0] == ?: then
+					arguments[-1] = ":#{last_argument}"
 				end
 				write_with_eol(arguments.join(Space))
 			end
@@ -395,11 +396,7 @@ module SilverPlatter
 			
 			# send a mode command to a channel
 			def send_mode(channel, *mode)
-				if mode.empty? then
-					send_raw(MODE, channel)
-				else
-					send_raw(MODE, channel, *mode)
-				end
+				send_raw(MODE, channel, *mode)
 			end
 			
 			# Give Op to user in channel
