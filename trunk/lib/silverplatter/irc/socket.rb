@@ -380,7 +380,7 @@ module SilverPlatter
 	
 			# set your status to away with reason 'reason'
 			def send_away(reason="")
-				return back if reason.empty?
+				return send_back if reason.empty?
 				send_raw(AWAY, reason)
 			end
 	
