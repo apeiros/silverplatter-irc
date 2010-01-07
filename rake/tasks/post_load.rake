@@ -1,5 +1,5 @@
 #--
-# Copyright 2007-2008 by Stefan Rusterholz.
+# Copyright 2007-2009 by Stefan Rusterholz.
 # All rights reserved.
 # See LICENSE.txt for permissions.
 #++
@@ -13,6 +13,6 @@
 
 # defaultize meta data, have to do this here because many tasks depend on Project.meta
 # for initialization and task creation.
-Project.meta.summary     ||= proc { extract_summary() }
-Project.meta.description ||= proc { extract_description() || extract_summary() }
-Project.meta.__finalize__
+#Project.meta.summary     ||= proc { extract_summary() }
+#Project.meta.description ||= proc { extract_description() || extract_summary() }
+#Project.meta.__finalize__
