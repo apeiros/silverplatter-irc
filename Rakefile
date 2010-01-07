@@ -18,6 +18,9 @@ Project.meta.website          = 'http://silverplatter.rubyforge.org/irc'
 Project.meta.bugtracker       = 'http://'
 Project.meta.feature_requests = 'http://'
 Project.meta.use_git          = true
+Project.meta.readme           = 'README.rdoc'
+Project.meta.summary          = extract_summary()
+Project.meta.description      = extract_description()
 
 Project.manifest.ignore       = %w[{docs,spec,stuff,test,web}/**/*]
 
