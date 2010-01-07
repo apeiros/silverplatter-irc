@@ -1,0 +1,2078 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Class: SilverPlatter::IRC::Connection</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/silverplatter/irc/connection_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/silverplatter/irc/connection.rb">lib/silverplatter/irc/connection.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link">Socket</p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#M000162">::new</a></li>
+					
+					<li><a href="#M000176">#==</a></li>
+					
+					<li><a href="#M000188">#[]</a></li>
+					
+					<li><a href="#M000216">#banlist</a></li>
+					
+					<li><a href="#M000215">#chanlist</a></li>
+					
+					<li><a href="#M000192">#channel_by_name</a></li>
+					
+					<li><a href="#M000190">#channels</a></li>
+					
+					<li><a href="#M000177">#create_user</a></li>
+					
+					<li><a href="#M000163">#event</a></li>
+					
+					<li><a href="#M000204">#filter</a></li>
+					
+					<li><a href="#M000164">#isupport</a></li>
+					
+					<li><a href="#M000195">#login</a></li>
+					
+					<li><a href="#M000231">#msg_identify</a></li>
+					
+					<li><a href="#M000203">#prepare</a></li>
+					
+					<li><a href="#M000197">#quit</a></li>
+					
+					<li><a href="#M000222">#read_loop</a></li>
+					
+					<li><a href="#M000219">#read_message</a></li>
+					
+					<li><a href="#M000218">#read_message_until</a></li>
+					
+					<li><a href="#M000225">#run</a></li>
+					
+					<li><a href="#M000194">#same_channelname?</a></li>
+					
+					<li><a href="#M000193">#same_nick?</a></li>
+					
+					<li><a href="#M000165">#subscribe</a></li>
+					
+					<li><a href="#M000168">#subscribe_listener</a></li>
+					
+					<li><a href="#M000167">#subscribe_once</a></li>
+					
+					<li><a href="#M000217">#terminate</a></li>
+					
+					<li><a href="#M000175">#unsubscribe</a></li>
+					
+					<li><a href="#M000235">#update_user_unsynchronized</a></li>
+					
+					<li><a href="#M000234">#use_casemapping</a></li>
+					
+					<li><a href="#M000191">#user_by_nick</a></li>
+					
+					<li><a href="#M000189">#users</a></li>
+					
+					<li><a href="#M000232">#valid_channelname?</a></li>
+					
+					<li><a href="#M000233">#valid_nickname?</a></li>
+					
+					<li><a href="#M000199">#wait_for</a></li>
+					
+					<li><a href="#M000208">#whois</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="../../CHANGELOG_rdoc.html">CHANGELOG.rdoc</a></li>
+				
+					<li class="file"><a href="../../HISTORY_rdoc.html">HISTORY.rdoc</a></li>
+				
+					<li class="file"><a href="../../LICENSE_txt.html">LICENSE.txt</a></li>
+				
+					<li class="file"><a href="../../MANIFEST_txt.html">MANIFEST.txt</a></li>
+				
+					<li class="file"><a href="../../README_rdoc.html">README.rdoc</a></li>
+				
+					<li class="file"><a href="../../TODO_rdoc.html">TODO.rdoc</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../SilverPlatter.html">SilverPlatter</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC.html">SilverPlatter::IRC</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ASCII_CaseMapping.html">SilverPlatter::IRC::ASCII_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Channel.html">SilverPlatter::IRC::Channel</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ChannelList.html">SilverPlatter::IRC::ChannelList</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ChannelModes.html">SilverPlatter::IRC::ChannelModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Client.html">SilverPlatter::IRC::Client</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ClientDSL.html">SilverPlatter::IRC::ClientDSL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color.html">SilverPlatter::IRC::Color</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color/Sequence.html">SilverPlatter::IRC::Color::Sequence</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color/String.html">SilverPlatter::IRC::Color::String</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Connection.html">SilverPlatter::IRC::Connection</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ConnectionDSL.html">SilverPlatter::IRC::ConnectionDSL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ConnectionSet.html">SilverPlatter::IRC::ConnectionSet</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Hostmask.html">SilverPlatter::IRC::Hostmask</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Hostmask/StringHelper.html">SilverPlatter::IRC::Hostmask::StringHelper</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Listener.html">SilverPlatter::IRC::Listener</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message.html">SilverPlatter::IRC::Message</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/JOIN.html">SilverPlatter::IRC::Message::JOIN</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/KILL.html">SilverPlatter::IRC::Message::KILL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/NICK.html">SilverPlatter::IRC::Message::NICK</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/NOTICE.html">SilverPlatter::IRC::Message::NOTICE</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/PART.html">SilverPlatter::IRC::Message::PART</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/PRIVMSG.html">SilverPlatter::IRC::Message::PRIVMSG</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/TOPIC.html">SilverPlatter::IRC::Message::TOPIC</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/MessagePRIVMSG.html">SilverPlatter::IRC::MessagePRIVMSG</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser.html">SilverPlatter::IRC::Parser</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/Command.html">SilverPlatter::IRC::Parser::Command</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/InvalidMessageFormat.html">SilverPlatter::IRC::Parser::InvalidMessageFormat</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/ParseError.html">SilverPlatter::IRC::Parser::ParseError</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/UnknownCommand.html">SilverPlatter::IRC::Parser::UnknownCommand</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459Strict_CaseMapping.html">SilverPlatter::IRC::RFC1459Strict_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_CaseMapping.html">SilverPlatter::IRC::RFC1459_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_ChannelModes.html">SilverPlatter::IRC::RFC1459_ChannelModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_UserModes.html">SilverPlatter::IRC::RFC1459_UserModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Socket.html">SilverPlatter::IRC::Socket</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/StringHelpers.html">SilverPlatter::IRC::StringHelpers</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Subscriptions.html">SilverPlatter::IRC::Subscriptions</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Topic.html">SilverPlatter::IRC::Topic</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/User.html">SilverPlatter::IRC::User</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/UserList.html">SilverPlatter::IRC::UserList</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/UserManager.html">SilverPlatter::IRC::UserManager</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Whois.html">SilverPlatter::IRC::Whois</a></li>
+				
+					<li><a href="../../Exception.html">Exception</a></li>
+				
+					<li><a href="../../Exception/Detailed.html">Exception::Detailed</a></li>
+				
+					<li><a href="../../Diagnostics.html">Diagnostics</a></li>
+				
+					<li><a href="../../OpenStruct.html">OpenStruct</a></li>
+				
+					<li><a href="../../String.html">String</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">SilverPlatter::IRC::Connection</h1>
+
+		<div id="description">
+			<h2>Authors</h2>
+<ul>
+<li>Stefan Rusterholz <apeiros@gmx.net>
+
+</li>
+</ul>
+<h2>About</h2>
+<p>
+A connection to a single irc server, managing users, channels and other
+data belonging to it.
+</p>
+<h2>Synopsis</h2>
+<pre>
+  irc = SilverPlatter::IRC::Connection.new &quot;irc.freenode.org&quot;
+  irc.connect
+</pre>
+<h2>Description</h2>
+<p>
+Parses messages, automatically converts them to
+SilverPlatter::IRC::Messages (or descendants), knows about the user
+representing itself, provides highlevel methods that collect commands in
+reply of queries (e.g. who, whois, chanlist, banlist etc.) and several
+other services. allows creation of dialogs from privmsg and notice messages
+<a href="Connection.html">Connection</a> is the hub between parser, users,
+channels, usermanager and itself.
+</p>
+<h2>Notes</h2>
+<p>
+A <a href="User.html">User</a> has two possible states in relation to a
+connection:
+</p>
+<ul>
+<li>visible: the user shares at least one channel with the connection&#8217;s
+<a href="User.html">User</a> (connection.me)
+
+</li>
+<li>invisible: the user was seen quitting (or being killed) or doesn&#8217;t
+share any channel
+
+</li>
+</ul>
+<p>
+The connections own <a href="UserList.html">UserList</a> will drop users on
+leave_server (quit, kill, &#8230;), it will retain users that leave_channel
+(part, kick, &#8230;) and become invisible. This is to help keeping
+</p>
+<p>
+If you set the connection of the <a href="UserList.html">UserList</a>, all
+users stored in it should use the same connection object.
+</p>
+<p>
+The code assumes Object#dup, Hash#[] and Hash#[] to be atomic, in other
+words it doesn&#8217;t synchronize those methods.
+</p>
+<h2>Known Bugs</h2>
+<p>
+Currently none Please inform me about bugs using the bugtracker on <a
+href="http://rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse">rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse</a>
+</p>
+<h2>See Also</h2>
+<ul>
+<li><a href="../IRC.html">SilverPlatter::IRC</a>
+
+</li>
+<li><a href="Client.html">SilverPlatter::IRC::Client</a>
+
+</li>
+<li><a href="User.html">SilverPlatter::IRC::User</a>
+
+</li>
+<li><a href="Connection.html">SilverPlatter::IRC::Connection</a>
+
+</li>
+<li><a href="Channel.html">SilverPlatter::IRC::Channel</a>
+
+</li>
+<li><a href="ChannelList.html">SilverPlatter::IRC::ChannelList</a>
+
+</li>
+</ul>
+
+		</div>
+
+		<!-- Constants -->
+		
+		<div id="constants-list" class="section">
+			<h3 class="section-header">Constants</h3>
+			<dl>
+			
+				<dt><a name="RaiseOnNickError">RaiseOnNickError</a></dt>
+				
+				<dd class="description"><p>
+This is the proc that is used per default for &amp;on_nick_error in <a
+href="Connection.html#M000195">Connection#login</a>
+</p></dd>
+				
+			
+				<dt><a name="IncrementOnNickError">IncrementOnNickError</a></dt>
+				
+				<dd class="description"><p>
+This proc can be used as &amp;on_nick_error with <a
+href="Connection.html#M000195">Connection#login</a> It will prefix the nick
+with [<digit] with <digit> growing by 1 per try. E.g. first try is
+&#8216;butler&#8217;, then &#8217;[1]butler&#8217;, &#8217;[2]butler&#8217;
+and so on.
+</p></dd>
+				
+			
+				<dt><a name="DefaultOptions">DefaultOptions</a></dt>
+				
+				<dd class="description"><p>
+A hash with all options available in addition to
+SilverPlatter::IRC::Socket::DefaultOptions
+</p></dd>
+				
+			
+			</dl>
+		</div>
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="client-encoding-attribute-method" class="method-detail">
+				<a name="client_encoding"></a>
+				
+				<a name="client_encoding="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">client_encoding</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The encoding of the client (defaults to utf-8)
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="server-encoding-attribute-method" class="method-detail">
+				<a name="server_encoding"></a>
+				
+				<a name="server_encoding="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">server_encoding</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The default encoding of the server (defaults to utf-8)
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="channel-encoding-attribute-method" class="method-detail">
+				<a name="channel_encoding"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">channel_encoding</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+A hash with the encodings of individual channels
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="me-attribute-method" class="method-detail">
+				<a name="me"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">me</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The <a href="User.html">SilverPlatter::IRC::User</a> that represents the
+client of this connection
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="disconnect-callback-attribute-method" class="method-detail">
+				<a name="disconnect_callback"></a>
+				
+				<a name="disconnect_callback="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">disconnect_callback</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The callback invoked when the client is disconnected
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="default-attribute-method" class="method-detail">
+				<a name="default"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">default</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+Defaults used e.g. when loging in Keys:
+</p>
+<ul>
+<li>:nick - nickname
+
+</li>
+<li>:user - username
+
+</li>
+<li>:real - realname
+
+</li>
+<li>:join - channels to join after logging in
+
+</li>
+</ul>
+				
+				</div>
+			</div>
+			
+			<div id="parser-attribute-method" class="method-detail">
+				<a name="parser"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">parser</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The parser instance. Should only be used by connection and parser-commands.
+</p>
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="M000162"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">(server=nil, options={}, &description)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Server is the irc-server to connect you can pass a block which is executed
+on disconnect with the arguments connection and reason. Possible values for
+reason are:
+</p>
+<ul>
+<li>:quit: the connection was programmatically quit, this means you should not
+try to reconnect
+
+</li>
+<li>:disconnect: the server stopped responding or the socket raised an error. A
+reconnect attempt should be made after waiting a bit
+
+</li>
+<li>:noconnect: the attempt to connect failed. You should wait before retrying.
+
+</li>
+</ul>
+<p>
+The options argument is a hash, see <a
+href="Connection.html#DefaultOptions">DefaultOptions</a> constant for
+possible values.
+</p>
+<p>
+There are 3 ways to create a new <a href="Connection.html">Connection</a>
+object:
+</p>
+<pre>
+  con1 = SilverPlatter::IRC::Connection.new(&quot;irc.example.com&quot;, :port =&gt; 8001)
+  con2 = SilverPlatter::IRC::Connection.new(nil, :server =&gt; &quot;irc.example.com&quot;, :port =&gt; 8001)
+  con3 = SilverPlatter::IRC::Connection.new do
+    server &quot;irc.example.com&quot;
+    port   8001
+  end
+</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 146</span>
+146:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">server</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">description</span>)
+147:         <span class="ruby-identifier">options</span>.<span class="ruby-identifier">update</span>(<span class="ruby-constant">ConnectionDSL</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">server</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">description</span>).<span class="ruby-identifier">__config__</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">description</span>
+148:         <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:server</span>]   <span class="ruby-operator">||=</span> <span class="ruby-identifier">server</span> <span class="ruby-comment cmt"># options overrides server</span>
+149:         <span class="ruby-constant">DefaultOptions</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>,<span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-comment cmt"># prefer over merge as it allows to have nil values replaced</span>
+150:           <span class="ruby-identifier">options</span>[<span class="ruby-identifier">k</span>] <span class="ruby-operator">||=</span> <span class="ruby-identifier">v</span>
+151:         }
+152:         <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:username</span>] <span class="ruby-operator">||=</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:nickname</span>]
+153:         <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:realname</span>] <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;#{options[:nickname]} (silverplatter-irc)&quot;</span>
+154: 
+155:         <span class="ruby-ivar">@events</span>              = {}
+156:         <span class="ruby-ivar">@logger</span>              = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:logger</span>)
+157:         <span class="ruby-ivar">@nicknames</span>           = {} <span class="ruby-comment cmt"># map nicks to users</span>
+158:         <span class="ruby-ivar">@channelnames</span>        = {} <span class="ruby-comment cmt"># map channelnames to channels</span>
+159:         <span class="ruby-ivar">@channels</span>            = <span class="ruby-constant">ChannelList</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-comment cmt"># list of all channels</span>
+160:         <span class="ruby-ivar">@users</span>               = <span class="ruby-constant">UserList</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-comment cmt"># list of all users</span>
+161:         <span class="ruby-ivar">@usermanager</span>         = <span class="ruby-constant">UserManager</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-ivar">@users</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:max_users_backlog</span>), <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:max_users_age</span>))
+162:         <span class="ruby-ivar">@subscriptions</span>       = <span class="ruby-constant">Subscriptions</span>.<span class="ruby-identifier">new</span>
+163:         <span class="ruby-ivar">@message_lock</span>        = <span class="ruby-constant">Mutex</span>.<span class="ruby-identifier">new</span> <span class="ruby-comment cmt">#</span>
+164:         <span class="ruby-ivar">@client_encoding</span>     = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:client_encoding</span>)
+165:         <span class="ruby-ivar">@server_encoding</span>     = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:server_encoding</span>)
+166:         <span class="ruby-ivar">@channel_encoding</span>    = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span> { <span class="ruby-ivar">@server_encoding</span> } <span class="ruby-comment cmt"># @server_encoding might change</span>
+167:         <span class="ruby-ivar">@reconnect_tries</span>     = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:reconnect_tries</span>)
+168:         <span class="ruby-ivar">@reconnect_delay</span>     = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:reconnect_delay</span>)
+169:         <span class="ruby-ivar">@events</span>[<span class="ruby-identifier">:disconnect</span>] = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:on_disconnect</span>)
+170:         <span class="ruby-ivar">@events</span>[<span class="ruby-identifier">:nick_error</span>] = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:on_nick_error</span>) <span class="ruby-operator">||</span> <span class="ruby-constant">RaiseOnNickError</span>
+171:         <span class="ruby-ivar">@ping_interval</span>       = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:ping_interval</span>)
+172:         <span class="ruby-ivar">@case_mapping</span>        = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:case_mapping</span>)
+173:         <span class="ruby-ivar">@ping_delay</span>          = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:ping_delay</span>)
+174:         <span class="ruby-ivar">@ping_loop</span>           = <span class="ruby-keyword kw">nil</span>
+175:         <span class="ruby-ivar">@me</span>                  = <span class="ruby-keyword kw">nil</span>
+176:         <span class="ruby-ivar">@read_thread</span>         = <span class="ruby-constant">Thread</span>.<span class="ruby-identifier">new</span> {} <span class="ruby-comment cmt"># create a dead thread which can be tested for .alive?</span>
+177:         <span class="ruby-ivar">@parser</span>              = <span class="ruby-constant">Parser</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-value str">&quot;rfc2812&quot;</span>, <span class="ruby-value str">&quot;generic&quot;</span>)
+178:         <span class="ruby-ivar">@dispatch</span>            = <span class="ruby-constant">Queue</span>.<span class="ruby-identifier">new</span>
+179:         <span class="ruby-ivar">@dispatcher</span>          = <span class="ruby-constant">Thread</span>.<span class="ruby-identifier">new</span> {
+180:           <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">job</span> = <span class="ruby-ivar">@dispatch</span>.<span class="ruby-identifier">shift</span>
+181:             <span class="ruby-keyword kw">begin</span>
+182:               <span class="ruby-identifier">job</span>.<span class="ruby-identifier">shift</span>.<span class="ruby-identifier">call</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">job</span>)
+183:             <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+184:               <span class="ruby-identifier">exception</span>(<span class="ruby-identifier">e</span>)
+185:             <span class="ruby-keyword kw">end</span>
+186:           <span class="ruby-keyword kw">end</span>
+187:         }
+188:         <span class="ruby-ivar">@default</span>             = {
+189:           <span class="ruby-identifier">:serverpass</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:serverpass</span>),
+190:           <span class="ruby-identifier">:nickname</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:nickname</span>),
+191:           <span class="ruby-identifier">:username</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:username</span>),
+192:           <span class="ruby-identifier">:realname</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:realname</span>),
+193:           <span class="ruby-identifier">:join</span>       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:join</span>),
+194:         }
+195: 
+196:         <span class="ruby-ivar">@mutex_whois</span>         = <span class="ruby-constant">Mutex</span>.<span class="ruby-identifier">new</span>
+197: 
+198:         <span class="ruby-ivar">@channel_encoding</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:channel_encoding</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:channel_encoding</span>]
+199:         <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:channel_encoding</span>)
+200: 
+201:         <span class="ruby-keyword kw">super</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">options</span>)
+202:         
+203:         <span class="ruby-ivar">@read_thread</span>.<span class="ruby-identifier">join</span>
+204:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="M000176"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">==</span><span
+						class="method-args">(other)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Tests whether two connections are equal. They are if the server and port is
+the same.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 253</span>
+253:       <span class="ruby-keyword kw">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">other</span>)
+254:         (<span class="ruby-ivar">@server</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">server</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-ivar">@port</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">port</span>)
+255:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="M000188"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">[]</span><span
+						class="method-args">(entity)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Retrieve a <a href="Channel.html">Channel</a> or <a
+href="User.html">User</a> by channelname or nickname respectively.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 333</span>
+333:       <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">entity</span>)
+334:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">valid_channelname?</span>(<span class="ruby-identifier">entity</span>) <span class="ruby-keyword kw">then</span>
+335:           <span class="ruby-identifier">channel_by_name</span>(<span class="ruby-identifier">entity</span>)
+336:         <span class="ruby-keyword kw">else</span>
+337:           <span class="ruby-identifier">user_by_nick</span>(<span class="ruby-identifier">entity</span>)
+338:         <span class="ruby-keyword kw">end</span>
+339:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="banlist-method" class="method-detail ">
+				<a name="M000216"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">banlist</span><span
+						class="method-args">(channel)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="banlist-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 542</span>
+542:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">banlist</span>(<span class="ruby-identifier">channel</span>)
+543:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="chanlist-method" class="method-detail ">
+				<a name="M000215"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">chanlist</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="chanlist-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 539</span>
+539:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">chanlist</span>
+540:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="channel-by-name-method" class="method-detail ">
+				<a name="M000192"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">channel_by_name</span><span
+						class="method-args">(name)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get a channel by its name (the method takes care of casemapping)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="channel-by-name-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 371</span>
+371:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">channel_by_name</span>(<span class="ruby-identifier">name</span>) <span class="ruby-comment cmt"># =&gt; Channel</span>
+372:         <span class="ruby-ivar">@channelnames</span>[<span class="ruby-identifier">casemap</span>(<span class="ruby-identifier">name</span>)]
+373:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="channels-method" class="method-detail ">
+				<a name="M000190"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">channels</span><span
+						class="method-args">(*names)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+If called without arguments it will return a <a
+href="ChannelList.html">ChannelList</a> with all known channels in this
+connection If called with arguments it will return an Array with channels
+mapped to those names (possibly nil)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="channels-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 355</span>
+355:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">channels</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">names</span>)
+356:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">names</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword kw">then</span>
+357:           <span class="ruby-ivar">@channels</span>
+358:         <span class="ruby-keyword kw">else</span>
+359:           <span class="ruby-ivar">@message_lock</span>.<span class="ruby-identifier">synchronize</span> {
+360:             <span class="ruby-ivar">@channelnames</span>.<span class="ruby-identifier">values_at</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">names</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span> <span class="ruby-identifier">casemap</span>(<span class="ruby-identifier">name</span>) })
+361:           }
+362:         <span class="ruby-keyword kw">end</span>
+363:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="create-user-method" class="method-detail ">
+				<a name="M000177"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">create_user</span><span
+						class="method-args">(nick, user=nil, host=nil, real=nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Should only be used by the <a href="Parser.html">Parser</a> Create a new <a
+href="User.html">User</a> if necessary or update an old one, returns the
+new or existing <a href="User.html">User</a>. FIXME: might be
+streamlineable
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="create-user-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 260</span>
+260:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_user</span>(<span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">host</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">real</span>=<span class="ruby-keyword kw">nil</span>) <span class="ruby-comment cmt"># nicklist, userlist</span>
+261:         <span class="ruby-identifier">new_user</span>, <span class="ruby-identifier">old_user</span> = <span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>
+262:         <span class="ruby-ivar">@users</span>.<span class="ruby-identifier">synchronize</span> {
+263:           <span class="ruby-identifier">new_user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">real</span>, <span class="ruby-keyword kw">self</span>)
+264:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">old_user</span> = <span class="ruby-ivar">@nicknames</span>[<span class="ruby-identifier">new_user</span>.<span class="ruby-identifier">compare</span>]
+265:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">old_user</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">new_user</span> <span class="ruby-keyword kw">then</span>
+266:               <span class="ruby-identifier">update_user_unsynchronized</span>(<span class="ruby-identifier">old_user</span>, <span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">real</span>)
+267:               <span class="ruby-identifier">new_user</span> = <span class="ruby-identifier">old_user</span>
+268: 
+269:             <span class="ruby-comment cmt"># if old user was out of sight the new user overrides the old</span>
+270:             <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">old_user</span>.<span class="ruby-identifier">invisible?</span> <span class="ruby-keyword kw">then</span>
+271:               <span class="ruby-ivar">@nicknames</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">old_user</span>.<span class="ruby-identifier">compare</span>)
+272:               <span class="ruby-ivar">@nicknames</span>[<span class="ruby-identifier">new_user</span>.<span class="ruby-identifier">compare</span>] = <span class="ruby-identifier">new_user</span>
+273:               <span class="ruby-ivar">@users</span>[<span class="ruby-identifier">new_user</span>] = <span class="ruby-keyword kw">true</span>
+274:               <span class="ruby-ivar">@users</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">old_user</span>)
+275:   
+276:             <span class="ruby-comment cmt"># thanks to the FU that is IRC, some ircds change hosts w/o notification, so:</span>
+277:             <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">old_user</span>.<span class="ruby-identifier">visible?</span> <span class="ruby-keyword kw">then</span> 
+278:               <span class="ruby-identifier">update_user_unsynchronized</span>(<span class="ruby-identifier">old_user</span>, <span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">real</span>)
+279: 
+280:             <span class="ruby-keyword kw">else</span>
+281:               <span class="ruby-ivar">@nicknames</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">old_user</span>.<span class="ruby-identifier">compare</span>)
+282:               <span class="ruby-ivar">@nicknames</span>[<span class="ruby-identifier">new_user</span>.<span class="ruby-identifier">compare</span>] = <span class="ruby-identifier">new_user</span>
+283:               <span class="ruby-ivar">@users</span>[<span class="ruby-identifier">new_user</span>] = <span class="ruby-keyword kw">true</span>
+284:               <span class="ruby-ivar">@users</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">old_user</span>)
+285:             <span class="ruby-keyword kw">end</span>
+286:           <span class="ruby-keyword kw">else</span>
+287:             <span class="ruby-ivar">@nicknames</span>[<span class="ruby-identifier">new_user</span>.<span class="ruby-identifier">compare</span>]  = <span class="ruby-identifier">new_user</span>
+288:             <span class="ruby-ivar">@users</span>[<span class="ruby-identifier">new_user</span>] = <span class="ruby-keyword kw">true</span>
+289:           <span class="ruby-keyword kw">end</span>
+290:         }
+291:         <span class="ruby-identifier">new_user</span>
+292:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="event-method" class="method-detail ">
+				<a name="M000163"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">event</span><span
+						class="method-args">(name, *args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="event-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 206</span>
+206:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">event</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+207:         <span class="ruby-identifier">cb</span> = <span class="ruby-ivar">@events</span>[<span class="ruby-identifier">name</span>]
+208:         <span class="ruby-identifier">cb</span>.<span class="ruby-identifier">call</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+209:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="filter-method" class="method-detail ">
+				<a name="M000204"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">filter</span><span
+						class="method-args">(symbol, priority=0, queue=Queue.new)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+listens for all Messages with symbol (optionally passing a test given as
+block) and pushes them onto the Queue returns the Queue, extended with
+Filter. You are responsible to unsubscribe it (via Queue#unsubscribe).
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="filter-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 479</span>
+479:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">filter</span>(<span class="ruby-identifier">symbol</span>, <span class="ruby-identifier">priority</span>=<span class="ruby-value">0</span>, <span class="ruby-identifier">queue</span>=<span class="ruby-constant">Queue</span>.<span class="ruby-identifier">new</span>)
+480:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Invalid Queue #{queue}:#{queue.class}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:push</span>)
+481:         <span class="ruby-identifier">listener</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-keyword kw">then</span>
+482:           <span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">symbol</span>, <span class="ruby-identifier">priority</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">|</span> <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">message</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">message</span>) }
+483:         <span class="ruby-keyword kw">else</span>
+484:           <span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">symbol</span>, <span class="ruby-identifier">priority</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">|</span> <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">message</span>) }
+485:         <span class="ruby-keyword kw">end</span>
+486:         <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">extend</span> <span class="ruby-constant">Filter</span>
+487:         <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">listener</span> = <span class="ruby-identifier">listener</span>
+488:         <span class="ruby-identifier">queue</span>
+489:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="isupport-method" class="method-detail ">
+				<a name="M000164"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">isupport</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+An <a href="../../OpenStruct.html">OpenStruct</a> containing all isupport
+values of the server (lowercased and symbolified)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="isupport-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 212</span>
+212:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">isupport</span>
+213:         <span class="ruby-ivar">@parser</span>.<span class="ruby-identifier">isupport</span>
+214:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="login-method" class="method-detail ">
+				<a name="M000195"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">login</span><span
+						class="method-args">(nick=nil, user=nil, real=nil, serverpass=nil, &on_nick_error)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+login under nick, user, real - the fourth argument accepts a serverpassword
+in case the server requires one Login will automatically change the nick if
+the server reports that the provided one is in use. You can supply a block
+to change the way the nick is changed. The block receives the parameters:
+self, originalnick, lastnick, number. Nick represents the nick that was
+rejected and changes the number of changes so far. The block must return
+the new nick to use.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="login-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 394</span>
+394:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">login</span>(<span class="ruby-identifier">nick</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">user</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">real</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">serverpass</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">on_nick_error</span>)
+395:         <span class="ruby-identifier">nick</span>          <span class="ruby-operator">||=</span> <span class="ruby-ivar">@default</span>[<span class="ruby-identifier">:nickname</span>]
+396:         <span class="ruby-identifier">user</span>          <span class="ruby-operator">||=</span> <span class="ruby-ivar">@default</span>[<span class="ruby-identifier">:username</span>]
+397:         <span class="ruby-identifier">real</span>          <span class="ruby-operator">||=</span> <span class="ruby-ivar">@default</span>[<span class="ruby-identifier">:realname</span>]
+398:         <span class="ruby-identifier">serverpass</span>    <span class="ruby-operator">||=</span> <span class="ruby-ivar">@default</span>[<span class="ruby-identifier">:serverpass</span>]
+399:         <span class="ruby-identifier">on_nick_error</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@events</span>[<span class="ruby-identifier">:nick_error</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">RaiseOnNickError</span>
+400:         <span class="ruby-identifier">nick_change</span>     = <span class="ruby-keyword kw">nil</span>
+401:         <span class="ruby-identifier">number</span>          = <span class="ruby-value">0</span>
+402:         <span class="ruby-ivar">@me</span>             = <span class="ruby-identifier">create_user</span>(<span class="ruby-identifier">nick</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">real</span>)
+403:         <span class="ruby-ivar">@me</span>.<span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-identifier">:@me</span>, <span class="ruby-keyword kw">true</span>)
+404:         <span class="ruby-ivar">@events</span>[<span class="ruby-identifier">:old_nick_error</span>] = <span class="ruby-ivar">@events</span>[<span class="ruby-identifier">:nick_error</span>]
+405:         <span class="ruby-ivar">@events</span>[<span class="ruby-identifier">:nick_error</span>] = <span class="ruby-identifier">proc</span> {
+406:           <span class="ruby-ivar">@me</span>.<span class="ruby-identifier">nick</span> = <span class="ruby-ivar">@events</span>[<span class="ruby-identifier">:old_nick_error</span>].<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">nick</span>, <span class="ruby-ivar">@me</span>.<span class="ruby-identifier">nick</span>, <span class="ruby-identifier">number</span><span class="ruby-operator">+=</span><span class="ruby-value">1</span>)
+407:           <span class="ruby-identifier">send_nick</span>(<span class="ruby-ivar">@me</span>.<span class="ruby-identifier">nick</span>)
+408:         }
+409: 
+410:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@read_thread</span>.<span class="ruby-identifier">alive?</span> <span class="ruby-keyword kw">then</span>
+411:           <span class="ruby-identifier">prepare</span> <span class="ruby-keyword kw">do</span>
+412:             <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">real</span>, <span class="ruby-identifier">serverpass</span>)
+413:           <span class="ruby-keyword kw">end</span>.<span class="ruby-identifier">wait_for</span> <span class="ruby-identifier">:RPL_WELCOME</span>
+414:         <span class="ruby-keyword kw">else</span> <span class="ruby-comment cmt"># can't use wait_for if there's no read_thread running</span>
+415:           <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">real</span>, <span class="ruby-identifier">serverpass</span>)
+416:           <span class="ruby-identifier">read_message_until</span> <span class="ruby-identifier">:RPL_WELCOME</span>
+417:         <span class="ruby-keyword kw">end</span>
+418: 
+419:         <span class="ruby-keyword kw">true</span>
+420:       <span class="ruby-keyword kw">ensure</span>
+421:         <span class="ruby-ivar">@events</span>[<span class="ruby-identifier">:nick_error</span>] = <span class="ruby-ivar">@events</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:old_nick_error</span>)
+422:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="msg-identify-method" class="method-detail ">
+				<a name="M000231"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">msg_identify</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+See CAPAB-IDENTIFY in the ISUPPORT draft. FIXME comment
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="msg-identify-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 631</span>
+631:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">msg_identify</span>
+632:         <span class="ruby-ivar">@parser</span>.<span class="ruby-identifier">msg_identify</span>
+633:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="prepare-method" class="method-detail ">
+				<a name="M000203"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">prepare</span><span
+						class="method-args">(callback=nil, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+prepare do preparation_stuff end.wait_for :SYMBOL is the same as <a
+href="Connection.html#M000199">wait_for</a> :SYMBOL, :prepare => proc do
+stuff end you can alternatively supply a callable object as first argument.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="prepare-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 471</span>
+471:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">prepare</span>(<span class="ruby-identifier">callback</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+472:         <span class="ruby-constant">Preparation</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">callback</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">block</span>)
+473:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="quit-method" class="method-detail ">
+				<a name="M000197"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">quit</span><span
+						class="method-args">(reason=nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Quits, closes the connection and updates all users (visibility)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="quit-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 425</span>
+425:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">quit</span>(<span class="ruby-identifier">reason</span>=<span class="ruby-keyword kw">nil</span>)
+426:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@read_thread</span>.<span class="ruby-identifier">alive?</span> <span class="ruby-keyword kw">then</span>
+427:           <span class="ruby-identifier">prepare</span> <span class="ruby-keyword kw">do</span>
+428:             <span class="ruby-identifier">send_quit</span>(<span class="ruby-identifier">reason</span>)
+429:           <span class="ruby-keyword kw">end</span>.<span class="ruby-identifier">wait_for</span> <span class="ruby-identifier">:ERROR</span> <span class="ruby-comment cmt"># rfc2812, 3.1.7, Servers acknowledge a QUIT with an ERROR</span>
+430:         <span class="ruby-keyword kw">else</span>
+431:           <span class="ruby-identifier">send_quit</span>(<span class="ruby-identifier">reason</span>)
+432:           <span class="ruby-identifier">read_message_until</span> <span class="ruby-identifier">:ERROR</span>
+433:         <span class="ruby-keyword kw">end</span>
+434:         <span class="ruby-identifier">close</span>
+435:         <span class="ruby-keyword kw">self</span>
+436:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="read-loop-method" class="method-detail ">
+				<a name="M000222"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">read_loop</span><span
+						class="method-args">(&block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Reads as long as the connection is up, dispatches the read messages Rescues
+any exception but Interrupt and logs it as exception
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="read-loop-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 570</span>
+570:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_loop</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+571:         <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">string</span> = <span class="ruby-identifier">read</span>
+572:           <span class="ruby-keyword kw">begin</span>
+573:             <span class="ruby-identifier">message</span> = <span class="ruby-ivar">@parser</span>.<span class="ruby-identifier">server_message</span>(<span class="ruby-identifier">string</span>)
+574:             <span class="ruby-ivar">@subscriptions</span>.<span class="ruby-identifier">each_for</span>(<span class="ruby-identifier">message</span>.<span class="ruby-identifier">symbol</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">listener</span><span class="ruby-operator">|</span>
+575:               <span class="ruby-ivar">@dispatch</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">listener</span>, <span class="ruby-identifier">message</span>]
+576:             }
+577:             <span class="ruby-ivar">@dispatch</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">block</span>, <span class="ruby-identifier">message</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+578:           <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Interrupt</span>, <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">EPIPE</span>
+579:             <span class="ruby-identifier">raise</span>
+580:           <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+581:             <span class="ruby-identifier">exception</span>(<span class="ruby-identifier">e</span>)
+582:           <span class="ruby-keyword kw">end</span>
+583:         <span class="ruby-keyword kw">end</span>
+584:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="read-message-method" class="method-detail ">
+				<a name="M000219"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">read_message</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Read the next message from the server. Returns a <a
+href="Message.html">SilverPlatter::IRC::Message</a> or nil on disconnect.
+Does NOT dispatch.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="read-message-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 563</span>
+563:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_message</span>
+564:         <span class="ruby-identifier">string</span> = <span class="ruby-identifier">read</span>
+565:         <span class="ruby-identifier">string</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@parser</span>.<span class="ruby-identifier">server_message</span>(<span class="ruby-identifier">string</span>)
+566:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="read-message-until-method" class="method-detail ">
+				<a name="M000218"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">read_message_until</span><span
+						class="method-args">(*command)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Read the next messages from the server until one of the specified commands
+comes up or the <a href="Connection.html">Connection</a> is disconnected
+Returns a <a href="Message.html">SilverPlatter::IRC::Message</a> or nil on
+disconnect. Does NOT dispatch.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="read-message-until-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 552</span>
+552:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_message_until</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">command</span>)
+553:         <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">string</span> = <span class="ruby-identifier">read</span>
+554:           <span class="ruby-identifier">message</span> = <span class="ruby-ivar">@parser</span>.<span class="ruby-identifier">server_message</span>(<span class="ruby-identifier">string</span>)
+555:           <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">message</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">command</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">message</span>.<span class="ruby-identifier">symbol</span>)
+556:         <span class="ruby-keyword kw">end</span>
+557:         <span class="ruby-keyword kw">nil</span>
+558:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="run-method" class="method-detail ">
+				<a name="M000225"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">run</span><span
+						class="method-args">(&block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="run-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 586</span>
+586:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">run</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+587:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">then</span>
+588:           <span class="ruby-identifier">read_loop</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+589:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-ivar">@read_thread</span>.<span class="ruby-identifier">alive?</span> <span class="ruby-keyword kw">then</span>
+590:           <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Already running&quot;</span>
+591:         <span class="ruby-keyword kw">else</span>
+592:           <span class="ruby-ivar">@read_thread</span> = <span class="ruby-constant">Thread</span>.<span class="ruby-identifier">new</span> { <span class="ruby-identifier">read_loop</span> }
+593:         <span class="ruby-keyword kw">end</span>
+594:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="same-channelname--method" class="method-detail ">
+				<a name="M000194"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">same_channelname?</span><span
+						class="method-args">(a, b)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+test whether two channelnames are the same, e.g. according to
+RFC1459-strict the following channelnames are the same:
+same_channelname?(&#8220;foo{}&#8221;, &#8220;FoO[]&#8221;) # => true
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="same-channelname--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 383</span>
+383:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">same_channelname?</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>) <span class="ruby-comment cmt"># =&gt; true/false - casemapped comparison</span>
+384:         <span class="ruby-identifier">casemap</span>(<span class="ruby-identifier">a</span>) <span class="ruby-operator">==</span> <span class="ruby-identifier">casemap</span>(<span class="ruby-identifier">b</span>)
+385:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="same-nick--method" class="method-detail ">
+				<a name="M000193"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">same_nick?</span><span
+						class="method-args">(a, b)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+test whether two nicknames are the same, e.g. according to RFC1459-strict
+the following nicknames are the same: same_nickname?(&#8220;foo{}&#8221;,
+&#8220;FoO[]&#8221;) # => true
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="same-nick--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 377</span>
+377:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">same_nick?</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>) <span class="ruby-comment cmt"># =&gt; true/false - casemapped comparison</span>
+378:         <span class="ruby-identifier">casemap</span>(<span class="ruby-identifier">a</span>) <span class="ruby-operator">==</span> <span class="ruby-identifier">casemap</span>(<span class="ruby-identifier">b</span>)
+379:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="subscribe-method" class="method-detail ">
+				<a name="M000165"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">subscribe</span><span
+						class="method-args">(symbols=nil, priority=0, *args, &callback)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Subscribe to one, many or all messages (by symbol) Creates a new <a
+href="Listener.html">Listener</a>, subscribes (see <a
+href="Connection.html#M000168">subscribe_listener</a>) and returns it. You
+can subscribe to the same message as often as you want. They will be run
+after each other. If they have different priority, then the higher the
+priority the earlier it will run. See IRC::SilverPlatter::Listener::new for
+more info.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="subscribe-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 223</span>
+223:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">symbols</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">priority</span>=<span class="ruby-value">0</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)
+224:         <span class="ruby-identifier">listener</span> = <span class="ruby-constant">Listener</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">symbols</span>, <span class="ruby-identifier">priority</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)
+225:         <span class="ruby-ivar">@subscriptions</span>.<span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">listener</span>)
+226:         <span class="ruby-identifier">listener</span>
+227:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="subscribe-listener-method" class="method-detail ">
+				<a name="M000168"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">subscribe_listener</span><span
+						class="method-args">(listener)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Subscribe a <a href="Listener.html">Listener</a> object (or any object
+emulating the interface of <a
+href="Listener.html">SilverPlatter::IRC::Listener</a>).
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="subscribe-listener-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 242</span>
+242:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subscribe_listener</span>(<span class="ruby-identifier">listener</span>)
+243:         <span class="ruby-ivar">@subscriptions</span>.<span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">listener</span>)
+244:         <span class="ruby-identifier">listener</span>
+245:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="subscribe-once-method" class="method-detail ">
+				<a name="M000167"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">subscribe_once</span><span
+						class="method-args">(symbols=nil, priority=0, *args, &callback)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Same as <a href="Connection.html#M000165">subscribe</a>, but the listener
+is automatically deleted after the first invocation.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="subscribe-once-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 231</span>
+231:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subscribe_once</span>(<span class="ruby-identifier">symbols</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">priority</span>=<span class="ruby-value">0</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">callback</span>)
+232:         <span class="ruby-identifier">listener</span> = <span class="ruby-constant">Listener</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">symbols</span>, <span class="ruby-identifier">priority</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">listener</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+233:           <span class="ruby-identifier">listener</span>.<span class="ruby-identifier">unsubscribe</span>
+234:           <span class="ruby-identifier">callback</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">listener</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+235:         }
+236:         <span class="ruby-ivar">@subscriptions</span>.<span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">listener</span>)
+237:         <span class="ruby-identifier">listener</span>
+238:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="terminate-method" class="method-detail ">
+				<a name="M000217"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">terminate</span><span
+						class="method-args">(stop_reading=true)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="terminate-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 545</span>
+545:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">terminate</span>(<span class="ruby-identifier">stop_reading</span>=<span class="ruby-keyword kw">true</span>)
+546:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="unsubscribe-method" class="method-detail ">
+				<a name="M000175"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">unsubscribe</span><span
+						class="method-args">(listener)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Remove a listener from the subscribtions.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="unsubscribe-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 248</span>
+248:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">unsubscribe</span>(<span class="ruby-identifier">listener</span>)
+249:         <span class="ruby-ivar">@subscriptions</span>.<span class="ruby-identifier">unsubscribe</span>(<span class="ruby-identifier">listener</span>)
+250:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="update-user-unsynchronized-method" class="method-detail ">
+				<a name="M000235"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">update_user_unsynchronized</span><span
+						class="method-args">(user_obj, nick, user=nil, host=nil, real=nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="update-user-unsynchronized-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 665</span>
+665:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update_user_unsynchronized</span>(<span class="ruby-identifier">user_obj</span>, <span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">host</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">real</span>=<span class="ruby-keyword kw">nil</span>) <span class="ruby-comment cmt"># nicklist, userlist</span>
+666:         <span class="ruby-identifier">old_compare</span> = <span class="ruby-identifier">user_obj</span>.<span class="ruby-identifier">compare</span>
+667:         <span class="ruby-identifier">user_obj</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">real</span>)
+668:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">old_compare</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">user_obj</span>.<span class="ruby-identifier">compare</span> <span class="ruby-keyword kw">then</span>
+669:           <span class="ruby-ivar">@nicknames</span>[<span class="ruby-identifier">user_obj</span>.<span class="ruby-identifier">compare</span>] = <span class="ruby-identifier">user_obj</span>
+670:           <span class="ruby-ivar">@nicknames</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">old_compare</span>)
+671:         <span class="ruby-keyword kw">end</span>
+672:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="use-casemapping-method" class="method-detail ">
+				<a name="M000234"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">use_casemapping</span><span
+						class="method-args">(type)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Define which casemapping this connection uses
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="use-casemapping-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 651</span>
+651:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">use_casemapping</span>(<span class="ruby-identifier">type</span>)
+652:         <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">type</span>
+653:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;ascii&quot;</span>
+654:             <span class="ruby-identifier">extend</span> <span class="ruby-constant">ASCII_CaseMapping</span>
+655:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;rfc1459&quot;</span>
+656:             <span class="ruby-identifier">extend</span> <span class="ruby-constant">RFC1459_CaseMapping</span>
+657:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;rfc1459-strict&quot;</span>
+658:             <span class="ruby-identifier">extend</span> <span class="ruby-constant">RFC1459Strict_CaseMapping</span>
+659:           <span class="ruby-keyword kw">else</span>
+660:             <span class="ruby-identifier">extend</span> <span class="ruby-constant">RFC1459_CaseMapping</span>
+661:             <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Unknown casemapping '#{type}'&quot;</span>
+662:         <span class="ruby-keyword kw">end</span>
+663:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="user-by-nick-method" class="method-detail ">
+				<a name="M000191"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">user_by_nick</span><span
+						class="method-args">(nick)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get a user by his nickname (the method takes care of casemapping)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="user-by-nick-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 366</span>
+366:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">user_by_nick</span>(<span class="ruby-identifier">nick</span>) <span class="ruby-comment cmt"># =&gt; User</span>
+367:         <span class="ruby-ivar">@nicknames</span>[<span class="ruby-identifier">casemap</span>(<span class="ruby-identifier">nick</span>)]
+368:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="users-method" class="method-detail ">
+				<a name="M000189"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">users</span><span
+						class="method-args">(*nicks)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+If called without arguments it will return a <a
+href="UserList.html">UserList</a> with all known users in this connection
+If called with arguments it will return an Array with users mapped to those
+nicks (possibly nil)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="users-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 343</span>
+343:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">users</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">nicks</span>)
+344:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">nicks</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword kw">then</span>
+345:           <span class="ruby-ivar">@users</span>
+346:         <span class="ruby-keyword kw">else</span>
+347:           <span class="ruby-ivar">@message_lock</span>.<span class="ruby-identifier">synchronize</span> {
+348:             <span class="ruby-ivar">@nicknames</span>.<span class="ruby-identifier">values_at</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">nicks</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">nick</span><span class="ruby-operator">|</span> <span class="ruby-identifier">casemap</span>(<span class="ruby-identifier">nick</span>) })
+349:           }
+350:         <span class="ruby-keyword kw">end</span>
+351:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="valid-channelname--method" class="method-detail ">
+				<a name="M000232"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">valid_channelname?</span><span
+						class="method-args">(name)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Test whether a string is a valid channelname
+</p>
+<h3>Synopsis</h3>
+<pre>
+  connection.valid_channelname?(&quot;#silverplatter&quot;) # =&gt; true
+</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="valid-channelname--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 638</span>
+638:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">valid_channelname?</span>(<span class="ruby-identifier">name</span>)
+639:         <span class="ruby-operator">!</span>(<span class="ruby-identifier">name</span> <span class="ruby-operator">!~</span> <span class="ruby-ivar">@parser</span>.<span class="ruby-identifier">expression</span>.<span class="ruby-identifier">channel</span>)
+640:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="valid-nickname--method" class="method-detail ">
+				<a name="M000233"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">valid_nickname?</span><span
+						class="method-args">(name)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Test whether a string is a valid nickname (without prefixes)
+</p>
+<h3>Synopsis</h3>
+<pre>
+  connection.valid_nickname?(&quot;butler&quot;) # =&gt; true
+  connection.valid_nickname?(&quot;@butler&quot;) # =&gt; false
+</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="valid-nickname--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 646</span>
+646:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">valid_nickname?</span>(<span class="ruby-identifier">name</span>)
+647:         <span class="ruby-operator">!</span>(<span class="ruby-identifier">name</span> <span class="ruby-operator">!~</span> <span class="ruby-ivar">@parser</span>.<span class="ruby-identifier">expression</span>.<span class="ruby-identifier">nick</span>)
+648:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="wait-for-method" class="method-detail ">
+				<a name="M000199"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">wait_for</span><span
+						class="method-args">(symbol, timeout=nil, opt={}, &test)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+blocks current thread until a <a href="Message.html">Message</a> with
+symbol (optionally passing a test given as block) is received, returns the
+message received that matches. returns nil if it times out before a match
+options:
+</p>
+<ul>
+<li>:priority: the priority the listener uses (defaults to 0)
+
+</li>
+<li>:prepare: a proc object (or any object responding to call) run after the
+listener has been set up and before blocking
+
+</li>
+</ul>
+<p>
+also see <a href="Connection.html#M000203">Connection#prepare</a>
+</p>
+<h3>Synopsis</h3>
+<pre>
+  # wait until we get the message that we retained op status
+  wait_for(:MODE) { |message| test_if_message_is_the_wanted_one }
+  wait_for(:FOO, :prepare =&gt; proc { do_something })
+</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="wait-for-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 451</span>
+451:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">wait_for</span>(<span class="ruby-identifier">symbol</span>, <span class="ruby-identifier">timeout</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">opt</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">test</span>)
+452:         <span class="ruby-identifier">listener</span> = <span class="ruby-keyword kw">nil</span>
+453:         <span class="ruby-identifier">timeout</span>(<span class="ruby-identifier">timeout</span>) {
+454:           <span class="ruby-identifier">queue</span>    = <span class="ruby-constant">Queue</span>.<span class="ruby-identifier">new</span>
+455:           <span class="ruby-identifier">listener</span> = <span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">symbol</span>, <span class="ruby-identifier">opt</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:priority</span>)) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>, <span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">m</span>) }
+456:           <span class="ruby-identifier">opt</span>[<span class="ruby-identifier">:prepare</span>].<span class="ruby-identifier">call</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">opt</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">:prepare</span>)
+457:           <span class="ruby-keyword kw">begin</span>
+458:             <span class="ruby-identifier">message</span> = <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">shift</span>
+459:           <span class="ruby-keyword kw">end</span> <span class="ruby-keyword kw">until</span>(<span class="ruby-operator">!</span><span class="ruby-identifier">block_given?</span> <span class="ruby-operator">||</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">message</span>))
+460:           <span class="ruby-identifier">message</span>
+461:         }
+462:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Timeout</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>
+463:         <span class="ruby-keyword kw">nil</span>
+464:       <span class="ruby-keyword kw">ensure</span>
+465:         <span class="ruby-identifier">listener</span>.<span class="ruby-identifier">unsubscribe</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">listener</span>
+466:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="whois-method" class="method-detail ">
+				<a name="M000208"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">whois</span><span
+						class="method-args">(user)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Performs a WHOIS command and returns a <a
+href="Whois.html">SilverPlatter::IRC::Whois</a> Struct.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="whois-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/connection.rb, line 492</span>
+492:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">whois</span>(<span class="ruby-identifier">user</span>)
+493:         <span class="ruby-identifier">nick</span>  = <span class="ruby-identifier">strip_user_prefixes</span>(<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span>)
+494:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Invalid nick #{nick.inspect}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">valid_nickname?</span>(<span class="ruby-identifier">nick</span>)
+495:         <span class="ruby-identifier">whois</span> = <span class="ruby-constant">Whois</span>.<span class="ruby-identifier">new</span>
+496:         <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">exists</span> = <span class="ruby-keyword kw">true</span>
+497: 
+498:         <span class="ruby-ivar">@mutex_whois</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>
+499:           <span class="ruby-identifier">subscriptions</span> = [
+500:             <span class="ruby-identifier">subscribe_once</span>(<span class="ruby-identifier">:RPL_WHOISUSER</span>, <span class="ruby-value">10</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
+501:               <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">nick</span>       = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">nick</span>
+502:               <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">user</span>       = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">user</span>
+503:               <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">host</span>       = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">host</span>
+504:               <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">real</span>       = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">real</span>
+505:             },
+506:             <span class="ruby-identifier">subscribe_once</span>(<span class="ruby-identifier">:RPL_WHOISSERVER</span>, <span class="ruby-value">10</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
+507:               <span class="ruby-comment cmt"># FIXME, why is there no code?</span>
+508:             },
+509:             <span class="ruby-identifier">subscribe_once</span>(<span class="ruby-identifier">:RPL_WHOISIDLE</span>, <span class="ruby-value">10</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
+510:               <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">signon</span>    = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">signon_time</span>
+511:               <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">idle</span>      = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">seconds_idle</span>
+512:             },
+513:             <span class="ruby-identifier">subscribe_once</span>(<span class="ruby-identifier">:RPL_UNIQOPIS</span>, <span class="ruby-value">10</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
+514:               <span class="ruby-comment cmt"># FIXME, why is there no code?</span>
+515:             },
+516:             <span class="ruby-identifier">subscribe_once</span>(<span class="ruby-identifier">:RPL_WHOISCHANNELS</span>, <span class="ruby-value">10</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
+517:               <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">channels</span>   = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">channels</span>
+518:             },
+519:             <span class="ruby-identifier">subscribe_once</span>(<span class="ruby-identifier">:RPL_IDENTIFIED_TO_SERVICES</span>, <span class="ruby-value">10</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
+520:               <span class="ruby-comment cmt"># FIXME, why is there no code?</span>
+521:             },
+522:             <span class="ruby-identifier">subscribe_once</span>(<span class="ruby-identifier">:ERR_NOSUCHNICK</span>, <span class="ruby-value">10</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
+523:               <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">exists</span> = <span class="ruby-keyword kw">false</span>
+524:             },
+525:             <span class="ruby-identifier">subscribe_once</span>(<span class="ruby-identifier">:RPL_REGISTERED_INFO</span>, <span class="ruby-value">10</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
+526:               <span class="ruby-identifier">whois</span>.<span class="ruby-identifier">registered</span> = <span class="ruby-keyword kw">true</span>
+527:             }
+528:           ]
+529:   
+530:           <span class="ruby-identifier">prepare</span> <span class="ruby-keyword kw">do</span>
+531:             <span class="ruby-ivar">@irc</span>.<span class="ruby-identifier">whois</span>(<span class="ruby-identifier">nick</span>)
+532:           <span class="ruby-keyword kw">end</span>.<span class="ruby-identifier">wait_for</span>(<span class="ruby-identifier">:RPL_ENDOFWHOIS</span>)
+533:           <span class="ruby-identifier">subscriptions</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">listener</span><span class="ruby-operator">|</span> <span class="ruby-identifier">listener</span>.<span class="ruby-identifier">unsubscribe</span> }
+534:         <span class="ruby-keyword kw">end</span>
+535: 
+536:         <span class="ruby-identifier">whois</span>
+537:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

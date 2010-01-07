@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Class: SilverPlatter::IRC::Parser</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/silverplatter/irc/parser/command_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/silverplatter/irc/parser/command.rb">lib/silverplatter/irc/parser/command.rb</a></li>
+					
+						<li><a href="../../lib/silverplatter/irc/parser_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/silverplatter/irc/parser.rb">lib/silverplatter/irc/parser.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link">Object</p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+			<div id="namespace-list-section" class="section">
+				<h3 class="section-header">Namespace</h3>
+				<ul class="link-list">
+					
+					<li><span class="type">MODULE</span> <a href="Parser/ParseError.html">SilverPlatter::IRC::Parser::ParseError</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Parser/Command.html">SilverPlatter::IRC::Parser::Command</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Parser/InvalidMessageFormat.html">SilverPlatter::IRC::Parser::InvalidMessageFormat</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Parser/UnknownCommand.html">SilverPlatter::IRC::Parser::UnknownCommand</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#M000295">::new</a></li>
+					
+					<li><a href="#M000300">#add</a></li>
+					
+					<li><a href="#M000298">#add_expression</a></li>
+					
+					<li><a href="#M000301">#alter</a></li>
+					
+					<li><a href="#M000299">#alter_expression</a></li>
+					
+					<li><a href="#M000297">#load</a></li>
+					
+					<li><a href="#M000303">#server_message</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="../../CHANGELOG_rdoc.html">CHANGELOG.rdoc</a></li>
+				
+					<li class="file"><a href="../../HISTORY_rdoc.html">HISTORY.rdoc</a></li>
+				
+					<li class="file"><a href="../../LICENSE_txt.html">LICENSE.txt</a></li>
+				
+					<li class="file"><a href="../../MANIFEST_txt.html">MANIFEST.txt</a></li>
+				
+					<li class="file"><a href="../../README_rdoc.html">README.rdoc</a></li>
+				
+					<li class="file"><a href="../../TODO_rdoc.html">TODO.rdoc</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../SilverPlatter.html">SilverPlatter</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC.html">SilverPlatter::IRC</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ASCII_CaseMapping.html">SilverPlatter::IRC::ASCII_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Channel.html">SilverPlatter::IRC::Channel</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ChannelList.html">SilverPlatter::IRC::ChannelList</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ChannelModes.html">SilverPlatter::IRC::ChannelModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Client.html">SilverPlatter::IRC::Client</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ClientDSL.html">SilverPlatter::IRC::ClientDSL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color.html">SilverPlatter::IRC::Color</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color/Sequence.html">SilverPlatter::IRC::Color::Sequence</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color/String.html">SilverPlatter::IRC::Color::String</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Connection.html">SilverPlatter::IRC::Connection</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ConnectionDSL.html">SilverPlatter::IRC::ConnectionDSL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ConnectionSet.html">SilverPlatter::IRC::ConnectionSet</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Hostmask.html">SilverPlatter::IRC::Hostmask</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Hostmask/StringHelper.html">SilverPlatter::IRC::Hostmask::StringHelper</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Listener.html">SilverPlatter::IRC::Listener</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message.html">SilverPlatter::IRC::Message</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/JOIN.html">SilverPlatter::IRC::Message::JOIN</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/KILL.html">SilverPlatter::IRC::Message::KILL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/NICK.html">SilverPlatter::IRC::Message::NICK</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/NOTICE.html">SilverPlatter::IRC::Message::NOTICE</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/PART.html">SilverPlatter::IRC::Message::PART</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/PRIVMSG.html">SilverPlatter::IRC::Message::PRIVMSG</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/TOPIC.html">SilverPlatter::IRC::Message::TOPIC</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/MessagePRIVMSG.html">SilverPlatter::IRC::MessagePRIVMSG</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser.html">SilverPlatter::IRC::Parser</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/Command.html">SilverPlatter::IRC::Parser::Command</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/InvalidMessageFormat.html">SilverPlatter::IRC::Parser::InvalidMessageFormat</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/ParseError.html">SilverPlatter::IRC::Parser::ParseError</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/UnknownCommand.html">SilverPlatter::IRC::Parser::UnknownCommand</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459Strict_CaseMapping.html">SilverPlatter::IRC::RFC1459Strict_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_CaseMapping.html">SilverPlatter::IRC::RFC1459_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_ChannelModes.html">SilverPlatter::IRC::RFC1459_ChannelModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_UserModes.html">SilverPlatter::IRC::RFC1459_UserModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Socket.html">SilverPlatter::IRC::Socket</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/StringHelpers.html">SilverPlatter::IRC::StringHelpers</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Subscriptions.html">SilverPlatter::IRC::Subscriptions</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Topic.html">SilverPlatter::IRC::Topic</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/User.html">SilverPlatter::IRC::User</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/UserList.html">SilverPlatter::IRC::UserList</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/UserManager.html">SilverPlatter::IRC::UserManager</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Whois.html">SilverPlatter::IRC::Whois</a></li>
+				
+					<li><a href="../../Exception.html">Exception</a></li>
+				
+					<li><a href="../../Exception/Detailed.html">Exception::Detailed</a></li>
+				
+					<li><a href="../../Diagnostics.html">Diagnostics</a></li>
+				
+					<li><a href="../../OpenStruct.html">OpenStruct</a></li>
+				
+					<li><a href="../../String.html">String</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">SilverPlatter::IRC::Parser</h1>
+
+		<div id="description">
+			<h2>Authors</h2>
+<ul>
+<li>Stefan Rusterholz <apeiros@gmx.net>
+
+</li>
+</ul>
+<h2>About</h2>
+<p>
+Parse messages from the server to <a
+href="Message.html">SilverPlatter::IRC::Message</a>.
+</p>
+<h2>Synopsis</h2>
+<h2>Description</h2>
+<p>
+Parses messages, automatically converts provides a parser that
+automatically connects users and channels, puts them in relation to the
+clients &#8216;me&#8217;, manages visibility of users and retrieves more
+information as required.
+</p>
+<h2>Notes</h2>
+<p>
+<a href="Parser.html">Parser</a> is <tt>unsynchronized</tt>. This only
+plays a role regarding <a href="Parser.html#M000297">Parser#load</a>. If <a
+href="Parser.html#M000297">Parser#load</a> is called while <a
+href="Parser.html#M000303">Parser#server_message</a> is used, then the
+behaviour is unpredictable. If you are in a situation where that may
+happen, synchronize reset and <a
+href="Parser.html#M000303">server_message</a> with the same mutex.
+</p>
+<h2>Known Bugs</h2>
+<p>
+Currently none Please inform me about bugs using the bugtracker on <a
+href="http://rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse">rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse</a>
+</p>
+<h2>See Also</h2>
+<ul>
+<li><a href="../IRC.html">SilverPlatter::IRC</a>
+
+</li>
+<li><a href="Connection.html">SilverPlatter::IRC::Connection</a>
+
+</li>
+</ul>
+
+		</div>
+
+		<!-- Constants -->
+		
+		<div id="constants-list" class="section">
+			<h3 class="section-header">Constants</h3>
+			<dl>
+			
+				<dt><a name="ParamScanRegex">ParamScanRegex</a></dt>
+				
+				<dd class="description"><p>
+The regex used to scan the params
+</p></dd>
+				
+			
+				<dt><a name="BasePath">BasePath</a></dt>
+				
+				<dd class="description"><p>
+enables chdirs, path to the command-sets
+</p></dd>
+				
+			
+			</dl>
+		</div>
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="connection-attribute-method" class="method-detail">
+				<a name="connection"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">connection</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The connection this parser is tied to, commands will get yielded this
+connection
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="commands-attribute-method" class="method-detail">
+				<a name="commands"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">commands</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The commands this parser knows about
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="expression-attribute-method" class="method-detail">
+				<a name="expression"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">expression</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The (regular) expressions this parser knows about
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="isupport-attribute-method" class="method-detail">
+				<a name="isupport"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">isupport</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The isupport as given by the server (or defaults otherwise)
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="msg-identify-attribute-method" class="method-detail">
+				<a name="msg_identify"></a>
+				
+				<a name="msg_identify="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">msg_identify</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+Filter the <a href="Parser.html#msg_identify">msg_identify</a> prefix?
+</p>
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="M000295"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">(connection, *command_sets)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Create a parser for the given connection with the supplied command sets
+Usually you&#8217;ll want to load the parser with &#8220;rfc2812&#8221; and
+&#8220;generic&#8221; Notice that load order is important.
+</p>
+<p>
+If you use <a href="Connection.html">SilverPlatter::IRC::Connection</a> or
+<a href="Client.html">Client</a> you will never have direct contact with <a
+href="Parser.html">Parser</a>.
+</p>
+<h1>Synopsis</h1>
+<pre>
+  parser = SilverPlatter::IRC::Parser.new(connection, &quot;rfc2812&quot;)
+</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/parser.rb, line 101</span>
+101:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">connection</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">command_sets</span>)
+102:         <span class="ruby-ivar">@connection</span>   = <span class="ruby-identifier">connection</span>
+103:         <span class="ruby-ivar">@msg_identify</span> = <span class="ruby-keyword kw">false</span>
+104:         <span class="ruby-ivar">@command_sets</span> = <span class="ruby-identifier">command_sets</span>
+105:         <span class="ruby-ivar">@isupport</span>     = <span class="ruby-constant">OpenStruct</span>.<span class="ruby-identifier">new</span>(
+106:           <span class="ruby-identifier">:nicklen</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-value">9</span>,      <span class="ruby-comment cmt"># RFC2812, Section 1.2.2 &quot;Services&quot;</span>
+107:           <span class="ruby-identifier">:channellen</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-value">50</span>,     <span class="ruby-comment cmt"># RFC2812, Section 1.3 &quot;Channels&quot;</span>
+108:           <span class="ruby-identifier">:prefixes</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;@+&quot;</span>,   <span class="ruby-comment cmt"># RFC2812, Section 5.1 &quot;Command responses&quot; (319, 352)</span>
+109:           <span class="ruby-identifier">:channelprefixes</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;\#+&amp;!&quot;</span> <span class="ruby-comment cmt"># RFC2812, Section 1.3 &quot;Channels&quot;</span>
+110:         )
+111:         <span class="ruby-identifier">reset</span>
+112:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="add-method" class="method-detail ">
+				<a name="M000300"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">add</span><span
+						class="method-args">(raw, *args, &proc)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Add a new command You must not use add to change an existing command, use
+alter for this.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="add-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/parser.rb, line 207</span>
+207:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">raw</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">proc</span>)
+208:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">IndexError</span>, <span class="ruby-node">&quot;Command #{raw} is already registered. Did you want 'alter'?&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@new_commands</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">raw</span>)
+209:         <span class="ruby-ivar">@new_commands</span>[<span class="ruby-identifier">raw</span>.<span class="ruby-identifier">downcase</span>] = <span class="ruby-constant">Command</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">raw</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">proc</span>)
+210:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="add-expression-method" class="method-detail ">
+				<a name="M000298"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">add_expression</span><span
+						class="method-args">(name, value)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Add an expression to the parser, can be used via parser.expression.<name>
+You can only add an expression with a name that isn&#8217;t yet added, if
+you want to change an existing expression you MUST use <a
+href="Parser.html#M000299">alter_expression</a> instead. This is to avoid
+mistakes.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="add-expression-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/parser.rb, line 171</span>
+171:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_expression</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span>)
+172:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@loading</span>[<span class="ruby-identifier">:firstrun</span>] <span class="ruby-keyword kw">then</span>
+173:           <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Expression #{name} already added, did you want alter_expression?&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@new_expression</span>[<span class="ruby-identifier">name</span>]
+174:           <span class="ruby-ivar">@new_expression</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">value</span>
+175:         <span class="ruby-keyword kw">else</span>
+176:           <span class="ruby-keyword kw">case</span> <span class="ruby-ivar">@loading</span>[<span class="ruby-identifier">:status</span>][<span class="ruby-identifier">name</span>]
+177:             <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">nil</span>
+178:               <span class="ruby-ivar">@new_expression</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">value</span>
+179:             <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:added</span> <span class="ruby-comment cmt"># should never happen</span>
+180:               <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Expression #{name} already added, did you want alter_expression?&quot;</span>
+181:             <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:altered</span> <span class="ruby-comment cmt"># ignore</span>
+182:           <span class="ruby-keyword kw">end</span>
+183:           <span class="ruby-ivar">@loading</span>[<span class="ruby-identifier">:status</span>][<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">:added</span>
+184:         <span class="ruby-keyword kw">end</span>
+185:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="alter-method" class="method-detail ">
+				<a name="M000301"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">alter</span><span
+						class="method-args">(raw, *args, &proc)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Alter an existing command You must not use alter to add a new command, use
+add for this.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="alter-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/parser.rb, line 214</span>
+214:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">alter</span>(<span class="ruby-identifier">raw</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">proc</span>)
+215:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">IndexError</span>, <span class="ruby-node">&quot;Command #{raw} is not registered. Did you want 'add'?&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@new_commands</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">raw</span>)
+216:         <span class="ruby-ivar">@new_commands</span>[<span class="ruby-identifier">raw</span>.<span class="ruby-identifier">downcase</span>] = <span class="ruby-constant">Command</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">raw</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">proc</span>)
+217:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="alter-expression-method" class="method-detail ">
+				<a name="M000299"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">alter_expression</span><span
+						class="method-args">(name, value)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Alter an existing expression. If another file defines an expression
+beforehand, you have to use <a
+href="Parser.html#M000299">alter_expression</a> instead of <a
+href="Parser.html#M000298">add_expression</a>
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="alter-expression-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/parser.rb, line 189</span>
+189:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">alter_expression</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span>)
+190:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@loading</span>[<span class="ruby-identifier">:firstrun</span>] <span class="ruby-keyword kw">then</span>
+191:           <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Expression #{name} not yet added, did you want add_expression?&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@new_expression</span>[<span class="ruby-identifier">name</span>]
+192:           <span class="ruby-ivar">@new_expression</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">value</span>
+193:         <span class="ruby-keyword kw">else</span>
+194:           <span class="ruby-keyword kw">case</span> <span class="ruby-ivar">@loading</span>[<span class="ruby-identifier">:status</span>][<span class="ruby-identifier">name</span>]
+195:             <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">nil</span>
+196:               <span class="ruby-ivar">@new_expression</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">value</span>
+197:             <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:added</span> <span class="ruby-comment cmt"># should never happen</span>
+198:               <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Expression #{name} alteration prior to adding&quot;</span>
+199:             <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:altered</span> <span class="ruby-comment cmt"># ignore, newer altered takes precedence</span>
+200:           <span class="ruby-keyword kw">end</span>
+201:           <span class="ruby-ivar">@loading</span>[<span class="ruby-identifier">:status</span>][<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">:altered</span>
+202:         <span class="ruby-keyword kw">end</span>
+203:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="load-method" class="method-detail ">
+				<a name="M000297"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">load</span><span
+						class="method-args">(*files)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Load additional command-sets.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="load-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/parser.rb, line 162</span>
+162:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">load</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">files</span>)
+163:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;Requires at least one argument.&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">files</span>.<span class="ruby-identifier">empty?</span>
+164:         <span class="ruby-ivar">@command_sets</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">files</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">downcase</span> })
+165:         <span class="ruby-identifier">reset</span>
+166:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="server-message-method" class="method-detail ">
+				<a name="M000303"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">server_message</span><span
+						class="method-args">(raw)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+parses an incomming message and returns a <a
+href="Message.html">Message</a> object from which you can easily access
+parsed data. Expects the newlines to be already chomped off. Process a
+message and set the additional fields process can have side-effects on the
+associated <a href="Connection.html">Connection</a>
+</p>
+<h2>Notes</h2>
+<p>
+There are several &#8216;magic&#8217; fields which the parser will
+automatically convert:
+</p>
+<ul>
+<li>:channel - will automatically be replaced by the corresponding <a
+href="Channel.html">Channel</a> object (by name)
+
+</li>
+<li>:recipient - will automatically be replaced by the corresponding <a
+href="User.html">User</a> object (by nick)
+
+</li>
+</ul>
+<h2>FIXME</h2>
+<ul>
+<li>documentation of this method
+
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="server-message-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/parser.rb, line 240</span>
+240:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">server_message</span>(<span class="ruby-identifier">raw</span>)
+241:         <span class="ruby-identifier">prefix</span>, <span class="ruby-identifier">command</span>, <span class="ruby-identifier">params</span>, <span class="ruby-identifier">symbol</span>, <span class="ruby-identifier">from</span> = <span class="ruby-keyword kw">nil</span>
+242:         <span class="ruby-identifier">from</span>, <span class="ruby-identifier">recipient</span>, <span class="ruby-identifier">channel</span>, <span class="ruby-identifier">text</span>, <span class="ruby-identifier">identified</span> = <span class="ruby-keyword kw">nil</span>
+243: 
+244:         <span class="ruby-comment cmt"># Basic analysis of the message</span>
+245:         <span class="ruby-comment cmt">#raise InvalidMessageFormat, raw unless matched = raw =~ @simple_message</span>
+246:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">InvalidMessageFormat</span>, <span class="ruby-identifier">raw</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">matched</span> = <span class="ruby-identifier">raw</span>.<span class="ruby-identifier">match</span>(<span class="ruby-ivar">@message_regex</span>)
+247:         <span class="ruby-comment cmt"># $1: prefix, $2: hostname, $3: nick, $4: user, $5: host, $6: command, $7: params</span>
+248:         <span class="ruby-identifier">prefix</span>, <span class="ruby-identifier">servername</span>, <span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">real</span>, <span class="ruby-identifier">command</span>, <span class="ruby-identifier">params</span> = <span class="ruby-operator">*</span><span class="ruby-identifier">matched</span>.<span class="ruby-identifier">captures</span>
+249:         <span class="ruby-identifier">from</span>    = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">create_user</span>(<span class="ruby-identifier">nick</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">real</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">nick</span>
+250:         <span class="ruby-identifier">params</span>  = <span class="ruby-identifier">params</span> <span class="ruby-value">? </span><span class="ruby-identifier">params</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-constant">ParamScanRegex</span>) <span class="ruby-operator">:</span> []
+251:         <span class="ruby-identifier">params</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp re">/^:/</span>, <span class="ruby-value str">''</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>.<span class="ruby-identifier">last</span>
+252:         <span class="ruby-identifier">command</span>.<span class="ruby-identifier">downcase!</span>
+253: 
+254:         <span class="ruby-comment cmt"># in depth analyzis of the message</span>
+255:         <span class="ruby-identifier">processor</span> = <span class="ruby-ivar">@commands</span>[<span class="ruby-identifier">command</span>.<span class="ruby-identifier">downcase</span>]
+256:         <span class="ruby-identifier">symbol</span>    = <span class="ruby-identifier">processor</span>.<span class="ruby-identifier">symbol</span>
+257:         
+258:         <span class="ruby-identifier">fields</span>    = {}
+259:         <span class="ruby-identifier">processor</span>.<span class="ruby-identifier">mapping</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-identifier">params</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">fields</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">value</span> }
+260: 
+261:         <span class="ruby-identifier">channel</span>   = <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:channel</span>)
+262:         <span class="ruby-identifier">recipient</span> = <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:recipient</span>)
+263: 
+264:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">recipient</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">valid_channelname?</span>(<span class="ruby-identifier">recipient</span>) <span class="ruby-keyword kw">then</span>
+265:           <span class="ruby-identifier">channel</span>   = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">create_channel</span>(<span class="ruby-identifier">recipient</span>)
+266:           <span class="ruby-identifier">recipient</span> = <span class="ruby-identifier">channel</span>
+267:         <span class="ruby-keyword kw">else</span>
+268:           <span class="ruby-identifier">recipient</span> = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">create_user</span>(<span class="ruby-identifier">recipient</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">recipient</span>
+269:           <span class="ruby-identifier">channel</span>   = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">create_channel</span>(<span class="ruby-identifier">channel</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">channel</span>
+270:         <span class="ruby-keyword kw">end</span>
+271:         
+272:         <span class="ruby-identifier">klass</span>     = <span class="ruby-constant">Message</span>.<span class="ruby-identifier">const_defined?</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">Message</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-operator">:</span> <span class="ruby-constant">Message</span>
+273:         <span class="ruby-identifier">message</span>   = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">symbol</span>, <span class="ruby-identifier">raw</span>, <span class="ruby-identifier">prefix</span>, <span class="ruby-identifier">command</span>, <span class="ruby-identifier">params</span>, <span class="ruby-identifier">fields</span>, <span class="ruby-ivar">@connection</span>)
+274:         <span class="ruby-identifier">message</span>.<span class="ruby-identifier">instance_eval</span> {
+275:           <span class="ruby-ivar">@from</span>       = <span class="ruby-identifier">from</span>
+276:           <span class="ruby-ivar">@recipient</span>  = <span class="ruby-identifier">recipient</span>
+277:           <span class="ruby-ivar">@channel</span>    = <span class="ruby-identifier">channel</span>
+278:           <span class="ruby-ivar">@text</span>       = <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:text</span>)
+279:           <span class="ruby-ivar">@identified</span> = <span class="ruby-keyword kw">nil</span>
+280:         }
+281:         <span class="ruby-identifier">processor</span>.<span class="ruby-identifier">processor</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">connection</span>, <span class="ruby-identifier">message</span>, <span class="ruby-identifier">fields</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">processor</span>.<span class="ruby-identifier">processor</span>
+282: 
+283:         <span class="ruby-identifier">message</span>
+284:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">IndexError</span>
+285:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownCommand</span>, <span class="ruby-node">&quot;Unknown command #{command}: #{raw.inspect}&quot;</span>
+286:       <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+287:         <span class="ruby-identifier">e</span>.<span class="ruby-identifier">extend</span> <span class="ruby-constant">ParseError</span>
+288:         <span class="ruby-identifier">e</span>.<span class="ruby-identifier">prepend</span> <span class="ruby-node">&quot;Message: #{raw.inspect}&quot;</span>
+289:         <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span>
+290:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

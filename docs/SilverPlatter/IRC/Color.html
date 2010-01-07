@@ -1,0 +1,1898 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Module: SilverPlatter::IRC::Color</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="module">
+
+	<div id="metadata">
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/silverplatter/irc/color/sequence_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/silverplatter/irc/color/sequence.rb">lib/silverplatter/irc/color/sequence.rb</a></li>
+					
+						<li><a href="../../lib/silverplatter/irc/color/string_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/silverplatter/irc/color/string.rb">lib/silverplatter/irc/color/string.rb</a></li>
+					
+						<li><a href="../../lib/silverplatter/irc/color_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/silverplatter/irc/color.rb">lib/silverplatter/irc/color.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+
+			<!-- Namespace Contents -->
+			
+			<div id="namespace-list-section" class="section">
+				<h3 class="section-header">Namespace</h3>
+				<ul class="link-list">
+					
+					<li><span class="type">MODULE</span> <a href="Color/String.html">SilverPlatter::IRC::Color::String</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Color/Sequence.html">SilverPlatter::IRC::Color::Sequence</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#M000131">#black</a></li>
+					
+					<li><a href="#M000129">#blink</a></li>
+					
+					<li><a href="#M000132">#blue</a></li>
+					
+					<li><a href="#M000125">#bold</a></li>
+					
+					<li><a href="#M000135">#brown</a></li>
+					
+					<li><a href="#M000122">#color</a></li>
+					
+					<li><a href="#M000133">#green</a></li>
+					
+					<li><a href="#M000144">#grey</a></li>
+					
+					<li><a href="#M000128">#italic</a></li>
+					
+					<li><a href="#M000142">#ltblue</a></li>
+					
+					<li><a href="#M000141">#ltcyan</a></li>
+					
+					<li><a href="#M000139">#ltgreen</a></li>
+					
+					<li><a href="#M000145">#ltgrey</a></li>
+					
+					<li><a href="#M000147">#on_black</a></li>
+					
+					<li><a href="#M000148">#on_blue</a></li>
+					
+					<li><a href="#M000151">#on_brown</a></li>
+					
+					<li><a href="#M000123">#on_color</a></li>
+					
+					<li><a href="#M000149">#on_green</a></li>
+					
+					<li><a href="#M000160">#on_grey</a></li>
+					
+					<li><a href="#M000158">#on_ltblue</a></li>
+					
+					<li><a href="#M000157">#on_ltcyan</a></li>
+					
+					<li><a href="#M000155">#on_ltgreen</a></li>
+					
+					<li><a href="#M000161">#on_ltgrey</a></li>
+					
+					<li><a href="#M000153">#on_orange</a></li>
+					
+					<li><a href="#M000159">#on_pink</a></li>
+					
+					<li><a href="#M000152">#on_purple</a></li>
+					
+					<li><a href="#M000150">#on_red</a></li>
+					
+					<li><a href="#M000156">#on_teal</a></li>
+					
+					<li><a href="#M000146">#on_white</a></li>
+					
+					<li><a href="#M000154">#on_yellow</a></li>
+					
+					<li><a href="#M000137">#orange</a></li>
+					
+					<li><a href="#M000143">#pink</a></li>
+					
+					<li><a href="#M000124">#plain</a></li>
+					
+					<li><a href="#M000136">#purple</a></li>
+					
+					<li><a href="#M000134">#red</a></li>
+					
+					<li><a href="#M000126">#reverse</a></li>
+					
+					<li><a href="#M000140">#teal</a></li>
+					
+					<li><a href="#M000127">#underline</a></li>
+					
+					<li><a href="#M000130">#white</a></li>
+					
+					<li><a href="#M000138">#yellow</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="../../CHANGELOG_rdoc.html">CHANGELOG.rdoc</a></li>
+				
+					<li class="file"><a href="../../HISTORY_rdoc.html">HISTORY.rdoc</a></li>
+				
+					<li class="file"><a href="../../LICENSE_txt.html">LICENSE.txt</a></li>
+				
+					<li class="file"><a href="../../MANIFEST_txt.html">MANIFEST.txt</a></li>
+				
+					<li class="file"><a href="../../README_rdoc.html">README.rdoc</a></li>
+				
+					<li class="file"><a href="../../TODO_rdoc.html">TODO.rdoc</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../SilverPlatter.html">SilverPlatter</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC.html">SilverPlatter::IRC</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ASCII_CaseMapping.html">SilverPlatter::IRC::ASCII_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Channel.html">SilverPlatter::IRC::Channel</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ChannelList.html">SilverPlatter::IRC::ChannelList</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ChannelModes.html">SilverPlatter::IRC::ChannelModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Client.html">SilverPlatter::IRC::Client</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ClientDSL.html">SilverPlatter::IRC::ClientDSL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color.html">SilverPlatter::IRC::Color</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color/Sequence.html">SilverPlatter::IRC::Color::Sequence</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color/String.html">SilverPlatter::IRC::Color::String</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Connection.html">SilverPlatter::IRC::Connection</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ConnectionDSL.html">SilverPlatter::IRC::ConnectionDSL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ConnectionSet.html">SilverPlatter::IRC::ConnectionSet</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Hostmask.html">SilverPlatter::IRC::Hostmask</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Hostmask/StringHelper.html">SilverPlatter::IRC::Hostmask::StringHelper</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Listener.html">SilverPlatter::IRC::Listener</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message.html">SilverPlatter::IRC::Message</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/JOIN.html">SilverPlatter::IRC::Message::JOIN</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/KILL.html">SilverPlatter::IRC::Message::KILL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/NICK.html">SilverPlatter::IRC::Message::NICK</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/NOTICE.html">SilverPlatter::IRC::Message::NOTICE</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/PART.html">SilverPlatter::IRC::Message::PART</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/PRIVMSG.html">SilverPlatter::IRC::Message::PRIVMSG</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/TOPIC.html">SilverPlatter::IRC::Message::TOPIC</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/MessagePRIVMSG.html">SilverPlatter::IRC::MessagePRIVMSG</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser.html">SilverPlatter::IRC::Parser</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/Command.html">SilverPlatter::IRC::Parser::Command</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/InvalidMessageFormat.html">SilverPlatter::IRC::Parser::InvalidMessageFormat</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/ParseError.html">SilverPlatter::IRC::Parser::ParseError</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/UnknownCommand.html">SilverPlatter::IRC::Parser::UnknownCommand</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459Strict_CaseMapping.html">SilverPlatter::IRC::RFC1459Strict_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_CaseMapping.html">SilverPlatter::IRC::RFC1459_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_ChannelModes.html">SilverPlatter::IRC::RFC1459_ChannelModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_UserModes.html">SilverPlatter::IRC::RFC1459_UserModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Socket.html">SilverPlatter::IRC::Socket</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/StringHelpers.html">SilverPlatter::IRC::StringHelpers</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Subscriptions.html">SilverPlatter::IRC::Subscriptions</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Topic.html">SilverPlatter::IRC::Topic</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/User.html">SilverPlatter::IRC::User</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/UserList.html">SilverPlatter::IRC::UserList</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/UserManager.html">SilverPlatter::IRC::UserManager</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Whois.html">SilverPlatter::IRC::Whois</a></li>
+				
+					<li><a href="../../Exception.html">Exception</a></li>
+				
+					<li><a href="../../Exception/Detailed.html">Exception::Detailed</a></li>
+				
+					<li><a href="../../Diagnostics.html">Diagnostics</a></li>
+				
+					<li><a href="../../OpenStruct.html">OpenStruct</a></li>
+				
+					<li><a href="../../String.html">String</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="module">SilverPlatter::IRC::Color</h1>
+
+		<div id="description">
+			<h2>Authors</h2>
+<ul>
+<li>Stefan Rusterholz <apeiros@gmx.net>
+
+</li>
+</ul>
+<h2>About</h2>
+<h2>Synopsis</h2>
+<pre>
+  module Kernel
+    include SilverPlatter::IRC::Color
+  end
+  &quot;#{red.on_yellow}Hello World!#{plain}&quot;
+</pre>
+<h2>Description</h2>
+<p>
+&#8230;
+</p>
+<h2>Known Bugs</h2>
+<p>
+Currently none Please inform me about bugs using the bugtracker on <a
+href="http://rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse">rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse</a>
+</p>
+<h2>See Also</h2>
+<ul>
+<li><a href="../IRC.html">SilverPlatter::IRC</a>
+
+</li>
+<li><a href="Color/Sequence.html">SilverPlatter::IRC::Color::Sequence</a>
+
+</li>
+<li><a href="Color/String.html">SilverPlatter::IRC::Color::String</a>
+
+</li>
+</ul>
+
+		</div>
+
+		<!-- Constants -->
+		
+		<div id="constants-list" class="section">
+			<h3 class="section-header">Constants</h3>
+			<dl>
+			
+				<dt><a name="Reset">Reset</a></dt>
+				
+				<dd class="description"><p>
+The code to reset formatting
+</p></dd>
+				
+			
+				<dt><a name="Bold">Bold</a></dt>
+				
+				<dd class="description"><p>
+The code to switch bold on
+</p></dd>
+				
+			
+				<dt><a name="Plain">Plain</a></dt>
+				
+				<dd class="description"><p>
+The code to switch plain on
+</p></dd>
+				
+			
+				<dt><a name="Reverse">Reverse</a></dt>
+				
+				<dd class="description"><p>
+The code to switch reversing on
+</p></dd>
+				
+			
+				<dt><a name="Underline">Underline</a></dt>
+				
+				<dd class="description"><p>
+The code to switch underline on
+</p></dd>
+				
+			
+				<dt><a name="Italic">Italic</a></dt>
+				
+				<dd class="description"><p>
+The code to switch italic on
+</p></dd>
+				
+			
+				<dt><a name="Blink">Blink</a></dt>
+				
+				<dd class="description"><p>
+The code to switch blinking on
+</p></dd>
+				
+			
+			</dl>
+		</div>
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="black-method" class="method-detail ">
+				<a name="M000131"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">black</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Black foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="black-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 146</span>
+146:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">black</span>
+147:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>)
+148:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="blink-method" class="method-detail ">
+				<a name="M000129"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">blink</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Set the text to blink
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="blink-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 136</span>
+136:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">blink</span>
+137:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-constant">Blink</span>)
+138:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="blue-method" class="method-detail ">
+				<a name="M000132"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">blue</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Blue foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="blue-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 151</span>
+151:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">blue</span>
+152:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>)
+153:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="bold-method" class="method-detail ">
+				<a name="M000125"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">bold</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Set the font to bold
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="bold-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 116</span>
+116:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">bold</span>
+117:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-constant">Bold</span>)
+118:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="brown-method" class="method-detail ">
+				<a name="M000135"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">brown</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Brown foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="brown-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 166</span>
+166:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">brown</span>
+167:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">5</span>)
+168:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="color-method" class="method-detail ">
+				<a name="M000122"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">color</span><span
+						class="method-args">(code)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Foreground color with the given code. Code is 0-15. The codes translate to:
+</p>
+<ul>
+<li>0: white
+
+</li>
+<li>1: black
+
+</li>
+<li>2: blue
+
+</li>
+<li>3: green
+
+</li>
+<li>4: red
+
+</li>
+<li>5: brown
+
+</li>
+<li>6: purple
+
+</li>
+<li>7: orange
+
+</li>
+<li>8: yellow
+
+</li>
+<li>9: light green
+
+</li>
+<li>10: teal
+
+</li>
+<li>11: light cyan
+
+</li>
+<li>12: light blue
+
+</li>
+<li>13: pink
+
+</li>
+<li>14: grey
+
+</li>
+<li>15: light grey
+
+</li>
+</ul>
+<p>
+For every color code there&#8217;s a named method too.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="color-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 83</span>
+83:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">color</span>(<span class="ruby-identifier">code</span>)
+84:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">code</span>)
+85:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="green-method" class="method-detail ">
+				<a name="M000133"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">green</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Green foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="green-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 156</span>
+156:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">green</span>
+157:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">3</span>)
+158:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="grey-method" class="method-detail ">
+				<a name="M000144"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">grey</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Grey foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="grey-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 211</span>
+211:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">grey</span>
+212:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">14</span>)
+213:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="italic-method" class="method-detail ">
+				<a name="M000128"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">italic</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Set the font to italic
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="italic-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 131</span>
+131:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">italic</span>
+132:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-constant">Italic</span>)
+133:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="ltblue-method" class="method-detail ">
+				<a name="M000142"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">ltblue</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Light blue foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="ltblue-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 201</span>
+201:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ltblue</span>
+202:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">12</span>)
+203:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="ltcyan-method" class="method-detail ">
+				<a name="M000141"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">ltcyan</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Light cyan foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="ltcyan-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 196</span>
+196:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ltcyan</span>
+197:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">11</span>)
+198:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="ltgreen-method" class="method-detail ">
+				<a name="M000139"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">ltgreen</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Light green foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="ltgreen-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 186</span>
+186:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ltgreen</span>
+187:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">9</span>)
+188:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="ltgrey-method" class="method-detail ">
+				<a name="M000145"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">ltgrey</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Light grey foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="ltgrey-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 216</span>
+216:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ltgrey</span>
+217:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">15</span>)
+218:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-black-method" class="method-detail ">
+				<a name="M000147"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_black</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Black background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-black-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 226</span>
+226:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_black</span>
+227:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">1</span>)
+228:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-blue-method" class="method-detail ">
+				<a name="M000148"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_blue</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Blue background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-blue-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 231</span>
+231:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_blue</span>
+232:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">2</span>)
+233:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-brown-method" class="method-detail ">
+				<a name="M000151"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_brown</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Brown background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-brown-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 246</span>
+246:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_brown</span>
+247:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">5</span>)
+248:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-color-method" class="method-detail ">
+				<a name="M000123"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_color</span><span
+						class="method-args">(code)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Background color with the given code. Code is 0-15. The codes translate to:
+</p>
+<ul>
+<li>0: white
+
+</li>
+<li>1: black
+
+</li>
+<li>2: blue
+
+</li>
+<li>3: green
+
+</li>
+<li>4: red
+
+</li>
+<li>5: brown
+
+</li>
+<li>6: purple
+
+</li>
+<li>7: orange
+
+</li>
+<li>8: yellow
+
+</li>
+<li>9: light green
+
+</li>
+<li>10: teal
+
+</li>
+<li>11: light cyan
+
+</li>
+<li>12: light blue
+
+</li>
+<li>13: pink
+
+</li>
+<li>14: grey
+
+</li>
+<li>15: light grey
+
+</li>
+</ul>
+<p>
+For every color code there&#8217;s a named method too.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-color-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 106</span>
+106:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_color</span>(<span class="ruby-identifier">code</span>)
+107:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">code</span>)
+108:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-green-method" class="method-detail ">
+				<a name="M000149"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_green</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Green background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-green-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 236</span>
+236:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_green</span>
+237:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">3</span>)
+238:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-grey-method" class="method-detail ">
+				<a name="M000160"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_grey</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Grey background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-grey-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 291</span>
+291:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_grey</span>
+292:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">14</span>)
+293:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-ltblue-method" class="method-detail ">
+				<a name="M000158"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_ltblue</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Light blue background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-ltblue-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 281</span>
+281:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_ltblue</span>
+282:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">12</span>)
+283:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-ltcyan-method" class="method-detail ">
+				<a name="M000157"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_ltcyan</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Light cyan background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-ltcyan-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 276</span>
+276:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_ltcyan</span>
+277:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">11</span>)
+278:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-ltgreen-method" class="method-detail ">
+				<a name="M000155"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_ltgreen</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Light green background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-ltgreen-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 266</span>
+266:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_ltgreen</span>
+267:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">9</span>)
+268:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-ltgrey-method" class="method-detail ">
+				<a name="M000161"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_ltgrey</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Light grey background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-ltgrey-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 296</span>
+296:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_ltgrey</span>
+297:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">15</span>)
+298:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-orange-method" class="method-detail ">
+				<a name="M000153"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_orange</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Orange background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-orange-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 256</span>
+256:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_orange</span>
+257:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">7</span>)
+258:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-pink-method" class="method-detail ">
+				<a name="M000159"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_pink</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Pink background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-pink-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 286</span>
+286:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_pink</span>
+287:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">13</span>)
+288:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-purple-method" class="method-detail ">
+				<a name="M000152"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_purple</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Purple background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-purple-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 251</span>
+251:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_purple</span>
+252:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">6</span>)
+253:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-red-method" class="method-detail ">
+				<a name="M000150"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_red</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Red background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-red-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 241</span>
+241:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_red</span>
+242:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">4</span>)
+243:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-teal-method" class="method-detail ">
+				<a name="M000156"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_teal</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Teal background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-teal-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 271</span>
+271:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_teal</span>
+272:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">10</span>)
+273:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-white-method" class="method-detail ">
+				<a name="M000146"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_white</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+White background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-white-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 221</span>
+221:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_white</span>
+222:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">0</span>)
+223:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="on-yellow-method" class="method-detail ">
+				<a name="M000154"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">on_yellow</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Yellow background color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="on-yellow-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 261</span>
+261:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">on_yellow</span>
+262:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-value">8</span>)
+263:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="orange-method" class="method-detail ">
+				<a name="M000137"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">orange</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Orange foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="orange-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 176</span>
+176:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">orange</span>
+177:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">7</span>)
+178:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="pink-method" class="method-detail ">
+				<a name="M000143"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">pink</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Pink foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="pink-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 206</span>
+206:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pink</span>
+207:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">13</span>)
+208:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="plain-method" class="method-detail ">
+				<a name="M000124"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">plain</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Set coloring back to plain
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="plain-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 111</span>
+111:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">plain</span>
+112:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-constant">Plain</span>)
+113:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="purple-method" class="method-detail ">
+				<a name="M000136"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">purple</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Purple foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="purple-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 171</span>
+171:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">purple</span>
+172:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">6</span>)
+173:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="red-method" class="method-detail ">
+				<a name="M000134"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">red</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Red foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="red-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 161</span>
+161:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">red</span>
+162:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">4</span>)
+163:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="reverse-method" class="method-detail ">
+				<a name="M000126"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">reverse</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Set the text to be reversed
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="reverse-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 121</span>
+121:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reverse</span>
+122:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-constant">Reverse</span>)
+123:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="teal-method" class="method-detail ">
+				<a name="M000140"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">teal</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Teal foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="teal-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 191</span>
+191:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">teal</span>
+192:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">10</span>)
+193:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="underline-method" class="method-detail ">
+				<a name="M000127"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">underline</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Set the font to be underlined
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="underline-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 126</span>
+126:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">underline</span>
+127:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-constant">Underline</span>)
+128:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="white-method" class="method-detail ">
+				<a name="M000130"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">white</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+White foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="white-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 141</span>
+141:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">white</span>
+142:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>)
+143:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="yellow-method" class="method-detail ">
+				<a name="M000138"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">yellow</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Yellow foreground color
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="yellow-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/color.rb, line 181</span>
+181:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">yellow</span>
+182:         <span class="ruby-constant">Sequence</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">8</span>)
+183:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

@@ -1,0 +1,1230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Class: SilverPlatter::IRC::User</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/silverplatter/irc/user_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/silverplatter/irc/user.rb">lib/silverplatter/irc/user.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link">ChannelList</p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#M000352">::new</a></li>
+					
+					<li><a href="#M000374">#<=></a></li>
+					
+					<li><a href="#M000370">#==</a></li>
+					
+					<li><a href="#M000364">#away?</a></li>
+					
+					<li><a href="#M000384">#change_visibility</a></li>
+					
+					<li><a href="#M000355">#channels</a></li>
+					
+					<li><a href="#M000379">#clone</a></li>
+					
+					<li><a href="#M000378">#dup</a></li>
+					
+					<li><a href="#M000354">#each</a></li>
+					
+					<li><a href="#M000365">#hostmask</a></li>
+					
+					<li><a href="#M000363">#in?</a></li>
+					
+					<li><a href="#M000387">#invisible?</a></li>
+					
+					<li><a href="#M000357">#op?</a></li>
+					
+					<li><a href="#M000399">#set_compare</a></li>
+					
+					<li><a href="#M000368">#to_s</a></li>
+					
+					<li><a href="#M000362">#uop?</a></li>
+					
+					<li><a href="#M000385">#update_last_seen</a></li>
+					
+					<li><a href="#M000386">#visible?</a></li>
+					
+					<li><a href="#M000358">#voice?</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+			<div id="includes-section" class="section">
+				<h3 class="section-header">Included Modules</h3>
+				<ul class="link-list">
+				
+				
+					<li><a class="include" href="RFC1459_CaseMapping.html">SilverPlatter::IRC::RFC1459_CaseMapping</a></li>
+				
+				
+				
+					<li><a class="include" href="RFC1459_CaseMapping.html">SilverPlatter::IRC::RFC1459_CaseMapping</a></li>
+				
+				
+				
+					<li><span class="include">Comparable</span></li>
+				
+				
+				
+					<li><span class="include">Enumerable</span></li>
+				
+				
+				</ul>
+			</div>
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="../../CHANGELOG_rdoc.html">CHANGELOG.rdoc</a></li>
+				
+					<li class="file"><a href="../../HISTORY_rdoc.html">HISTORY.rdoc</a></li>
+				
+					<li class="file"><a href="../../LICENSE_txt.html">LICENSE.txt</a></li>
+				
+					<li class="file"><a href="../../MANIFEST_txt.html">MANIFEST.txt</a></li>
+				
+					<li class="file"><a href="../../README_rdoc.html">README.rdoc</a></li>
+				
+					<li class="file"><a href="../../TODO_rdoc.html">TODO.rdoc</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../SilverPlatter.html">SilverPlatter</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC.html">SilverPlatter::IRC</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ASCII_CaseMapping.html">SilverPlatter::IRC::ASCII_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Channel.html">SilverPlatter::IRC::Channel</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ChannelList.html">SilverPlatter::IRC::ChannelList</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ChannelModes.html">SilverPlatter::IRC::ChannelModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Client.html">SilverPlatter::IRC::Client</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ClientDSL.html">SilverPlatter::IRC::ClientDSL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color.html">SilverPlatter::IRC::Color</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color/Sequence.html">SilverPlatter::IRC::Color::Sequence</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Color/String.html">SilverPlatter::IRC::Color::String</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Connection.html">SilverPlatter::IRC::Connection</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ConnectionDSL.html">SilverPlatter::IRC::ConnectionDSL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/ConnectionSet.html">SilverPlatter::IRC::ConnectionSet</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Hostmask.html">SilverPlatter::IRC::Hostmask</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Hostmask/StringHelper.html">SilverPlatter::IRC::Hostmask::StringHelper</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Listener.html">SilverPlatter::IRC::Listener</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message.html">SilverPlatter::IRC::Message</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/JOIN.html">SilverPlatter::IRC::Message::JOIN</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/KILL.html">SilverPlatter::IRC::Message::KILL</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/NICK.html">SilverPlatter::IRC::Message::NICK</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/NOTICE.html">SilverPlatter::IRC::Message::NOTICE</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/PART.html">SilverPlatter::IRC::Message::PART</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/PRIVMSG.html">SilverPlatter::IRC::Message::PRIVMSG</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Message/TOPIC.html">SilverPlatter::IRC::Message::TOPIC</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/MessagePRIVMSG.html">SilverPlatter::IRC::MessagePRIVMSG</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser.html">SilverPlatter::IRC::Parser</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/Command.html">SilverPlatter::IRC::Parser::Command</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/InvalidMessageFormat.html">SilverPlatter::IRC::Parser::InvalidMessageFormat</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/ParseError.html">SilverPlatter::IRC::Parser::ParseError</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Parser/UnknownCommand.html">SilverPlatter::IRC::Parser::UnknownCommand</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459Strict_CaseMapping.html">SilverPlatter::IRC::RFC1459Strict_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_CaseMapping.html">SilverPlatter::IRC::RFC1459_CaseMapping</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_ChannelModes.html">SilverPlatter::IRC::RFC1459_ChannelModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/RFC1459_UserModes.html">SilverPlatter::IRC::RFC1459_UserModes</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Socket.html">SilverPlatter::IRC::Socket</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/StringHelpers.html">SilverPlatter::IRC::StringHelpers</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Subscriptions.html">SilverPlatter::IRC::Subscriptions</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Topic.html">SilverPlatter::IRC::Topic</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/User.html">SilverPlatter::IRC::User</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/UserList.html">SilverPlatter::IRC::UserList</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/UserManager.html">SilverPlatter::IRC::UserManager</a></li>
+				
+					<li><a href="../../SilverPlatter/IRC/Whois.html">SilverPlatter::IRC::Whois</a></li>
+				
+					<li><a href="../../Exception.html">Exception</a></li>
+				
+					<li><a href="../../Exception/Detailed.html">Exception::Detailed</a></li>
+				
+					<li><a href="../../Diagnostics.html">Diagnostics</a></li>
+				
+					<li><a href="../../OpenStruct.html">OpenStruct</a></li>
+				
+					<li><a href="../../String.html">String</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">SilverPlatter::IRC::User</h1>
+
+		<div id="description">
+			<h2>Authors</h2>
+<ul>
+<li>Stefan Rusterholz <apeiros@gmx.net>
+
+</li>
+</ul>
+<h2>About</h2>
+<p>
+The <a href="User.html">User</a> class is used to store users and attached
+infos, e.g. channels it shares with the client, modes it has in those
+channels, hostname etc.
+</p>
+<h2>Synopsis</h2>
+<h2>Description</h2>
+<h2>Notes</h2>
+<p>
+The code assumes Object#dup, Hash#[] and Hash#[] to be atomic, in other
+words it doesn&#8217;t synchronize those methods.
+</p>
+<h2>Known Bugs</h2>
+<p>
+Currently none Please inform me about bugs using the bugtracker on <a
+href="http://rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse">rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse</a>
+</p>
+<h2>See Also</h2>
+<ul>
+<li><a href="../IRC.html">SilverPlatter::IRC</a>
+
+</li>
+<li><a href="ChannelList.html">SilverPlatter::IRC::ChannelList</a>
+
+</li>
+<li><a href="Client.html">SilverPlatter::IRC::Client</a>
+
+</li>
+<li><a href="User.html">SilverPlatter::IRC::User</a>
+
+</li>
+<li><a href="Connection.html">SilverPlatter::IRC::Connection</a>
+
+</li>
+<li><a href="Channel.html">SilverPlatter::IRC::Channel</a>
+
+</li>
+</ul>
+
+		</div>
+
+		<!-- Constants -->
+		
+		<div id="constants-list" class="section">
+			<h3 class="section-header">Constants</h3>
+			<dl>
+			
+				<dt><a name="Incomparable">Incomparable</a></dt>
+				
+				<dd class="description"><p>
+Temporary <a href="User.html#compare">User#compare</a> value if no nick is
+given
+</p></dd>
+				
+			
+			</dl>
+		</div>
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="nick-attribute-method" class="method-detail">
+				<a name="nick"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">nick</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+nickname of a user
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="user-attribute-method" class="method-detail">
+				<a name="user"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">user</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+username of a user
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="host-attribute-method" class="method-detail">
+				<a name="host"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">host</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+hostpart of a user
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="real-attribute-method" class="method-detail">
+				<a name="real"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">real</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+realname of a user
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="compare-attribute-method" class="method-detail">
+				<a name="compare"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">compare</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+lowercase nickname (casemapping defaults to rfc1459, will use parsers
+casemapping if available to conform to connection setting)
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="away-attribute-method" class="method-detail">
+				<a name="away"></a>
+				
+				<a name="away="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">away</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+The away message of a user, nil of not away
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="last-seen-attribute-method" class="method-detail">
+				<a name="last_seen"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">last_seen</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+last time the <a href="Connection.html">SilverPlatter::IRC::Connection</a>
+has seen this user
+</p>
+				
+				</div>
+			</div>
+			
+			<div id="me-attribute-method" class="method-detail">
+				<a name="me"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">me</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+Returns whether this user represents the client
+</p>
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="M000352"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">(nick=nil, user=nil, host=nil, real=nil, connection=nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 81</span>
+81:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">nick</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">user</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">host</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">real</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">connection</span>=<span class="ruby-keyword kw">nil</span>)
+82:         <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">connection</span>)
+83: 
+84:         <span class="ruby-ivar">@nick</span>, <span class="ruby-ivar">@user</span>, <span class="ruby-ivar">@host</span>, <span class="ruby-ivar">@real</span> = <span class="ruby-keyword kw">nil</span>
+85: 
+86:         <span class="ruby-ivar">@nick</span>       = <span class="ruby-identifier">nick</span>.<span class="ruby-identifier">freeze</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">nick</span>
+87:         <span class="ruby-ivar">@user</span>       = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">freeze</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">user</span>
+88:         <span class="ruby-ivar">@host</span>       = <span class="ruby-identifier">host</span>.<span class="ruby-identifier">freeze</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">host</span>
+89:         <span class="ruby-ivar">@real</span>       = <span class="ruby-identifier">real</span>.<span class="ruby-identifier">freeze</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">real</span>
+90:         <span class="ruby-ivar">@last_seen</span>  = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+91:         <span class="ruby-ivar">@visibility</span> = <span class="ruby-keyword kw">false</span>
+92: 
+93:         <span class="ruby-identifier">set_compare</span>
+94: 
+95:         <span class="ruby-ivar">@channels</span>   = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">NoModes</span>) <span class="ruby-comment cmt"># IRC::Channel =&gt; flags</span>
+96:         <span class="ruby-ivar">@me</span>         = <span class="ruby-keyword kw">false</span>
+97:         <span class="ruby-ivar">@away</span>       = <span class="ruby-keyword kw">nil</span>
+98:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="M000374"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">&lt;=&gt;</span><span
+						class="method-args">(other)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Compares nicknames
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 182</span>
+182:       <span class="ruby-keyword kw">def</span> <span class="ruby-operator">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
+183:         <span class="ruby-ivar">@compare</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">compare</span>
+184:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="M000370"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">==</span><span
+						class="method-args">(other)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Compares two SilverPlatter::IRC::User&#8217;s based on available
+information That means a `user = <a
+href="User.html#M000352">SilverPlatter::IRC::User.new</a>` which has no
+information set will be == to any other <a href="User.html">User</a>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 171</span>
+171:       <span class="ruby-keyword kw">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">other</span>)
+172:         <span class="ruby-identifier">other</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">User</span>) <span class="ruby-operator">&amp;&amp;</span> (
+173:           (<span class="ruby-operator">!</span>(<span class="ruby-ivar">@connection</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">connection</span>) <span class="ruby-operator">||</span> <span class="ruby-ivar">@connection</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">connection</span>) <span class="ruby-operator">&amp;&amp;</span>
+174:           (<span class="ruby-operator">!</span>(<span class="ruby-ivar">@nick</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">nick</span>)     <span class="ruby-operator">||</span> <span class="ruby-ivar">@compare</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">compare</span>) <span class="ruby-operator">&amp;&amp;</span>
+175:           (<span class="ruby-operator">!</span>(<span class="ruby-ivar">@user</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">user</span>)     <span class="ruby-operator">||</span> <span class="ruby-ivar">@user</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">user</span>) <span class="ruby-operator">&amp;&amp;</span>
+176:           (<span class="ruby-operator">!</span>(<span class="ruby-ivar">@host</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">host</span>)     <span class="ruby-operator">||</span> <span class="ruby-ivar">@host</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">host</span>) <span class="ruby-operator">&amp;&amp;</span>
+177:           (<span class="ruby-operator">!</span>(<span class="ruby-ivar">@real</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">real</span>)     <span class="ruby-operator">||</span> <span class="ruby-ivar">@real</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">real</span>)
+178:         )
+179:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="away--method" class="method-detail ">
+				<a name="M000364"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">away?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+check if user is away
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="away--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 142</span>
+142:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">away?</span>
+143:         <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-ivar">@away</span>
+144:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="change-visibility-method" class="method-detail ">
+				<a name="M000384"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">change_visibility</span><span
+						class="method-args">(new_visibility)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Change the visibility of this user, returns whether the status has changed
+or not
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="change-visibility-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 226</span>
+226:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">change_visibility</span>(<span class="ruby-identifier">new_visibility</span>)
+227:         <span class="ruby-identifier">changed</span>     = (<span class="ruby-ivar">@visibility</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">new_visibility</span>)
+228:         <span class="ruby-ivar">@last_seen</span>  = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+229:         <span class="ruby-ivar">@visibility</span> = <span class="ruby-identifier">new_visibility</span>
+230:         <span class="ruby-identifier">changed</span>
+231:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="channels-method" class="method-detail ">
+				<a name="M000355"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">channels</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Return the channels this user shares with your client
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="channels-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 106</span>
+106:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">channels</span>
+107:         <span class="ruby-ivar">@channels</span>.<span class="ruby-identifier">keys</span>
+108:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="clone-method" class="method-detail ">
+				<a name="M000379"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">clone</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Users can&#8217;t be cloned
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="clone-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 204</span>
+204:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clone</span>
+205:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-node">&quot;can't clone #{self.class}&quot;</span>
+206:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="dup-method" class="method-detail ">
+				<a name="M000378"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">dup</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Users can&#8217;t be duped
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="dup-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 199</span>
+199:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dup</span>
+200:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-node">&quot;can't dup #{self.class}&quot;</span>
+201:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="each-method" class="method-detail ">
+				<a name="M000354"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">each</span><span
+						class="method-args">(&block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Iterate over all channels this user shares with your client
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="each-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 101</span>
+101:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+102:         <span class="ruby-ivar">@channels</span>.<span class="ruby-identifier">each_key</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+103:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="hostmask-method" class="method-detail ">
+				<a name="M000365"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">hostmask</span><span
+						class="method-args">(wildnick=false, wilduser=false, wildhost=false)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+A <a href="Hostmask.html">SilverPlatter::IRC::Hostmask</a> instance
+representing the hostmask of this user To ensure a complete hostmask, do a
+who(nickname) first.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="hostmask-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 148</span>
+148:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hostmask</span>(<span class="ruby-identifier">wildnick</span>=<span class="ruby-keyword kw">false</span>, <span class="ruby-identifier">wilduser</span>=<span class="ruby-keyword kw">false</span>, <span class="ruby-identifier">wildhost</span>=<span class="ruby-keyword kw">false</span>)
+149:         <span class="ruby-constant">Hostmask</span>.<span class="ruby-identifier">new</span>(
+150:           <span class="ruby-operator">!</span><span class="ruby-identifier">wildnick</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@nick</span> <span class="ruby-operator">||</span> <span class="ruby-value str">'*'</span>,
+151:           <span class="ruby-operator">!</span><span class="ruby-identifier">wilduser</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@user</span> <span class="ruby-operator">||</span> <span class="ruby-value str">'*'</span>,
+152:           <span class="ruby-operator">!</span><span class="ruby-identifier">wildhost</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@host</span> <span class="ruby-operator">||</span> <span class="ruby-value str">'*'</span>,
+153:           <span class="ruby-ivar">@connection</span>
+154:         )
+155:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="in--method" class="method-detail ">
+				<a name="M000363"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">in?</span><span
+						class="method-args">(channel)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Check if user is in channel, will not perform a whois, so it only works if
+the client is also in the channel
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="in--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 136</span>
+136:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">in?</span>(<span class="ruby-identifier">channel</span>)
+137:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-node">&quot;Channel required, #{channel.class} given&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Channel</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">channel</span>
+138:         <span class="ruby-ivar">@channels</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">channel</span>)
+139:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="invisible--method" class="method-detail ">
+				<a name="M000387"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">invisible?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+True if the user shares no channel with the <a
+href="Connection.html">SilverPlatter::IRC::Connection</a>
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="invisible--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 244</span>
+244:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">invisible?</span>
+245:         <span class="ruby-operator">!</span><span class="ruby-ivar">@visibility</span>
+246:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="op--method" class="method-detail ">
+				<a name="M000357"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">op?</span><span
+						class="method-args">(in_channel)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+check if user has op (+o) in given channel (<a
+href="../../String.html">String</a> or <a
+href="Channel.html">SilverPlatter::IRC::Channel</a>)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="op--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 117</span>
+117:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">op?</span>(<span class="ruby-identifier">in_channel</span>)
+118:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-node">&quot;Channel required, #{in_channel.class} given&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Channel</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">in_channel</span>
+119:         <span class="ruby-ivar">@channels</span>[<span class="ruby-identifier">in_channel</span>].<span class="ruby-identifier">include?</span>(<span class="ruby-constant">Op</span>)
+120:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="to-s-method" class="method-detail ">
+				<a name="M000368"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">to_s</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Returns the (frozen!) nickname of the user
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="to-s-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 158</span>
+158:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>
+159:         <span class="ruby-ivar">@nick</span>
+160:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="uop--method" class="method-detail ">
+				<a name="M000362"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">uop?</span><span
+						class="method-args">(in_channel)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+check if user has uop (+u) in given channel (<a
+href="../../String.html">String</a> or SilverPlatterIRC::Channel)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="uop--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 129</span>
+129:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">uop?</span>(<span class="ruby-identifier">in_channel</span>)
+130:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-node">&quot;Channel required, #{in_channel.class} given&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Channel</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">in_channel</span>
+131:         <span class="ruby-ivar">@channels</span>[<span class="ruby-identifier">in_channel</span>].<span class="ruby-identifier">include?</span>(<span class="ruby-constant">Uop</span>)
+132:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="update-last-seen-method" class="method-detail ">
+				<a name="M000385"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">update_last_seen</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Set the <a href="User.html#last_seen">last_seen</a> time to now
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="update-last-seen-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 234</span>
+234:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update_last_seen</span>
+235:         <span class="ruby-ivar">@last_seen</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+236:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="visible--method" class="method-detail ">
+				<a name="M000386"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">visible?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+True if the user shares a channel with the <a
+href="Connection.html">SilverPlatter::IRC::Connection</a>
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="visible--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 239</span>
+239:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">visible?</span>
+240:         <span class="ruby-ivar">@visibility</span>
+241:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="voice--method" class="method-detail ">
+				<a name="M000358"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">voice?</span><span
+						class="method-args">(in_channel)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+check if user has voice (+v) in given channel (<a
+href="../../String.html">String</a> or <a
+href="Channel.html">SilverPlatter::IRC::Channel</a>)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="voice--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 123</span>
+123:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">voice?</span>(<span class="ruby-identifier">in_channel</span>)
+124:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, <span class="ruby-node">&quot;Channel required, #{in_channel.class} given&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Channel</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">in_channel</span>
+125:         <span class="ruby-ivar">@channels</span>[<span class="ruby-identifier">in_channel</span>].<span class="ruby-identifier">include?</span>(<span class="ruby-constant">Voice</span>)
+126:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="private-instance-method-details" class="method-section section">
+			<h3 class="section-header">Private Instance Methods</h3>
+
+		
+			<div id="set-compare-method" class="method-detail ">
+				<a name="M000399"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">set_compare</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+set @compare to casemapped nick, use @parser.casemap if available, else use
+rfc1459
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="set-compare-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/silverplatter/irc/user.rb, line 286</span>
+286:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">set_compare</span>
+287:         <span class="ruby-ivar">@compare</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@nick</span> <span class="ruby-keyword kw">then</span>
+288:           <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@connection</span> <span class="ruby-keyword kw">then</span>
+289:             <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">casemap</span>(<span class="ruby-ivar">@nick</span>).<span class="ruby-identifier">freeze</span>
+290:           <span class="ruby-keyword kw">else</span>
+291:             <span class="ruby-identifier">casemap</span>(<span class="ruby-ivar">@nick</span>).<span class="ruby-identifier">freeze</span>
+292:           <span class="ruby-keyword kw">end</span>
+293:         <span class="ruby-keyword kw">else</span>
+294:           <span class="ruby-constant">Incomparable</span>
+295:         <span class="ruby-keyword kw">end</span>
+296:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+
