@@ -2,6 +2,7 @@
 
 
 == Indexing
+
 Author::           Stefan Rusterholz <stefan.rusterholz+silverplatter-irc at gmail.com>
 Version::          1.0.0
 Website::          http://silverplatter.rubyforge.org/irc
@@ -12,16 +13,21 @@ License::          Ruby License (see LICENSE.txt)
 
 
 == Summary
+
 SilverPlatter::IRC is an easy to use library for IRC clients. For an example use
 take a look at the butler project: http://butler.rubyforge.org which uses it to
 implement an IRC bot.
 
 
 == Description
-FIXME
+
+SilverPlatter::IRC is an easy to use library for IRC clients. For an example use
+take a look at the butler project: http://butler.rubyforge.org which uses it to
+implement an IRC bot.
 
 
 == Installing
+
 === Via RubyGems
 You need for the installation:
 * rubygems >= 1.2.0
@@ -69,12 +75,15 @@ To install, do:
 Note: you might have to use 'sudo rake gem:install'
 
 
+
 == Examples
 
 See in the examples dir for code examples.
 
 
+
 == Design
+
 SilverPlatter::IRC is designed in layers, the following layers exist:
 Socket::     Provides many abstracted write methods and send-queues to protect your client from
              accidentally flooding (sending too many messages at once)
@@ -92,9 +101,11 @@ time and is semi-intelligent as Parser, Channel and Users are tied to the connec
 automatically updated apropriatly. Also it can properly deal with requests with multiple
 commands as reply, collecting those and making them accessible in a nice format.
 Client enables multiple connections in a nice manner.
-	
+
+
 
 == Contributing
+
 If you wish to contribute, then there are various ways to do so:
 Code::          If you wish to contribute code, simply fork the github project, clone and start
                 to work. Contact me when you think your modifications are ready to be pulled into
@@ -108,7 +119,10 @@ Testing::       Testrun silverplatter-irc on different IRC servers and collect l
 SSL::           Have a server with SSL to connect to? Tell me, I'd very much like to try enable
                 ssl connections.
 
+
+
 == Links
+
 Website::          http://silverplatter.rubyforge.org/irc
 Project::          http://rubyforge.org/projects/silverplatter
 Bugtracker::       http://rubyforge.org/tracker/?atid=17330&group_id=4522&func=browse
