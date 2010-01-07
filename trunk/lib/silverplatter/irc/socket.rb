@@ -15,7 +15,7 @@ require 'thread'
 
 module SilverPlatter
 	module IRC
-	
+
 		# == Authors
 		# * Stefan Rusterholz <apeiros@gmx.net>
 		#
@@ -35,7 +35,7 @@ module SilverPlatter
 		# SilverPlatter::IRC::Socket#read from only will just warn and send the overlength
 		# message. If you are looking for queries (commands that get an answer from the
 		# server) take a look at SilverPlatter::IRC::Connection.
-		# 
+		#
 		# == Synopsis
 		#   irc = SilverPlatter::IRC::Socket.new('irc.freenode.org', :port => 6667)
 		#   irc.connect
@@ -44,7 +44,7 @@ module SilverPlatter
 		#   irc.send_part("#channel3")
 		#   irc.send_privmsg("Hi all of you in #channel1!", "#channel1")
 		#   irc.close
-		# 
+		#
 		# == Notes
 		# Errno::EHOSTUNREACH:: server not reached
 		# Errno::ECONNREFUSED:: server is up, but refuses connection
@@ -55,7 +55,7 @@ module SilverPlatter
 
 			# SilverPlatter::IRC::Socket version
 			VERSION	= "1.0.0"
-			
+
 			# A single space character
 			Space   = " ".freeze
 			# AWAY command
@@ -105,33 +105,33 @@ module SilverPlatter
 
 			# end-of-line used for communication
 			attr_reader :eol
-	
+
 			# contains counters:
 			# :read_lines:: Number of lines that have been read.
 			# :read_bytes:: Number of bytes that have been read.
 			# :sent_lines:: Number of lines that have been sent.
 			# :sent_bytes:: Number of bytes that have been sent.
 			attr_reader :count
-	
+
 			# contains limits for the protocol, burst times/counts etc.
 			attr_reader :limit
-			
+
 			# log raw out, will use log_out.puts(raw)
 			attr_accessor :log_out
-			
+
 			DefaultOptions = {
 				:port => 6667,
 				:eol  => "\r\n".freeze,
 				:host => nil,
 			}
-			
+
 			# Fix evil behaviour of IO::new (complains if a block is given)
 			def self.new(*a, &b) # :nodoc:
 				obj = allocate
 				obj.send(:initialize, *a, &b)
 				obj
 			end
-			
+
 			# Initialize properties, doesn't connect automatically
 			# options:
 			# :server:: ip/domain of server (overrides a given server parameter)
@@ -209,7 +209,7 @@ module SilverPlatter
 				@connected = false
 				nil
 			end
-			
+
 			# Send a raw message to irc, eol will be appended
 			# Use specialized methods instead if possible since they will releave
 			# you from several tasks like translating newlines, take care of overlength
@@ -218,14 +218,14 @@ module SilverPlatter
 				@mutex.synchronize {
 					warn("Raw too long (#{data.length} instead of #{@limit[:raw_length]})") if (data.length > @limit[:raw_length])
 					now	= Time.now
-		
+
 					# keep delay between single (bursted) messages
 					sleeptime = @limit[:send_delay]-(now-@last_sent)
 					if sleeptime > 0 then
 						sleep(sleeptime)
 						now += sleeptime
 					end
-					
+
 					# keep delay after a burst (1)
 					if (@count[:burst] >= @limit[:burst]) then
 						sleeptime = @limit[:burst_delay]-(now-@last_sent)
@@ -235,7 +235,7 @@ module SilverPlatter
 						end
 						@count[:burst]	= 0
 					end
-		
+
 					# keep delay after a burst (2)
 					if (@count[:burst2] >= @limit[:burst2]) then
 						sleeptime = @limit[:burst2_delay]-(now-@last_sent)
@@ -245,7 +245,7 @@ module SilverPlatter
 						end
 						@count[:burst2]	= 0
 					end
-		
+
 					# send data and update data
 					@last_sent  = Time.new
 					data       += @eol
@@ -259,8 +259,8 @@ module SilverPlatter
 			rescue IOError
 				error("Writing #{data.inspect} failed")
 				raise
-			end 
-	
+			end
+
 			def send_raw(*arguments)
 				last_argument = arguments.last.to_s
 				if last_argument.include?(Space) || last_argument[0] == ?: then
@@ -276,26 +276,26 @@ module SilverPlatter
 				send_raw(NICK, nickname)
 				send_raw(USER, username, "0", "*", realname)
 			end
-	
+
 			# identify nickname to nickserv
 			# FIXME: figure out what the server supports, possibly requires it
 			# to be moved to SilverPlatter::IRC::Connection (to allow ghosting, nickchange, identify)
 			def send_identify(password)
 				send_raw(NS, "IDENTIFY #{password}")
 			end
-			
+
 			# FIXME: figure out what the server supports, possibly requires it
 			# to be moved to SilverPlatter::IRC::Connection (to allow ghosting, nickchange, identify)
 			def send_ghost(nickname, password)
 				send_raw(NS, "GHOST #{nickname} #{password}")
 			end
-			
+
 			# cuts the message-text into pieces of a maximum size
 			# (or until the next newline if shorter)
 			def normalize_message(message, limit=nil, &block)
 				message.scan(/[^\n\r]{1,#{limit||@limit[:message_length]}}/, &block)
 			end
-	
+
 			# sends a privmsg to given user or channel (or multiple)
 			# messages containing newline or exceeding @limit[:message_length] are automatically splitted
 			# into multiple messages.
@@ -306,7 +306,7 @@ module SilverPlatter
 					}
 				}
 			end
-	
+
 			# same as privmsg except it's formatted for ACTION
 			def send_action(message, *recipients)
 				normalize_message(message) { |message|
@@ -315,7 +315,7 @@ module SilverPlatter
 					}
 				}
 			end
-	
+
 			# sends a notice to receiver (or multiple if receiver is array of receivers)
 			# formatted=true allows usage of ![]-format commands (see IRCmessage.getFormatted)
 			# messages containing newline automatically get splitted up into multiple messages.
@@ -327,17 +327,17 @@ module SilverPlatter
 					}
 				}
 			end
-	
+
 			# send a ping
 			def send_ping(*args)
 				send_raw(PING, *args)
 			end
-	
+
 			# send a pong
 			def send_pong(*args)
 				send_raw(PONG, *args)
 			end
-	
+
 			# join specified channels
 			# use an array [channel, password] to join password-protected channels
 			# returns the channels joined.
@@ -356,7 +356,7 @@ module SilverPlatter
 					channel
 				} # need to map to get rid of the passwords
 			end
-	
+
 			# part specified channels
 			# returns the channels parted from.
 			def send_part(reason=nil, *channels)
@@ -371,34 +371,36 @@ module SilverPlatter
 					send_raw(PART, channel, reason)
 				} # each returns receiver
 			end
-	
+
 			# set your own nick
 			# does NO verification/validation of any kind
 			def send_nick(nick)
 				send_raw(NICK, nick)
 			end
-	
+
 			# set your status to away with reason 'reason'
-			def send_away(reason="")
-				return send_back if reason.empty?
+			# If the reason is nil or an empty string, it will reset your status to
+			# 'back'.
+			def send_away(reason=nil)
+				return send_back if reason.nil? || reason.empty?
 				send_raw(AWAY, reason)
 			end
-	
+
 			# reset your away status to back
 			def send_back
 				send_raw(AWAY)
 			end
-	
+
 			# kick user in channel with reason
 			def send_kick(user, channel, reason)
 				send_raw(KICK, channel, user, reason)
 			end
-			
+
 			# send a mode command to a channel
 			def send_mode(channel, *mode)
 				send_raw(MODE, channel, *mode)
 			end
-			
+
 			# Give Op to user in channel
 			# User can be a nick or IRC::User, either one or an array.
 			def send_multiple_mode(channel, pre, flag, targets)
@@ -407,36 +409,36 @@ module SilverPlatter
 					send_raw(MODE, channel, "#{pre}#{flag*slice.length}", *slice)
 				}
 			end
-	
+
 			# Give Op to user in channel
 			# User can be a nick or IRC::User, either one or an array.
 			def send_op(channel, *users)
 				send_multiple_mode(channel, '+', 'o', users)
 			end
-	
+
 			# Take Op from user in channel
 			# User can be a nick or IRC::User, either one or an array.
 			def send_deop(channel, *users)
 				send_multiple_mode(channel, '-', 'o', users)
 			end
-	
+
 			# Give voice to user in channel
 			# User can be a nick or IRC::User, either one or an array.
 			def send_voice(channel, *users)
 				send_multiple_mode(channel, '+', 'v', users)
 			end
-	
+
 			# Take voice from user in channel.
 			# User can be a nick or IRC::User, either one or an array.
 			def send_devoice(channel, *users)
 				send_multiple_mode(channel, '-', 'v', users)
 			end
-	
+
 			# Set ban in channel to mask
 			def send_ban(channel, *masks)
 				send_multiple_mode(channel, '+', 'b', masks)
 			end
-	
+
 			# Remove ban in channel to mask
 			def send_unban(channel, *masks)
 				send_multiple_mode(channel, '-', 'b', masks)
@@ -446,29 +448,29 @@ module SilverPlatter
 			def send_who(target)
 				send_raw(WHO, target)
 			end
-	
+
 			# Send a "whois" to server
 			def send_whois(nick)
 				send_raw(WHOIS, nick)
 			end
-	
+
 			# send the quit message to the server
 			def send_quit(reason=nil)
 				send_raw(QUIT, reason || "leaving")
 			end
-			
+
 			# send the quit message to the server
 			# unless you set close to false it will also close the socket
 			def quit(reason="leaving", close=true)
 				send_quit(reason)
 				close() if close
 			end
-	
+
 			# closes the connection to the irc-server
 			def close
 				@socket.close
 			end
-			
+
 			def inspect # :nodoc:
 				sprintf "#<%s:0x%08x %s:%s from %s using '%s', stats: %s>",
 					self.class,
