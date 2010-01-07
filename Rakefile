@@ -19,7 +19,7 @@ Project.meta.bugtracker       = 'http://'
 Project.meta.feature_requests = 'http://'
 Project.meta.use_git          = true
 
-Project.manifest.ignore       = %w[web/**/*]
+Project.manifest.ignore       = %w[{docs,spec,stuff,test,web}/**/*]
 
 Project.rubyforge.project     = 'silverplatter'
 Project.rubyforge.path        = 'silverplatter/irc'
