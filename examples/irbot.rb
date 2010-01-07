@@ -15,9 +15,20 @@
 $VERBOSE                  = true
 Thread.abort_on_exception = true
 
+# Enable running the examples without installation
+libdir = File.expand_path(File.dirname(__FILE__)+'/../lib')
+$LOAD_PATH.unshift libdir if File.exist?(libdir)
+
+# Require the necessary libraries
+begin; require 'rubygems'; rescue LoadError; end
+require 'silverplatter/irc/connection'
+require 'pp' # everybody and his/her mom need pp
+
+include SilverPlatter
+
 BotConfig = {
 	:server          => "irc.freenode.org",
-	:port            => 6667,
+	:port            => 8001,
 	:serverpass      => nil,
 
 	:nickname        => ENV["IRBOTNICK"] || "silverp",
@@ -35,20 +46,9 @@ BotConfig = {
 		$stdout.flush
 		$stdin.gets.chomp
 	},
+	:log => Log.to_console(:formatter => Log::ColoredDebugConsole)
 }
 
-
-
-# Enable running the examples without installation
-libdir = File.expand_path(File.dirname(__FILE__)+'/../lib')
-$LOAD_PATH.unshift libdir if File.exist?(libdir)
-
-# Require the necessary libraries
-begin; require 'rubygems'; rescue LoadError; end
-require 'silverplatter/irc/connection'
-require 'pp' # everybody and his/her mom need pp
-
-include SilverPlatter
 Bot = IRC::Connection.new(nil, BotConfig)
 
 class IRC::UserList; alias / []; end
